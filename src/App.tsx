@@ -318,14 +318,7 @@ export default function App() {
           <rect width="100%" height="100%" fill="url(#smudge-2)" />
           <rect width="100%" height="100%" fill="url(#smudge-3)" />
 
-          {/* Faint paper wrinkles & creases */}
-          {/* Main fold line from top-left curving slightly across */}
-          <path d="M -100 200 Q 500 180 1100 240 T 2200 160" fill="none" stroke="#fafafa" strokeWidth="2.0" opacity="0.45" />
-          <path d="M -100 202 Q 500 182 1100 242 T 2200 162" fill="none" stroke="#2c271f" strokeWidth="1.0" opacity="0.06" />
-
-          {/* Secondary subtle vertical crease */}
-          <path d="M 1150 -100 Q 1050 450 1250 1300" fill="none" stroke="#fafafa" strokeWidth="2.5" opacity="0.4" />
-          <path d="M 1152 -100 Q 1052 450 1252 1300" fill="none" stroke="#2c271f" strokeWidth="1.2" opacity="0.07" />
+          {/* Faint paper wrinkles & creases removed for a clean, non-distracting flat paper background */}
 
           {/* Genuine scanner dust, fibers, and microscopic speckles */}
           <g fill="#1b1b1b" opacity="0.28">
