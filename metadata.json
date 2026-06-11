@@ -1,0 +1,6 @@
+{
+  "name": "Bao You Portfolio",
+  "description": "Personal portfolio website of Bao You, Global GTM CRM & Revenue Systems Product Manager",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

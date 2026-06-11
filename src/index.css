@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-hand: "Architects Daughter", "Comic Neue", cursive, sans-serif;
+  
+  --color-paper: #ecebe6; /* Soft realistic grey-white textured paper */
+  --color-ink: #18181b;
+  --color-highlight: #fef08a; /* Soft hand highlight yellow */
+  --color-marker-blue: #bfdbfe; /* Light builder/blueprint marker blue */
+  --color-marker-green: #bbf7d0; /* Highlight green */
+  --color-marker-orange: #fed7aa; /* Orange marker */
+}
+
+/* Gorgeous naive sketchbook paper texture */
+.bg-sketchbook-paper {
+  background-color: var(--color-paper);
+  background-image: 
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperGrain)'/%3E%3C/svg%3E");
+}
+
+/* Custom styles for the handdrawn sketch effect */
+.handdrawn-border {
+  border: 3px solid var(--color-ink);
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+}
+
+.handdrawn-border-sm {
+  border: 2px solid var(--color-ink);
+  border-radius: 120px 10px 100px 10px / 10px 100px 10px 120px;
+}
+
+.handdrawn-shadow {
+  box-shadow: 4px 4px 0px 0px var(--color-ink);
+}
+
+.handdrawn-shadow-lg {
+  box-shadow: 6px 6px 0px 0px var(--color-ink);
+}
+
+.handdrawn-shadow-sm {
+  box-shadow: 2px 2px 0px 0px var(--color-ink);
+}
+
+/* Faint graph paper background pattern */
+.bg-graph-paper {
+  background-color: var(--color-paper);
+  background-image: 
+    linear-gradient(rgba(24, 24, 27, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(24, 24, 27, 0.04) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+/* Subtle page margin lines */
+.notebook-column {
+  position: relative;
+}
+
+.notebook-column::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 40px;
+  width: 2px;
+  background-color: rgba(239, 68, 68, 0.15); /* Faint red notebook margin */
+  pointer-events: none;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Interactive hover scales */
+.hover-sketch:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px var(--color-ink);
+}
+
+.hover-sketch:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px 0px var(--color-ink);
+}
+
+/* Customize scrollbar to look sketchy */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-paper);
+  border-left: 2px solid var(--color-ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink);
+  border: 2px solid var(--color-paper);
+  border-radius: 10px;
+}
+
