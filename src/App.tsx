@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { 
   Mail, 
   Phone, 
@@ -90,6 +91,9 @@ import {
 
 // Import Crayon Animated Video Player
 import { CrayonVideoPlayer } from "./components/CrayonVideoPlayer";
+
+// Import Apple Music Playlist Connector
+import { MyFavoriteMusic } from "./components/MyFavoriteMusic";
 
 // Helper helper function to return specific hand-crafted corporate badges matching credentials
 const getCompanyIcon = (issuer: string) => {
@@ -222,6 +226,7 @@ export default function App() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // Career experience expansion
   const [activeProjectTab, setActiveProjectTab] = useState<"traditional" | "ai" | "crm" | "evaluation" | "modeling" | "sales">("crm");
   const [certFilter, setCertFilter] = useState<"all" | "salesforce" | "other">("all");
+  const [isMusicModalOpen, setIsMusicModalOpen] = useState(false);
 
   // Live Calendar & Booking states
   const [activeCalendarTab, setActiveCalendarTab] = useState<"embed" | "booking">("embed");
@@ -320,24 +325,8 @@ export default function App() {
 
           {/* Faint paper wrinkles & creases removed for a clean, non-distracting flat paper background */}
 
-          {/* Genuine scanner dust, fibers, and microscopic speckles */}
-          <g fill="#1b1b1b" opacity="0.28">
-            <circle cx="140" cy="110" r="0.75" />
-            <circle cx="280" cy="220" r="0.4" />
-            <circle cx="490" cy="340" r="0.9" />
-            <circle cx="760" cy="160" r="0.5" />
-            <circle cx="950" cy="510" r="1.1" />
-            <circle cx="1380" cy="250" r="0.6" />
-            <circle cx="1600" cy="570" r="0.8" />
-            <circle cx="1820" cy="210" r="0.5" />
-            <circle cx="1950" cy="440" r="1.2" />
-
-            {/* Microscopic fiber threads */}
-            <path d="M 330 140 Q 332 143 335 141" fill="none" stroke="#1b1b1b" strokeWidth="0.6" />
-            <path d="M 870 340 Q 868 345 873 343" fill="none" stroke="#1b1b1b" strokeWidth="0.5" />
-            <path d="M 1440 600 Q 1444 602 1441 605" fill="none" stroke="#1b1b1b" strokeWidth="0.6" />
-          </g>
-
+          {/* Genuine scanner dust, fibers, and microscopic speckles removed for a cleaner background per user request */}
+          
           {/* Soft sketchbook paper vignette shadows in the outermost corners */}
           <radialGradient id="vignette-effect" cx="50%" cy="50%" r="70%">
             <stop offset="65%" stopColor="#000000" stopOpacity="0" />
@@ -347,34 +336,7 @@ export default function App() {
         </svg>
       </div>
       
-      {/* Authentic Handdrawn Ink Splatter Background Accents replicating Homepage.png */}
-      <svg className="fixed left-2 md:left-6 lg:left-10 top-36 w-16 md:w-20 lg:w-24 h-48 pointer-events-none opacity-45 z-0 select-none text-zinc-800" viewBox="0 0 80 180" fill="currentColor">
-        <circle cx="20" cy="30" r="3.5" />
-        <circle cx="28" cy="45" r="1.5" />
-        <circle cx="15" cy="50" r="2.2" />
-        <path d="M 35 22 Q 38 27 34 29 C 31 31 32 23 35 22 Z" />
-        <circle cx="45" cy="65" r="4.2" opacity="0.8" />
-        <circle cx="50" cy="80" r="2" />
-        <circle cx="18" cy="95" r="1.5" />
-        <circle cx="25" cy="110" r="5" />
-        <circle cx="34" cy="118" r="2.5" />
-        <path d="M 22 135 C 24 139 21 144 18 142 C 16 139 20 134 22 135 Z" />
-        <circle cx="48" cy="148" r="3.1" />
-        <circle cx="55" cy="158" r="1.5" />
-        <circle cx="28" cy="165" r="2.2" />
-      </svg>
-      <svg className="fixed right-2 md:right-6 lg:right-10 top-56 w-14 md:w-16 lg:w-20 h-40 pointer-events-none opacity-35 z-0 select-none text-zinc-805" viewBox="0 0 60 160" fill="currentColor">
-        <circle cx="25" cy="20" r="4.5" />
-        <circle cx="15" cy="35" r="2.1" />
-        <circle cx="32" cy="42" r="1.5" />
-        <circle cx="20" cy="60" r="3" />
-        <circle cx="45" cy="75" r="1.8" />
-        <path d="M 12 90 Q 15 94 13 97 C 10 99 9 93 12 90 Z" />
-        <circle cx="28" cy="105" r="5.2" />
-        <circle cx="38" cy="120" r="2.3" />
-        <circle cx="15" cy="135" r="1.2" />
-        <circle cx="24" cy="145" r="3.5" />
-      </svg>
+      {/* Background accents removed for a cleaner flat paper look */}
       
       {/* ========================================================
           CORE HEADER BAR (Consistent across all pages)
@@ -456,6 +418,24 @@ export default function App() {
                 </div>
               </div>
 
+            </div>
+
+            {/* Small Pink Music Note Section as a 3D Polished Pill Button */}
+            <div className="w-full max-w-5xl mx-auto flex justify-end px-4 mb-2 z-20">
+              <button
+                id="music-note-home-btn"
+                onClick={() => setIsMusicModalOpen(true)}
+                className="relative px-3.5 py-1.5 bg-gradient-to-br from-pink-400 via-pink-500 to-rose-600 text-white font-hand text-[10px] sm:text-xs font-black rounded-full border-2 border-ink shadow-[0_4px_0_0_#be185d,3px_7px_0px_0px_rgba(24,24,27,0.3)] hover:-translate-y-1 hover:shadow-[0_5px_0_0_#be185d,3px_8px_0px_0px_rgba(24,24,27,0.3)] active:translate-y-0.5 active:shadow-[0_1px_0_0_#be185d,1.5px_3px_0px_0px_rgba(24,24,27,0.3)] transition-all duration-150 cursor-pointer flex items-center gap-1.5 group overflow-hidden select-none"
+                title="Pop Up My Favorite Music Player"
+              >
+                {/* Glossy radial glass shine overlays */}
+                <span className="absolute inset-x-0 top-0 h-[45%] bg-white/35 rounded-t-full filter blur-[1px]"></span>
+                <span className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none"></span>
+                <Music className="h-3.5 w-3.5 stroke-[3] drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)] transform group-hover:scale-110 transition-transform duration-200" />
+                <span className="relative drop-shadow-[0_1.5px_1px_rgba(0,0,0,0.35)] shrink-0">
+                  Listen to My Favorite Music!
+                </span>
+              </button>
             </div>
 
             {/* Separator banner with sparse margin spacing */}
@@ -1375,10 +1355,13 @@ export default function App() {
               </p>
             </div>
 
-            <div className="max-w-2xl md:max-w-3xl mx-auto space-y-10 animate-fade-in text-ink">
+            <div className="max-w-5xl lg:max-w-6xl mx-auto space-y-10 animate-fade-in text-ink">
               
-              {/* Official Contact Rolodex */}
-              <div className="bg-white border-3 border-ink rounded-xl p-5 md:p-6 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)]">
+              {/* Responsive 2-column grid to hold Contact Rolodex and Apple Music player side-by-side */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                
+                {/* Official Contact Rolodex */}
+                <div className="bg-white border-3 border-ink rounded-xl p-5 md:p-6 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)]">
                 <h3 className="font-hand text-xl font-black text-ink mb-4 pb-2 border-b-2 border-dashed border-zinc-200 flex items-center gap-2">
                   <span>📁 Official Contact Rolodex</span>
                 </h3>
@@ -1549,7 +1532,11 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Off-Duty Hobbies Snapshot Polaroids */}
+              {/* My Favorite Music Panel (Apple Music API Integration) */}
+              <MyFavoriteMusic />
+            </div>
+
+            {/* Off-Duty Hobbies Snapshot Polaroids */}
               <div className="bg-white border-3 border-ink rounded-xl p-5 md:p-6 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)]">
                 <h3 className="font-hand text-xl font-black text-ink mb-5 pb-2 border-b-2 border-dashed border-zinc-200 flex items-center gap-2">
                   <span>📸 Off-Duty Hobbies Grid</span>
@@ -1866,6 +1853,80 @@ export default function App() {
           Copyright © 2026. Hand-Drawn Design Style.
         </p>
       </footer>
+
+      {/* 🎵 APPLE MUSIC POPUP WINDOW MODAL 🎵 */}
+      <AnimatePresence>
+        {isMusicModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMusicModalOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-xs cursor-pointer"
+            />
+            
+            {/* Window Dialog */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ type: "spring", damping: 28, stiffness: 380 }}
+              className="relative bg-white border-4 border-ink rounded-2xl w-full max-w-lg md:max-w-xl shadow-[8px_8px_0px_0px_rgba(242,108,162,1)] z-10 flex flex-col h-auto max-h-[95vh] select-none"
+            >
+              {/* Custom Windows-style Header bar with pink color */}
+              <div className="bg-pink-500 text-white border-b-4 border-ink p-3 flex items-center justify-between select-none relative z-20 shrink-0">
+                <div className="flex items-center gap-2 mr-3 min-w-0">
+                  <span className="w-3.5 h-3.5 rounded-full bg-white border-2 border-ink flex items-center justify-center text-[8px] font-black font-sans text-pink-500 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] shrink-0">
+                    ★
+                  </span>
+                  <span className="font-hand text-lg md:text-xl font-black text-white drop-shadow-sm tracking-wide truncate">
+                    🎵 My Favorite Music
+                  </span>
+                </div>
+                
+                {/* Control Action Buttons (With guaranteed shrink-0 so they never wrap or cut off) */}
+                <div className="flex items-center gap-2 shrink-0 select-none relative z-30">
+                  <button 
+                    onClick={() => {
+                      setIsMusicModalOpen(false);
+                      navigateToPage("contact");
+                      setTimeout(() => {
+                        const el = document.getElementById("my-favorite-music-comp");
+                        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+                      }, 200);
+                    }}
+                    className="px-2.5 py-1 bg-white hover:bg-neutral-100 text-ink text-xs font-hand font-extrabold border-2 border-ink rounded-lg shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer flex items-center gap-1 shrink-0"
+                    title="View inline under Contact & Hobbies page"
+                  >
+                    View Inline ↗
+                  </button>
+                  <button 
+                    onClick={() => setIsMusicModalOpen(false)}
+                    className="w-8 h-8 rounded-lg bg-pink-100 text-pink-950 border-2 border-ink font-black hover:bg-pink-200 active:translate-y-0.5 flex items-center justify-center transition-all cursor-pointer shrink-0"
+                    aria-label="Close Pop Up"
+                    title="Close Window"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              {/* Scroll-free Content Container */}
+              <div className="p-4 bg-stone-50 rounded-b-xl relative z-10 overflow-visible h-auto">
+                <MyFavoriteMusic isModalView={true} />
+              </div>
+
+              {/* Footer status bar */}
+              <div className="bg-zinc-100 border-t-2 border-ink p-2.5 rounded-b-xl flex items-center justify-between text-ink select-none font-mono text-[9px] sm:text-[10px] uppercase font-bold text-zinc-500 shrink-0">
+                <span>SYSTEM: COMPACT FOCUS VIBES</span>
+                <span className="text-pink-600 font-extrabold animate-pulse">● BAO'S MUSIC OK</span>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

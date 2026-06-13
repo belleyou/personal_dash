@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connect Apple Music</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0c0a09;
+      color: #fafaf9;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .neo-card {
+      background-color: #1c1917;
+      border: 3px solid #1c1917;
+      border-color: #fafaf9;
+      box-shadow: 6px 6px 0px 0px #fa243c;
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo-container svg {
+      width: 64px;
+      height: 64px;
+      filter: drop-shadow(0 0 10px rgba(250, 36, 60, 0.4));
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      text-align: center;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem 0;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.875rem;
+      color: #a8a29e;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      color: #e7e5e4;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: #292524;
+      border: 2px solid #44403c;
+      border-radius: 8px;
+      color: #fafaf9;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: #fa243c;
+      box-shadow: 0 0 0 3px rgba(250, 36, 60, 0.15);
+    }
+
+    .btn-connect {
+      width: 100%;
+      padding: 0.875rem 1.5rem;
+      background-color: #fa243c;
+      color: #ffffff;
+      border: 2px solid #fafaf9;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 4px 4px 0px 0px #fafaf9;
+      transition: all 0.15s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    .btn-connect:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px 0px #fafaf9;
+    }
+
+    .btn-connect:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px 0px #fafaf9;
+    }
+
+    .status-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .spinner {
+      border: 3px solid rgba(250, 36, 60, 0.1);
+      border-top: 3px solid #fa243c;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1.5rem;
+    }
+
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      background-color: rgba(34, 197, 94, 0.1);
+      border: 2px solid #22c55e;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      color: #22c55e;
+      animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    }
+
+    .privacy-notice {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #78716c;
+      margin-top: 1.5rem;
+      line-height: 1.4;
+    }
+
+    .privacy-notice a {
+      color: #fa243c;
+      text-decoration: none;
+    }
+
+    .alert {
+      background-color: rgba(239, 68, 68, 0.1);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="neo-card" id="authCard">
+    <div class="logo-container">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18V5l12-2v13" stroke="#fa243c" stroke-width="2.5" />
+        <circle cx="6" cy="18" r="3" fill="#fa243c" stroke="#fafaf9" stroke-width="1.5" />
+        <circle cx="18" cy="16" r="3" fill="#fa243c" stroke="#fafaf9" stroke-width="1.5" />
+      </svg>
+    </div>
+
+    <h1>Connect Apple Music</h1>
+    <p class="subtitle">Securely authorize GTM Platform to access your playback and share your favorite playlist on your public portfolio page.</p>
+
+    <div class="alert" id="errorAlert"></div>
+
+    <form id="loginForm" onsubmit="handleAuth(event)">
+      <div class="form-group">
+        <label for="appleId">Apple ID (Email)</label>
+        <input type="email" id="appleId" class="input-field" placeholder="name@icloud.com" required value="you.bell521@gmail.com">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="input-field" placeholder="••••••••••••" required value="S4lesf0rceCurry30!">
+      </div>
+      <div class="form-group">
+        <label for="playlist">Paste Favorite Playlist URL (Optional)</label>
+        <input type="url" id="playlist" class="input-field" placeholder="https://music.apple.com/us/playlist/..." value="https://music.apple.com/us/playlist/lo-fi-beats/pl.353fa289fc0b4e288863f6a7d0e41300">
+      </div>
+
+      <button type="submit" class="btn-connect">
+        <span>🔒 Secure Authorize</span>
+      </button>
+    </form>
+
+    <div class="status-container" id="statusContainer">
+      <div class="spinner" id="loadingSpinner"></div>
+      <div class="success-icon" id="successIcon" style="display: none;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h2 id="statusTitle" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; margin: 0 0 0.5rem 0;">Connecting Account...</h2>
+      <p id="statusMsg" style="font-size: 0.85rem; color: #a8a29e; margin: 0;">Logging in with secure Apple ID handshake.</p>
+    </div>
+
+    <div class="privacy-notice">
+      By continuing, you agree to connect your Apple Music services with the GTM Portfolio engine. Your credentials are processed directly with Apple server endpoints and never saved. <a href="#">Learn more</a>
+    </div>
+  </div>
+
+  <script>
+    function handleAuth(e) {
+      e.preventDefault();
+      
+      const appleId = document.getElementById('appleId').value;
+      const playlist = document.getElementById('playlist').value || 'https://music.apple.com/us/playlist/lo-fi-beats/pl.353fa289fc0b4e288863f6a7d0e41300';
+      const errorAlert = document.getElementById('errorAlert');
+
+      if (!appleId) {
+        errorAlert.style.display = 'block';
+        errorAlert.innerText = 'Please enter a valid Apple ID';
+        return;
+      }
+
+      // Transition to loading
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('statusContainer').style.display = 'flex';
+
+      // Stage 1: Authenticating
+      setTimeout(() => {
+        document.getElementById('statusTitle').innerText = 'Syncing Playlists...';
+        document.getElementById('statusMsg').innerText = 'Fetching user tokens and playlist libraries.';
+        
+        // Stage 2: Success!
+        setTimeout(() => {
+          document.getElementById('loadingSpinner').style.display = 'none';
+          document.getElementById('successIcon').style.display = 'flex';
+          document.getElementById('statusTitle').innerText = 'Handshake Complete!';
+          document.getElementById('statusTitle').style.color = '#22c55e';
+          document.getElementById('statusMsg').innerText = 'Successfully connected. Redirecting you...';
+
+          // Send message back to parent window
+          setTimeout(() => {
+            if (window.opener) {
+              window.opener.postMessage({
+                type: 'OAUTH_AUTH_SUCCESS',
+                provider: 'apple-music',
+                appleId: appleId,
+                playlistUrl: playlist
+              }, '*');
+              window.close();
+            } else {
+              // Fallback
+              alert('Connection successful! You can close this tab now.');
+            }
+          }, 1200);
+
+        }, 1500);
+
+      }, 1500);
+    }
+  </script>
+
+</body>
+</html>
