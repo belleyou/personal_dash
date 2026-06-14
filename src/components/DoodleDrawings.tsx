@@ -4,6 +4,7 @@
  */
 
 import React from "react";
+import { motion } from "motion/react";
 
 /**
  * Clean hand-drawn styled SVG icon of the Handshake ("Who Am I?")
@@ -782,7 +783,7 @@ export const DoodleBoyWithBubble: React.FC<DoodleBoyProps> = ({
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 100 130"
-        className="w-40 h-52 select-none z-10"
+        className="w-full h-full select-none z-10"
       >
         <defs>
           {/* Gaussian blur for beautiful, realistic soft 3D shadows on the ground */}
@@ -835,7 +836,17 @@ export const DoodleBoyWithBubble: React.FC<DoodleBoyProps> = ({
         <ellipse cx="50" cy="126" rx="10" ry="1.8" fill="#18181b" opacity="0.22" filter="url(#shadow-blur)" />
 
         {/* Group the entire boy structure with a realistic drop-shadow filter to separate him from the paper page */}
-        <g filter="url(#pop-shadow)">
+        <motion.g 
+          filter="url(#pop-shadow)"
+          animate={{
+            y: [0, -1.8, 0]
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 4,
+            ease: "easeInOut"
+          }}
+        >
           {/* Trouser legs peeking out */}
           <path d="M 42 110 L 42 119 C 42 119, 45 119, 45 119" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
           <path d="M 58 110 L 58 119 C 58 119, 55 119, 55 119" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
@@ -925,7 +936,19 @@ export const DoodleBoyWithBubble: React.FC<DoodleBoyProps> = ({
           />
 
           {/* Real Crayon Sky Blue Balloon floating on the right side of the child (held by the right hand) */}
-          <g>
+          <motion.g
+            animate={{
+              rotate: [-5, 6, -5],
+              y: [0, -3.5, 0],
+              x: [0, 1.2, 0]
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 4.5,
+              ease: "easeInOut"
+            }}
+            style={{ transformOrigin: "77px 98px" }}
+          >
             {/* Balloon Polish Fill: Base Sky Blue with dynamic radial 3D gradient */}
             <path
               d="M 79 17 C 69.5 17, 65 32, 65 39 C 65 47.5, 72 55, 79 55 C 86 55, 93 47.5, 93 39 C 93 32, 88.5 17, 79 17 Z"
@@ -986,7 +1009,7 @@ export const DoodleBoyWithBubble: React.FC<DoodleBoyProps> = ({
               opacity="0.55"
               strokeLinecap="round"
             />
-          </g>
+          </motion.g>
 
           {/* Oversized Trench Coat Body - Colored in polished 3D Camel orange gradient */}
           <path
@@ -1072,8 +1095,21 @@ export const DoodleBoyWithBubble: React.FC<DoodleBoyProps> = ({
           <path d="M 45 64 Q 50 67 55 64" fill="none" stroke="#18181b" strokeWidth="2.2" />
           <path d="M 46 66 Q 50 69 54 66" fill="none" stroke="#18181b" strokeWidth="1.2" opacity="0.6" />
 
-          {/* Main Head Structure */}
-          <ellipse cx="50" cy="49" rx="14.5" ry="13.5" fill="#fafafa" stroke="#18181b" strokeWidth="2.8" />
+          {/* Head Structure motion container */}
+          <motion.g
+            animate={{
+              rotate: [-2, 2, -2],
+              y: [0, 0.3, 0]
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 5,
+              ease: "easeInOut"
+            }}
+            style={{ transformOrigin: "50px 64px" }}
+          >
+            {/* Main Head Structure */}
+            <ellipse cx="50" cy="49" rx="14.5" ry="13.5" fill="#fafafa" stroke="#18181b" strokeWidth="2.8" />
           <ellipse cx="50" cy="49" rx="14" ry="13" fill="none" stroke="#18181b" strokeWidth="1" opacity="0.6" />
 
           {/* Side protruding round ears */}
@@ -1154,7 +1190,8 @@ export const DoodleBoyWithBubble: React.FC<DoodleBoyProps> = ({
             stroke="#18181b"
             strokeWidth="1.5"
           />
-        </g>
+          </motion.g>
+        </motion.g>
       </svg>
     </div>
   );

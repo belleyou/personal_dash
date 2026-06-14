@@ -398,7 +398,7 @@ export default function App() {
                 {/* The beautifully styled childlike character scaled down */}
                 <DoodleBoyWithBubble 
                   currentHoverSection="home" 
-                  className="w-36 h-44 md:w-44 md:h-52 transform hover:rotate-1 transition-transform duration-500 ease-out" 
+                  className="w-[187px] h-[228px] md:w-[228px] md:h-[270.4px] transform hover:rotate-1 transition-transform duration-500 ease-out" 
                 />
               </div>
               
