@@ -95,6 +95,9 @@ import { CrayonVideoPlayer } from "./components/CrayonVideoPlayer";
 // Import Apple Music Playlist Connector
 import { MyFavoriteMusic } from "./components/MyFavoriteMusic";
 
+// Import Salesforce Web-to-Lead configuration form
+import { WebToLeadForm } from "./components/WebToLeadForm";
+
 // Helper helper function to return specific hand-crafted corporate badges matching credentials
 const getCompanyIcon = (issuer: string) => {
   const canonical = issuer.toLowerCase();
@@ -245,7 +248,7 @@ export default function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace("#", "");
-      if (["home", "about", "certifications", "projects", "career", "contact", "meet"].includes(hash)) {
+      if (["home", "about", "certifications", "projects", "career", "contact", "meet", "thank-you"].includes(hash)) {
         setActivePage(hash);
         setHoveredNav(hash);
       } else {
@@ -515,7 +518,7 @@ export default function App() {
             </div>
 
             {/* Hand-drawn partner/portfolio company logos in order: iHerb, Google, Salesforce, Twitter, XAI */}
-            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mb-12 select-none bg-white/20 p-2.5 rounded-lg border-2 border-dashed border-zinc-300 w-full max-w-5xl mx-auto shadow-xs">
+            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mb-6 select-none bg-white/20 p-2.5 rounded-lg border-2 border-dashed border-zinc-300 w-full max-w-5xl mx-auto shadow-xs">
               <span className="font-hand text-xs font-black text-zinc-600 tracking-wider">PROUD PORTFOLIO & WORK ROLES:</span>
               <IHerbLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
               <GoogleLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
@@ -523,6 +526,9 @@ export default function App() {
               <TwitterLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
               <XaiLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
             </div>
+
+            {/* Salesforce Web-to-Lead Dynamic Integration Form Panel */}
+            <WebToLeadForm userEmail={CONTACT_INFO.email} />
           </div>
         )}
 
@@ -1837,6 +1843,80 @@ export default function App() {
 
             </div>
 
+          </div>
+        )}
+
+        {/* 7. DEDICATED THANK YOU PAGE */}
+        {activePage === "thank-you" && (
+          <div className="max-w-4xl mx-auto my-12 p-8 bg-white border-3 border-ink rounded-2xl shadow-[8px_8px_0px_0px_rgba(24,24,27,1)] text-center space-y-8 animate-fade-in bg-graph-paper relative overflow-hidden select-none">
+            {/* Visual design markings decoration */}
+            <span className="absolute top-3 left-4 text-xs font-mono text-zinc-400">ASTERA-INSPECT-COMPLETE</span>
+            <span className="absolute top-3 right-4 text-xs font-mono text-zinc-400">STATUS: LEAD_PERSISTED_OK</span>
+            <span className="absolute bottom-3 right-4 text-[10px] font-hand text-zinc-400">designed with love by PM Bao You</span>
+
+            {/* Breathtaking checkmark badge */}
+            <div className="inline-flex items-center justify-center p-5 bg-emerald-100 rounded-full border-4 border-ink shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] rotate-[-2deg] my-4 animate-bounce">
+              <CheckCircle className="h-14 w-14 text-emerald-600 stroke-[2.5]" />
+            </div>
+
+            <div className="space-y-3">
+              <h2 className="font-hand text-4xl lg:text-5xl font-black text-ink tracking-tight">
+                Thank You, Builder!
+              </h2>
+              <p className="font-sans text-base max-w-xl mx-auto text-zinc-700 leading-relaxed">
+                Your high-speed connectivity project proposal has been successfully broadcast to our lead ingestion flow in Salesforce.
+              </p>
+            </div>
+
+            {/* Simulated technical system flow steps */}
+            <div className="bg-zinc-50 border-2 border-dashed border-ink rounded-xl p-6 text-left max-w-2xl mx-auto space-y-4 shadow-sm relative">
+              <div className="absolute -top-3.5 left-6 bg-highlight border-2 border-ink px-3 py-1 rounded text-xs font-hand font-extrabold rotate-[1deg]">
+                WHAT HAPPENS NEXT?
+              </div>
+
+              <div className="space-y-4 pt-2 font-sans text-sm text-zinc-650">
+                <div className="flex gap-3 items-start">
+                  <span className="flex-shrink-0 flex items-center justify-center bg-sky-100 border border-ink font-bold font-mono text-[10px] h-6 w-6 rounded-full mt-0.5">1</span>
+                  <div>
+                    <strong className="text-zinc-950 block text-sm font-bold">Standard Confirmation Dispatch</strong>
+                    <span className="text-xs">We automatically prepared a custom intake confirmation email summarizing your lanes, Aries DSP retimers, Taurus cables, or Leo memory controllers configuration. Check the intake dialog banner to fire off a copy!</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 items-start">
+                  <span className="flex-shrink-0 flex items-center justify-center bg-indigo-100 border border-ink font-bold font-mono text-[10px] h-6 w-6 rounded-full mt-0.5">2</span>
+                  <div>
+                    <strong className="text-zinc-950 block text-sm font-bold">Signal Integrity Review</strong>
+                    <span className="text-xs">Systems architects at our San Jose, CA headquarters will analyze your channel insertion loss, lane counts, and board topologies to map optimization blueprints.</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 items-start">
+                  <span className="flex-shrink-0 flex items-center justify-center bg-emerald-100 border border-ink font-bold font-mono text-[10px] h-6 w-6 rounded-full mt-0.5">3</span>
+                  <div>
+                    <strong className="text-zinc-950 block text-sm font-bold">Proposal Consultation Scheduled</strong>
+                    <span className="text-xs">Check out the <strong>MEET ME</strong> section in the top navigation to directly lock in an interactive, live calendar consultation slot on my schedule if you want to speed up implementation review!</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom action loop buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+              <button
+                onClick={() => navigateToPage("home")}
+                className="px-8 py-3.5 bg-highlight text-ink font-hand text-lg font-black border-3 border-ink rounded-xl shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] transition-all flex items-center gap-2 cursor-pointer rotate-[-1deg]"
+              >
+                <span>← BACK TO HOME SCREEN</span>
+              </button>
+
+              <button
+                onClick={() => navigateToPage("meet")}
+                className="px-8 py-3.5 bg-white text-ink font-hand text-lg font-black border-3 border-ink rounded-xl shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] transition-all flex items-center gap-2 cursor-pointer rotate-[1deg]"
+              >
+                <span>BOOK A SESSION NOW →</span>
+              </button>
+            </div>
           </div>
         )}
 
