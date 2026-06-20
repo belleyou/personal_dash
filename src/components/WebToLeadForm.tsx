@@ -34,6 +34,7 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   // Custom Field mapping inputs (allows mapping to actual Salesforce Custom Field API names/IDs)
   const [projectTypeField, setProjectTypeField] = useState("00NgL000047BQPJ"); // User's Salesforce Project Type Custom ID
   const [projectStatusField, setProjectStatusField] = useState("00NgL000047B8P1"); // User's Salesforce Project Status Custom ID
+  const [projectDescriptionField, setProjectDescriptionField] = useState("00NgL000047eJlpUAE"); // User's Salesforce Project Description Custom ID
   const [companyEmailField, setCompanyEmailField] = useState("company_email__c");
 
   // Lead Form Fields
@@ -56,19 +57,23 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
 
   const [copiedCode, setCopiedCode] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    let stateKey = name;
+    if (name === "countrySelect") stateKey = "country";
+    if (name === "descriptionInput") stateKey = "description";
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [stateKey]: value
     }));
   };
 
   const handleCopyCode = () => {
     const actionUrl = isSandbox 
-      ? "https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"
-      : "https://webtolead.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8";
+      ? `https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=${oid}`
+      : `https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=${oid}`;
 
     // Generate compliant standard Salesforce Web-to-Lead HTML Code
     const generatedHtml = `<!--  ----------------------------------------------------------------------  -->
@@ -95,8 +100,8 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   <label for="company">Company</label>
   <input id="company" maxlength="40" name="company" size="20" type="text" value="${formData.company}" /><br>
 
-  <label for="description">Project Description</label>
-  <textarea name="description">${formData.description}</textarea><br>
+  <label for="${projectDescriptionField}">Project Description</label>
+  <textarea id="${projectDescriptionField}" name="${projectDescriptionField}">${formData.description}</textarea><br>
 
   <!-- Custom Lead Attributes (mapped via Salesforce Custom Field IDs or API Name tokens) -->
   <label for="${projectTypeField}">Project Type</label>
@@ -296,9 +301,115 @@ San Jose, California`);
       {activeSection && (
         <div className="w-full bg-white border-3 border-ink rounded-xl p-6 sm:p-8 shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] notebook-column bg-graph-paper animate-fade-in mb-6 relative">
           
+          {/* Collapsible Salesforce Dev Console Settings */}
+          {activeSection === "submit" && (
+            <div className="w-full max-w-2xl mx-auto mb-6 border-2 border-indigo-900 border-dashed rounded-lg bg-zinc-50 p-4 font-sans text-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Settings className="h-4 w-4 text-indigo-650" />
+                  <span className="font-bold text-indigo-905">Salesforce Web-to-Lead Dev Console</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowSettings(!showSettings)}
+                  className="px-2.5 py-1 text-xs font-bold border border-ink rounded bg-highlight hover:bg-yellow-200 transition cursor-pointer"
+                >
+                  {showSettings ? "Hide Settings" : "Configure Fields & Org ID"}
+                </button>
+              </div>
+
+              {showSettings && (
+                <div className="mt-4 pt-4 border-t border-dashed border-zinc-300 space-y-4 animate-fade-in">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-zinc-650 mb-1 font-mono">Salesforce Org ID (oid)</label>
+                      <input
+                        type="text"
+                        value={oid}
+                        onChange={(e) => setOid(e.target.value)}
+                        className="w-full px-2.5 py-1.5 border border-zinc-400 bg-white rounded text-xs focus:border-ink focus:ring-0 font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-zinc-650 mb-1 font-mono">Redirect URL (retURL)</label>
+                      <input
+                        type="text"
+                        value={retURL}
+                        onChange={(e) => setRetURL(e.target.value)}
+                        className="w-full px-2.5 py-1.5 border border-zinc-400 bg-white rounded text-xs focus:border-ink focus:ring-0 font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-bold text-zinc-650 mb-1 font-mono">Project Type Field ID</label>
+                      <input
+                        type="text"
+                        value={projectTypeField}
+                        onChange={(e) => setProjectTypeField(e.target.value)}
+                        className="w-full px-2.5 py-1.5 border border-zinc-400 bg-white rounded text-xs focus:border-ink focus:ring-0 font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-zinc-650 mb-1 font-mono">Project Status Field ID</label>
+                      <input
+                        type="text"
+                        value={projectStatusField}
+                        onChange={(e) => setProjectStatusField(e.target.value)}
+                        className="w-full px-2.5 py-1.5 border border-zinc-400 bg-white rounded text-xs focus:border-ink focus:ring-0 font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-zinc-650 mb-1 font-mono">Project Desc Field ID</label>
+                      <input
+                        type="text"
+                        value={projectDescriptionField}
+                        onChange={(e) => setProjectDescriptionField(e.target.value)}
+                        className="w-full px-2.5 py-1.5 border border-zinc-400 bg-white rounded text-xs focus:border-ink focus:ring-0 font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="sandbox_mode_toggle"
+                        checked={isSandbox}
+                        onChange={(e) => setIsSandbox(e.target.checked)}
+                        className="h-4 w-4 rounded border-zinc-300 text-sky-600 focus:ring-sky-500 cursor-pointer"
+                      />
+                      <label htmlFor="sandbox_mode_toggle" className="text-xs font-bold text-zinc-700 cursor-pointer select-none">
+                        Use Salesforce Sandbox endpoint (test.salesforce.com)
+                      </label>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleCopyCode}
+                      className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-900 text-white text-xs font-bold rounded flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all shadow-sm font-mono"
+                    >
+                      {copiedCode ? <Check className="h-3.5 w-3.5 text-green-400 animate-bounce" /> : <Copy className="h-3.5 w-3.5" />}
+                      <span>{copiedCode ? "HTML Copied!" : "Copy Web-To-Lead HTML"}</span>
+                    </button>
+                  </div>
+                  
+                  <div className="text-[11px] text-zinc-500 leading-relaxed pt-1 flex items-start gap-1 font-sans">
+                    <HelpCircle className="h-3.5 w-3.5 text-zinc-400 shrink-0 mt-0.5" />
+                    <span>
+                      Mapping custom fields to <strong>{projectDescriptionField}</strong> (Project Description), <strong>{projectTypeField}</strong>, and <strong>{projectStatusField}</strong>. Submissions target 
+                      <strong> {isSandbox ? "Sandbox" : "Production"}</strong> channels.
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Form Fields Section */}
           <form 
-            action={isSandbox ? "https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" : "https://webtolead.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"}
+            action={isSandbox ? `https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=${oid}` : `https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=${oid}`}
             method="POST"
             onSubmit={handleFormSubmit}
             target="sf-iframe"
@@ -356,7 +467,6 @@ San Jose, California`);
                   maxLength={80}
                   className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
                 />
-                <input type="hidden" name="email" value={formData.email} />
               </div>
 
               <div>
@@ -371,14 +481,13 @@ San Jose, California`);
                   maxLength={40}
                   className="w-full px-3 py-2 border-2 border-zinc-500 rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
                 />
-                <input type="hidden" name="company" value={formData.company} />
               </div>
             </div>
 
             <div>
               <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Country / Region *</label>
               <select
-                name="country"
+                name="countrySelect"
                 id="sf_country_input"
                 required
                 value={formData.country}
@@ -402,7 +511,7 @@ San Jose, California`);
             <div>
               <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Project Description</label>
               <textarea
-                name="description"
+                name="descriptionInput"
                 id="sf_description_input"
                 rows={4}
                 value={formData.description}
@@ -410,6 +519,7 @@ San Jose, California`);
                 placeholder="Elaborate on scope, target go-live times, architectural hurdles, etc..."
                 className="w-full px-3 py-2 border-2 border-zinc-500 rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400 resize-none"
               />
+              <input type="hidden" name={projectDescriptionField} value={formData.description} />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
