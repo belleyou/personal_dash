@@ -296,10 +296,6 @@ San Jose, California`);
       {activeSection && (
         <div className="w-full bg-white border-3 border-ink rounded-xl p-6 sm:p-8 shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] notebook-column bg-graph-paper animate-fade-in mb-6 relative">
           
-          <div className="absolute right-4 top-4 text-[10px] font-mono text-zinc-400 select-none opacity-60">
-            {activeSection === "submit" ? "salesforce web-to-lead form" : "project proposal email dispatch"}
-          </div>
-          
           {/* Form Fields Section */}
           <form 
             action={isSandbox ? "https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" : "https://webtolead.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"}
@@ -311,41 +307,6 @@ San Jose, California`);
             {/* Salesforce Standard Hidden OID Fields */}
             <input type="hidden" name="oid" value={oid} />
             <input type="hidden" name="retURL" value={retURL} />
-
-            {activeSection === "submit" && (
-              <div className="bg-gradient-to-r from-sky-50 to-indigo-50 border-2 border-dashed border-sky-400 p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 select-none mb-4 animate-fade-in text-left">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 relative">
-                    <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse relative"></span>
-                    <h5 className="font-hand text-lg font-black text-sky-950 uppercase tracking-tight">
-                      Salesforce Integration Connected
-                    </h5>
-                  </div>
-                  <p className="font-sans text-xs text-sky-800 font-medium">
-                    This form is successfully bound to your active production Salesforce Web-to-Lead handler.
-                  </p>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 font-mono text-[10px] bg-white px-3 py-2 border border-sky-200 rounded-lg text-zinc-600 shadow-sm shrink-0">
-                  <div>
-                    <span className="text-zinc-400 block font-bold uppercase text-[8px] tracking-wider">ORG ID</span>
-                    <strong className="text-zinc-800">{oid}</strong>
-                  </div>
-                  <div>
-                    <span className="text-zinc-400 block font-bold uppercase text-[8px] tracking-wider">PROJECT STATUS KEY</span>
-                    <strong className="text-zinc-800">00NgL000047B8P1</strong>
-                  </div>
-                  <div>
-                    <span className="text-zinc-400 block font-bold uppercase text-[8px] tracking-wider">RET URL</span>
-                    <strong className="text-sky-600 truncate max-w-[100px] block" title={retURL}>{retURL}</strong>
-                  </div>
-                  <div>
-                    <span className="text-zinc-400 block font-bold uppercase text-[8px] tracking-wider">PROJECT TYPE KEY</span>
-                    <strong className="text-zinc-800">00NgL000047BQPJ</strong>
-                  </div>
-                </div>
-              </div>
-            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
