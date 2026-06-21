@@ -6,12 +6,12 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-hand: "Architects Daughter", "Comic Neue", cursive, sans-serif;
   
-  --color-paper: #ecebe6; /* Soft realistic grey-white textured paper */
-  --color-ink: #18181b;
-  --color-highlight: #fef08a; /* Soft hand highlight yellow */
-  --color-marker-blue: #bfdbfe; /* Light builder/blueprint marker blue */
-  --color-marker-green: #bbf7d0; /* Highlight green */
-  --color-marker-orange: #fed7aa; /* Orange marker */
+  --color-paper: #f1f3ea; /* Smooth organic warm sage-tinted linen paper */
+  --color-ink: #101c13; /* Deep rich forest ink */
+  --color-highlight: #dcfce7; /* Soft clover leaf green */
+  --color-marker-blue: #e0f2fe; /* Soft morning sky / water droplet */
+  --color-marker-green: #dfebc6; /* Sage moss sprout green */
+  --color-marker-orange: #fef08a; /* Warm golden sun orange-yellow */
 }
 
 /* Gorgeous naive sketchbook paper texture */

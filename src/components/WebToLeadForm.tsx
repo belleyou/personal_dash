@@ -207,89 +207,39 @@ San Jose, California`);
 
   return (
     <div className="w-full max-w-5xl mx-auto my-8 px-4 flex flex-col items-center">
-      {/* Sky Blue Styled 3D Buttons Side-By-Side */}
-      <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 z-10 w-full mb-10">
+      {/* Whimsical 3D Sketchbook Buttons Side-By-Side */}
+      <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 z-10 w-full mb-10 select-none">
         
-        {/* Submit a Project Glass-Gel Button */}
+        {/* Submit a Project Sketchbook Button */}
         <button
           id="btn-submit-project"
           onClick={() => {
             setActiveSection(activeSection === "submit" ? null : "submit");
           }}
-          className={`relative group shrink-0 transition-all duration-300 active:scale-95 focus:outline-none cursor-pointer ${
-            activeSection === "submit" ? "scale-105" : ""
+          className={`px-6 py-3 font-hand text-sm md:text-base font-extrabold transition-all duration-150 border-3 border-ink rounded-lg shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] flex items-center gap-2 cursor-pointer rotate-[-1.2deg] ${
+            activeSection === "submit"
+              ? "bg-highlight text-ink ring-2 ring-emerald-800/25"
+              : "bg-white hover:bg-emerald-50 text-ink"
           }`}
         >
-          {/* Inner / Outer Double Bezel 3D Glass Shell ring */}
-          <div className={`absolute -inset-[3px] rounded-full bg-gradient-to-b from-sky-300 via-sky-500 to-sky-700 opacity-80 group-hover:opacity-95 blur-[1px] transition-all duration-300 ${
-            activeSection === "submit" ? "from-yellow-300 via-sky-400 to-sky-600 ring-2 ring-yellow-400/50" : ""
-          }`} />
-          
-          {/* Main Capsule Body */}
-          <div className={`relative px-8 py-3.5 rounded-full bg-gradient-to-b ${
-            activeSection === "submit" 
-              ? "from-sky-600 via-sky-700 to-sky-850 border-3 border-yellow-400 shadow-xl shadow-sky-900/30" 
-              : "from-sky-400 via-sky-500 to-sky-650 border border-sky-300/45"
-          } shadow-xl overflow-hidden min-w-[210px] flex items-center justify-center`}>
-            
-            {/* Top Gloss Glare reflection overlay */}
-            <div className={`absolute top-[1.5px] left-[5px] right-[5px] h-[35%] bg-gradient-to-b ${
-              activeSection === "submit" ? "from-white/40" : "from-white/60"
-            } to-white/5 rounded-t-full pointer-events-none`} />
-
-            {/* Bottom interior reflection up-glow for plastic volumetric depth */}
-            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-sky-300/25 to-transparent rounded-b-full pointer-events-none" />
-            
-            {/* Soft bottom rim highlight line */}
-            <div className="absolute inset-x-4 bottom-[2.5px] h-[1px] bg-white/20 pointer-events-none" />
-
-            {/* Content holder (Icon + Text) */}
-            <div className="relative z-10 flex items-center gap-2.5 text-white font-sans font-semibold tracking-wide text-sm md:text-base selection:bg-transparent drop-shadow-[0_1.5px_1.5px_rgba(0,0,0,0.65)]">
-              <Database className={`h-4.5 w-4.5 shrink-0 ${activeSection === "submit" ? "text-yellow-300 animate-pulse" : "text-sky-100"}`} />
-              <span className={activeSection === "submit" ? "text-yellow-200" : "text-white"}>Submit a Project</span>
-            </div>
-          </div>
+          <Database className={`h-4.5 w-4.5 shrink-0 ${activeSection === "submit" ? "text-emerald-800 animate-pulse" : "text-[#4b5563]"}`} />
+          <span>Submit a Project</span>
         </button>
 
-        {/* Email Me a Project Glass-Gel Button */}
+        {/* Email Me a Project Sketchbook Button */}
         <button
           id="btn-email-me-project"
           onClick={() => {
             setActiveSection(activeSection === "email" ? null : "email");
           }}
-          className={`relative group shrink-0 transition-all duration-300 active:scale-95 focus:outline-none cursor-pointer ${
-            activeSection === "email" ? "scale-105" : ""
+          className={`px-6 py-3 font-hand text-sm md:text-base font-extrabold transition-all duration-150 border-3 border-ink rounded-lg shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] flex items-center gap-2 cursor-pointer rotate-[0.8deg] ${
+            activeSection === "email"
+              ? "bg-highlight text-ink ring-2 ring-emerald-800/25"
+              : "bg-white hover:bg-rose-50 text-ink"
           }`}
         >
-          {/* Inner / Outer Double Bezel 3D Glass Shell ring */}
-          <div className={`absolute -inset-[3px] rounded-full bg-gradient-to-b from-sky-300 via-sky-500 to-sky-700 opacity-80 group-hover:opacity-95 blur-[1px] transition-all duration-300 ${
-            activeSection === "email" ? "from-yellow-300 via-sky-400 to-sky-600 ring-2 ring-yellow-400/50" : ""
-          }`} />
-          
-          {/* Main Capsule Body */}
-          <div className={`relative px-8 py-3.5 rounded-full bg-gradient-to-b ${
-            activeSection === "email" 
-              ? "from-sky-600 via-sky-700 to-sky-850 border-3 border-yellow-400 shadow-xl shadow-sky-900/30" 
-              : "from-sky-400 via-sky-500 to-sky-650 border border-sky-300/45"
-          } shadow-xl overflow-hidden min-w-[210px] flex items-center justify-center`}>
-            
-            {/* Top Gloss Glare reflection overlay */}
-            <div className={`absolute top-[1.5px] left-[5px] right-[5px] h-[35%] bg-gradient-to-b ${
-              activeSection === "email" ? "from-white/40" : "from-white/60"
-            } to-white/5 rounded-t-full pointer-events-none`} />
-
-            {/* Bottom interior reflection up-glow for plastic volumetric depth */}
-            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-sky-300/25 to-transparent rounded-b-full pointer-events-none" />
-            
-            {/* Soft bottom rim highlight line */}
-            <div className="absolute inset-x-4 bottom-[2.5px] h-[1px] bg-white/20 pointer-events-none" />
-
-            {/* Content holder (Icon + Text) */}
-            <div className="relative z-10 flex items-center gap-2.5 text-white font-sans font-semibold tracking-wide text-sm md:text-base selection:bg-transparent drop-shadow-[0_1.5px_1.5px_rgba(0,0,0,0.65)]">
-              <Mail className={`h-4.5 w-4.5 shrink-0 ${activeSection === "email" ? "text-yellow-300 animate-pulse" : "text-sky-100"}`} />
-              <span className={activeSection === "email" ? "text-yellow-200" : "text-white"}>Email Me a Project</span>
-            </div>
-          </div>
+          <Mail className={`h-4.5 w-4.5 shrink-0 ${activeSection === "email" ? "text-emerald-800 animate-pulse" : "text-[#4b5563]"}`} />
+          <span>Email Me a Project</span>
         </button>
 
       </div>
@@ -390,7 +340,7 @@ San Jose, California`);
                 <option value="TW">Taiwan (Astera HQ Design Node)</option>
                 <option value="DE">Germany (EU Cloud Region)</option>
                 <option value="JP">Japan (APAC Enterprise)</option>
-                <option value="KR">South Korea (AI Foundry Hub)</option>
+                <option value="KR">South Korea (APAC Commercial Hub)</option>
                 <option value="CA">Canada</option>
                 <option value="GB">United Kingdom</option>
                 <option value="NL">Netherlands (ASML Ecosystem)</option>
@@ -427,7 +377,7 @@ San Jose, California`);
                   <option value="Aries PCIe/CXL Smart DSP Retimers">Aries PCIe/CXL Smart DSP Retimers</option>
                   <option value="Taurus Ethernet Smart Cable Modules">Taurus Ethernet Smart Cable Modules</option>
                   <option value="Leo CXL Memory Connectivity Controllers">Leo CXL Memory Connectivity Controllers</option>
-                  <option value="Intelligent Connectivity for Cloud & AI Infrastructure">Intelligent Connectivity for Cloud & AI Infrastructure</option>
+                  <option value="Intelligent Connectivity for Cloud & High-Speed Infrastructure">Intelligent Connectivity for Cloud & High-Speed Infrastructure</option>
                   <option value="Custom Semiconductor Connectivity Integration">Custom Semiconductor Connectivity Integration</option>
                 </select>
                 {/* Custom fields in salesforce are injected with custom name */}
@@ -512,7 +462,7 @@ San Jose, California`);
               {showCaptchaChallenge && !isCaptchaVerified && (
                 <div className="mt-4 border-t-2 border-dashed border-zinc-200 pt-4 w-full text-center space-y-3 animate-fade-in">
                   <p className="font-hand text-sm font-black text-indigo-905 leading-snug">
-                    Astera Labs powers cloud & AI hardware connections! Solve this quick design fuel block:
+                    Astera Labs powers high-speed system connections! Solve this quick design fuel block:
                   </p>
                   <p className="font-sans text-xs text-zinc-650">
                     "Which item powers PMs and hardware engineering teams at Astera Labs' global nodes?"

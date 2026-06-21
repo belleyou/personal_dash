@@ -56,7 +56,7 @@ export const METRICS: MetricCard[] = [
   {
     value: "50+",
     label: "Process Automations",
-    explanation: "Implemented advanced flows, integrations, and AI-augmented enterprise runbooks across Salesforce ecosystem.",
+    explanation: "Implemented advanced flows, ecosystem integrations, and high-performance business process runbooks across the Salesforce ecosystem.",
     markerColor: "marker-blue",
   },
   {
@@ -88,14 +88,14 @@ export const CAREER_EXPERIENCE: Experience[] = [
     role: "Global Senior Business Systems Manager — GTM Sales, PRM & Service Cloud",
     location: "San Francisco, CA",
     dates: "Jul 2022 – Apr 2026",
-    tools: ["Salesforce CRM", "Sales Cloud", "Service Cloud", "CPQ", "GTM Automation", "Gen AI API", "Slack Integration", "Jira"],
+    tools: ["Salesforce CRM", "Sales Cloud", "Service Cloud", "CPQ", "GTM Automation", "API Integrations", "Slack Integration", "Jira"],
     bullets: [
       "BizOps Product Delivery: Drove end-to-end feature delivery across a cross-functional team of Business Analysts, Platform Admins, and Integration Engineers — owning backlog prioritization, translating stakeholder requirements into scoped deliverables, and managing release sequencing.",
       "Incident Management & Escalation: Owned end-to-end incident response for Salesforce and integrated commercial platforms across 30+ applications — served as escalation lead for high-impact production issues, coordinating resolution across Engineering, IT, and business stakeholders under strict SLAs.",
       "UAT Leadership & Release Validation: Designed and executed UAT frameworks for Salesforce Sales Cloud, Marketing Cloud, and Partner Community releases — authored test scripts, led defect tracking cycles, and secured business sign-off.",
       "Platform Troubleshooting & CRM Architecture: Troubleshot and resolved complex issues across Salesforce, CPQ workflows, O2C integrations, and downstream ERP processes — collaborating with architects to maintain clean, scalable data models.",
       "Process Improvement & Documentation: Identified and implemented process improvements that increased delivery efficiency and release quality across the business applications portfolio; maintained SOPs, knowledge base articles, and operational runbooks.",
-      "AI-Powered Workflow Automation: Planned, built, and scaled out-of-the-box (OOB) CRM/GTM features and AI-augmented enterprise infrastructure, incorporating Gen AI workflows and core API integrations."
+      "Intelligent Workflow Automation: Planned, built, and scaled out-of-the-box (OOB) CRM/GTM automated features and high-efficiency enterprise infrastructure, incorporating advanced routing rules and core API integrations."
     ],
   },
   {
@@ -279,17 +279,17 @@ export const SKILLS_DATA: SkillCategory[] = [
     ]
   },
   {
-    category: "Automation & Gen AI GTM",
-    markerColor: "highlight",
+    category: "Workflow Automation & GTM Integrations",
+    markerColor: "marker-green",
     skills: [
-      "Gen AI Workflows & APIs",
-      "Agentic GTM Workflows",
+      "Smart Workflow Routines & APIs",
+      "Intelligent CRM Pipelines",
       "Lead Routing Automation",
-      "Meeting Summarization Logic",
+      "Business Logic Automations",
       "Zapier & Middleware Orchestration",
       "Mulesoft Integration",
       "Traction Complete & Lead-to-Account",
-      "Einstein Copilot"
+      "Salesforce Einstein Platform"
     ]
   },
   {
@@ -352,39 +352,39 @@ export const TRADITIONAL_PROJECTS: Project[] = [
 
 export const AI_GTM_PROJECTS: Project[] = [
   {
-    title: "AI CRM Data Quality Assistant",
-    aiUse: "@google/genai structured data extraction",
+    title: "Intelligent CRM Data Quality Pipeline",
+    aiUse: "Structured data parsing & quality checks",
     problem: "Hiring managers and RevOps staff lost hours correcting typos, unformatted names, and missing details on incoming partner sign-ups.",
-    solution: "Configured an intelligent pipeline using server-side Gemini intelligence that parses unstructured text, extracts accurate company details, and updates Salesforce records.",
+    solution: "Configured an intelligent pipeline that parses unstructured text, extracts accurate company details, and updates Salesforce records.",
     impact: "Secured a 95% reduction in manual data entry error rates across incoming partner registries.",
-    tools: ["Node.js Server", "@google/genai", "Salesforce APIs", "Webhook triggers"],
+    tools: ["Node.js Server", "Salesforce APIs", "Webhook triggers", "Data Validation"],
     demoUrl: "#_demo_data_ai",
   },
   {
-    title: "AI Meeting Summarization & GTM Task Generator",
-    aiUse: "GeminiChat & Task Extraction Agent",
+    title: "Automated Transcript Task Generator",
+    aiUse: "Workflow mapping & smart task extraction",
     problem: "Customer-facing teams spent excessive time transcribing sales discovery sessions and translating summaries into actionable Salesforce tasks.",
-    solution: "Engineered an agentic pipeline that ingests raw transcripts, maps user stories against templates, and triggers automated tasks directly in Salesforce and Slack.",
+    solution: "Engineered an automated pipeline that ingests raw transcripts, maps user stories against templates, and triggers automated tasks directly in Salesforce and Slack.",
     impact: "Saved discovery-to-scoping turnaround latency by 4.5 hours per business requirement package.",
-    tools: ["Google-GenAI SDK", "Confluence", "Salesforce REST API", "Slack Webhooks"],
+    tools: ["Confluence", "Salesforce REST API", "Slack Webhooks", "XML/JSON Parsers"],
     demoUrl: "#_demo_meeting_ai",
   },
   {
-    title: "AI Opportunity Health Scoring Model",
-    aiUse: "Predictive Intent Analyst",
+    title: "Predictive Opportunity Scoring Engine",
+    aiUse: "Activity analytical weighting models",
     problem: "Sales leaders lacked predictive signals on active deals in Salesforce, relying strictly on subjective deal close-dates.",
-    solution: "Designed a model reviewing Salesforce activity patterns (emails, meetings, age, stage shifts) and passing historical trends to Gemini API for real-time risk grading.",
+    solution: "Designed a model reviewing Salesforce activity patterns (emails, meetings, age, stage shifts) and passing historical trends to predictive engines for real-time risk grading.",
     impact: "Achieved an 88% precision score in forecasting high-risk active opportunities before quarter closing.",
-    tools: ["Python Analytics", "Snowflake", "Gemini API", "SOQL Queries"],
+    tools: ["Python Analytics", "Snowflake", "SOQL Queries", "Risk Modeling"],
     demoUrl: "#_demo_health_ai",
   },
   {
-    title: "AI-Augmented Quote Proposal Draft Workflow",
-    aiUse: "Smart GTM Architect",
+    title: "Automated Proposal Generation Module",
+    aiUse: "CPQ itemized mapping routines",
     problem: "Replying to complex, multi-million dollar commercial RFP (Request For Proposal) requirements took up to 5 days of manual effort.",
-    solution: "Built a GTM application prototype that matches RFP bullet items against CPQ SKU catalogs and generates tailored SLA quotes through agentic workflows.",
+    solution: "Built a GTM application prototype that matches RFP bullet items against CPQ SKU catalogs and generates tailored SLA quotes through intelligent workflows.",
     impact: "Reduced proposal generation overhead by 70% while improving pricing accuracy.",
-    tools: ["Traction Complete", "Salesforce CPQ APIs", "Gemini Pro", "Express.js"],
+    tools: ["Traction Complete", "Salesforce CPQ APIs", "JSON Schemas", "Express.js"],
     demoUrl: "#_demo_quote_ai",
   }
 ];

@@ -115,15 +115,15 @@ export const ExperienceTimeline: React.FC<ExperienceTimelineProps> = ({ experien
                 {/* Bullets */}
                 <ul className="space-y-3.5 text-zinc-700 text-sm leading-relaxed">
                   {item.bullets.map((bullet, bIdx) => {
-                    // Highlight key CRM/GTM/AI keywords inside the text for better recruiter scanning
-                    const parts = bullet.split(/(\b(?:Salesforce|CRM|CPQ|GTM|AI-Powered|AI-augmented|UAT|SOPs|SDLC|BizOps|Quote-to-Cash|SLAs)\b)/g);
+                    // Highlight key CRM/GTM/Systems keywords inside the text for better recruiter scanning
+                    const parts = bullet.split(/(\b(?:Salesforce|CRM|CPQ|GTM|Intelligent|Workflow|Automation|UAT|SOPs|SDLC|BizOps|Quote-to-Cash|SLAs)\b)/g);
                     
                     return (
                       <li key={bIdx} className="flex items-start gap-3">
                         <span className="font-hand text-lg text-ink font-bold shrink-0 mt-[-3px] select-none">-</span>
                         <span className="flex-1">
                           {parts.map((part, pIdx) => {
-                            const isKeyword = /\b(?:Salesforce|CRM|CPQ|GTM|AI-Powered|AI-augmented|UAT|SOPs|SDLC|BizOps|Quote-to-Cash|SLAs)\b/.test(part);
+                            const isKeyword = /\b(?:Salesforce|CRM|CPQ|GTM|Intelligent|Workflow|Automation|UAT|SOPs|SDLC|BizOps|Quote-to-Cash|SLAs)\b/.test(part);
                             return isKeyword ? (
                               <strong key={pIdx} className="text-zinc-950 font-bold bg-[#fef08a]/40 px-0.5 rounded">
                                 {part}

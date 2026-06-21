@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Mail, 
@@ -41,7 +41,11 @@ import {
   Coffee,
   Monitor,
   PlayCircle,
-  Database
+  Database,
+  Leaf,
+  Workflow,
+  Compass,
+  Flower
 } from "lucide-react";
 
 import baoSelfie from "./Selfie.png";
@@ -222,6 +226,44 @@ const getHobbyCover = (name: string, defaultCover?: string) => {
   return defaultCover;
 };
 
+export const BotanicalVine: React.FC<{ className?: string; flip?: boolean; rotate?: string }> = ({ className = "h-12 w-12", flip = false, rotate = "0deg" }) => {
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      className={`${className} select-none pointer-events-none fill-none stroke-current text-emerald-800/80 drop-shadow-sm`}
+      style={{ transform: `${flip ? "scaleX(-1)" : ""} rotate(${rotate})` }}
+    >
+      {/* Curved main stem */}
+      <path
+        d="M 15 85 Q 35 45 80 20"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+      {/* Leaf 1 */}
+      <path
+        d="M 28 66 Q 10 52 32 46 C 42 54 34 64 28 66"
+        fill="var(--color-highlight)"
+        strokeWidth="2"
+      />
+      {/* Leaf 2 */}
+      <path
+        d="M 46 48 Q 58 26 62 44 Q 52 56 46 48"
+        fill="var(--color-marker-green)"
+        strokeWidth="2"
+      />
+      {/* Leaf 3 */}
+      <path
+        d="M 64 32 Q 86 16 78 36 Q 68 42 64 32"
+        fill="var(--color-highlight)"
+        strokeWidth="2"
+      />
+      {/* Small organic berries / decorative buds */}
+      <circle cx="21" cy="74" r="3.5" fill="#f59e0b" stroke="var(--color-ink)" strokeWidth="1.2" />
+      <circle cx="53" cy="54" r="3.5" fill="#f59e0b" stroke="var(--color-ink)" strokeWidth="1.2" />
+    </svg>
+  );
+};
+
 export default function App() {
   const [activePage, setActivePage] = useState<string>("home");
   const [hoveredNav, setHoveredNav] = useState<string>("home");
@@ -230,6 +272,7 @@ export default function App() {
   const [activeProjectTab, setActiveProjectTab] = useState<"traditional" | "ai" | "crm" | "evaluation" | "modeling" | "sales">("crm");
   const [certFilter, setCertFilter] = useState<"all" | "salesforce" | "other">("all");
   const [isMusicModalOpen, setIsMusicModalOpen] = useState(false);
+  const [showResumeToast, setShowResumeToast] = useState(false);
 
   // Live Calendar & Booking states
   const [activeCalendarTab, setActiveCalendarTab] = useState<"embed" | "booking">("embed");
@@ -390,45 +433,50 @@ export default function App() {
             {/* Centered snug storybook landscape with the delicate childlike character centerpiece */}
             <div className="flex flex-col items-center justify-center py-4 md:py-6 px-4 text-center max-w-4xl mx-auto space-y-5 animate-fade-in relative z-10 w-full select-none">
               
-              {/* Outer delicate frame housing the childlike character - compact padding */}
-              <div className="relative p-5 md:p-6 bg-white/10 rounded-2xl border-2 border-dashed border-zinc-400/40 hover:border-zinc-450/60 transition-all duration-300 transform hover:scale-[1.01]">
+              {/* Outer delicate frame housing the childlike character - compact padding with Botanical Vines framing it */}
+              <div className="relative p-5 md:p-6 bg-white/15 rounded-2xl border-3 border-emerald-800/40 hover:border-emerald-800/60 transition-all duration-300 transform hover:scale-[1.01] shadow-sm">
+                
+                {/* Botanical Vine flourishes in opposite corners */}
+                <BotanicalVine className="absolute -left-6 -top-6 h-14 w-14 animate-pulse" rotate="-15deg" />
+                <BotanicalVine className="absolute -right-6 -bottom-6 h-14 w-14 animate-pulse" flip={true} rotate="-15deg" />
+
                 {/* Visual pencil markings on the frame to emphasize handmade craftsmanship */}
-                <span className="absolute left-3 top-2 text-[10px] font-mono text-zinc-400 select-none opacity-55">*</span>
-                <span className="absolute right-4 top-2 text-[10px] font-hand text-zinc-500/60 select-none opacity-45">scanned paper</span>
-                <span className="absolute right-3 bottom-2 text-xs font-mono text-zinc-400 select-none opacity-50">°</span>
-                <span className="absolute left-5 bottom-2 text-[9px] font-mono text-zinc-400 select-none opacity-40">#712f</span>
+                <span className="absolute left-3 top-2 text-[10px] font-mono text-emerald-700/60 select-none opacity-55">*</span>
+                <span className="absolute right-4 top-2 text-[10px] font-hand text-emerald-700/60 select-none opacity-45">natural fiber paper</span>
+                <span className="absolute right-3 bottom-2 text-xs font-mono text-emerald-700/60 select-none opacity-50">°</span>
+                <span className="absolute left-5 bottom-2 text-[9px] font-mono text-emerald-700/60 select-none opacity-40">#organic-flow</span>
                 
                 {/* The beautifully styled childlike character scaled down */}
                 <DoodleBoyWithBubble 
                   currentHoverSection="home" 
-                  className="w-[187px] h-[228px] md:w-[228px] md:h-[270.4px] transform hover:rotate-1 transition-transform duration-500 ease-out" 
+                  className="w-[187px] h-[228px] md:w-[228px] md:h-[270.4px] transform hover:rotate-1 transition-transform duration-500 ease-out animate-fade-in" 
                 />
               </div>
               
               {/* Storybook soft Typography & quiet narrative speech */}
               <div className="space-y-2 max-w-2xl">
-                <h2 className="font-hand text-xl md:text-2xl lg:text-3xl text-zinc-900 font-extrabold leading-tight tracking-tight">
-                  "Navigating GTM blueprints with childlike wonder and technical precision."
+                <h2 className="font-hand text-xl md:text-2xl lg:text-3xl text-emerald-950 font-extrabold leading-tight tracking-tight">
+                  "Navigating GTM blueprints with organic balance, natural curiosity, and technical precision."
                 </h2>
-                <p className="font-sans text-xs text-zinc-550 leading-relaxed max-w-lg mx-auto italic">
-                  Welcome to my sketchbook. A quiet composition of certified enterprise integrations, modern web architectures, and carefully crafted revenue operations.
+                <p className="font-sans text-xs text-zinc-650 leading-relaxed max-w-lg mx-auto italic">
+                  Welcome to my sketchbook. A calm, human-centric composition of certified enterprise integrations, sustainable GTM architectures, and carefully cultivated revenue operations.
                 </p>
                 
                 <div className="pt-1 flex justify-center gap-1.5 opacity-65">
-                  <span className="h-1 w-1 rounded-full bg-zinc-400"></span>
-                  <span className="h-1 w-1 rounded-full bg-zinc-350"></span>
-                  <span className="h-1 w-1 rounded-full bg-zinc-300"></span>
+                  <span className="h-1 w-1 rounded-full bg-emerald-600"></span>
+                  <span className="h-1 w-1 rounded-full bg-emerald-500"></span>
+                  <span className="h-1 w-1 rounded-full bg-emerald-400"></span>
                 </div>
               </div>
 
             </div>
 
-            {/* Small Pink Music Note Section as a 3D Polished Pill Button */}
+            {/* Small Natural Emerald Music Note Section as a 3D Polished Pill Button */}
             <div className="w-full max-w-5xl mx-auto flex justify-end px-4 mb-2 z-20">
               <button
                 id="music-note-home-btn"
                 onClick={() => setIsMusicModalOpen(true)}
-                className="relative px-3.5 py-1.5 bg-gradient-to-br from-pink-400 via-pink-500 to-rose-600 text-white font-hand text-[10px] sm:text-xs font-black rounded-full border-2 border-ink shadow-[0_4px_0_0_#be185d,3px_7px_0px_0px_rgba(24,24,27,0.3)] hover:-translate-y-1 hover:shadow-[0_5px_0_0_#be185d,3px_8px_0px_0px_rgba(24,24,27,0.3)] active:translate-y-0.5 active:shadow-[0_1px_0_0_#be185d,1.5px_3px_0px_0px_rgba(24,24,27,0.3)] transition-all duration-150 cursor-pointer flex items-center gap-1.5 group overflow-hidden select-none"
+                className="relative px-3.5 py-1.5 bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-800 text-white font-hand text-[10px] sm:text-xs font-black rounded-full border-2 border-ink shadow-[0_4px_0_0_#064e3b,3px_7px_0px_0px_rgba(24,24,27,0.3)] hover:-translate-y-1 hover:shadow-[0_5px_0_0_#064e3b,3px_8px_0px_0px_rgba(24,24,27,0.3)] active:translate-y-0.5 active:shadow-[0_1px_0_0_#064e3b,1.5px_3px_0px_0px_rgba(24,24,27,0.3)] transition-all duration-150 cursor-pointer flex items-center gap-1.5 group overflow-hidden select-none"
                 title="Pop Up My Favorite Music Player"
               >
                 {/* Glossy radial glass shine overlays */}
@@ -441,11 +489,15 @@ export default function App() {
               </button>
             </div>
 
-            {/* Separator banner with sparse margin spacing */}
-            <div className="w-full my-3 flex items-center justify-center gap-4 opacity-75 select-none font-medium">
-              <div className="h-[2px] bg-dashed bg-zinc-500 flex-1 max-w-md"></div>
-              <span className="font-hand text-xs font-black text-zinc-700 tracking-wider">PORTFOLIO PORTALS</span>
-              <div className="h-[2px] bg-dashed bg-zinc-500 flex-1 max-w-md"></div>
+            {/* Separator banner with custom botanical theme */}
+            <div className="w-full my-4 flex items-center justify-center gap-4 opacity-80 select-none font-medium">
+              <div className="h-[2.5px] border-t-2 border-dashed border-emerald-800/30 flex-1 max-w-md hidden sm:block"></div>
+              <div className="flex items-center gap-2 text-emerald-950">
+                <Leaf className="h-4.5 w-4.5 text-emerald-700 animate-pulse" />
+                <span className="font-hand text-xs font-black tracking-wider">ORGANIC GTM PORTALS</span>
+                <Flower className="h-4.5 w-4.5 text-emerald-700 animate-pulse" style={{ animationDuration: '6s' }} />
+              </div>
+              <div className="h-[2.5px] border-t-2 border-dashed border-emerald-800/30 flex-1 max-w-md hidden sm:block"></div>
             </div>
 
             {/* Real-time Handdrawn Navigation Infographic Panel */}
@@ -475,7 +527,7 @@ export default function App() {
                 </svg>
                 <div className="w-full border-t-2 border-dashed border-ink/20 opacity-40 my-1 md:hidden"></div>
 
-                {/* Column 2: Architectural Innovations */}
+                {/* Column 2: Organic GTM Blueprints */}
                 <div 
                   onClick={() => navigateToPage("projects")}
                   className="group flex-1 cursor-pointer p-2.5 rounded-xl hover:bg-emerald-100/40 transition-all duration-300 w-full text-center flex flex-col items-center justify-center"
@@ -483,10 +535,10 @@ export default function App() {
                   <div className="transform group-hover:scale-105 group-hover:rotate-[1deg] transition-all duration-300 flex flex-col items-center">
                     <ArchitectureFlowSvg className="h-16 w-16 md:h-20 md:w-20 mb-2 filter drop-shadow-sm" />
                     <h3 className="font-hand text-2xl font-black text-ink tracking-tight mt-0.5 select-none">
-                      Architectural Innovations
+                      Organic GTM Blueprints
                     </h3>
                     <p className="font-sans text-[11px] text-zinc-500 max-w-xs mt-1 italic">
-                      (Explore blueprints & technical integrations)
+                      (Explore functional CRM designs & technical integrations)
                     </p>
                   </div>
                 </div>
@@ -804,8 +856,8 @@ export default function App() {
                 <span>Architectural Innovations & Case Studies</span>
                 <LightbulbSketchSvg className="h-9 w-9 shrink-0 hover:scale-110 active:scale-95 transition-transform duration-150 cursor-pointer" />
               </h2>
-              <p className="font-sans text-sm text-zinc-600 mt-1">
-                Selected system architectures and automated workflows built with traditional middleware or generative artificial intelligence.
+              <p className="font-sans text-sm text-zinc-650 mt-1">
+                A careful composition of high-performance system architectures, organic commercial blueprints, and optimized workflows.
               </p>
             </div>
 
@@ -830,8 +882,8 @@ export default function App() {
                     : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
                 }`}
               >
-                <Sparkles className="h-4 w-4 text-indigo-600" />
-                AI GTM Solutions ({AI_GTM_PROJECTS.length})
+                <Workflow className="h-4 w-4 text-emerald-800" />
+                Intelligent Workflows ({AI_GTM_PROJECTS.length})
               </button>
               <button
                 onClick={() => setActiveProjectTab("traditional")}
@@ -841,8 +893,8 @@ export default function App() {
                     : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
                 }`}
               >
-                <FolderDot className="h-4 w-4 text-blue-600" />
-                Traditional GTM Solutions ({TRADITIONAL_PROJECTS.length})
+                <FolderDot className="h-4 w-4 text-teal-700" />
+                Core GTM Systems ({TRADITIONAL_PROJECTS.length})
               </button>
               <button
                 onClick={() => setActiveProjectTab("evaluation")}
@@ -874,8 +926,8 @@ export default function App() {
                     : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
                 }`}
               >
-                <Zap className="h-4 w-4 text-purple-600" />
-                Sales Process ({SALES_PRO_PROJECTS.length})
+                <Leaf className="h-4 w-4 text-emerald-800" />
+                Revenue Growth Ops ({SALES_PRO_PROJECTS.length})
               </button>
             </div>
 
@@ -1061,6 +1113,13 @@ export default function App() {
                 href={resumePdf} 
                 target="_blank" 
                 rel="noopener noreferrer"
+                onClick={() => {
+                  setShowResumeToast(true);
+                  // Hide after 4 seconds automatically
+                  setTimeout(() => {
+                    setShowResumeToast(false);
+                  }, 4000);
+                }}
                 className="self-start md:self-auto px-5 py-2.5 font-hand text-base font-extrabold transition-all duration-150 border-3 border-ink rounded-lg bg-highlight hover:bg-yellow-300 text-ink shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] flex items-center gap-2 cursor-pointer"
               >
                 <FileText className="h-5 w-5 shrink-0" />
@@ -1235,7 +1294,14 @@ export default function App() {
                   const isOpen = expandedIndex === idx;
 
                   return (
-                    <div key={idx} className="relative group">
+                    <motion.div
+                      key={idx}
+                      className="relative group"
+                      initial={{ opacity: 0, y: 40 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-80px" }}
+                      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: idx * 0.05 }}
+                    >
                       
                       {/* Interactive dot toggler */}
                       <button
@@ -1338,7 +1404,7 @@ export default function App() {
                         </div>
 
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -2005,6 +2071,33 @@ export default function App() {
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      {/* Resume Download Toast Notification */}
+      <AnimatePresence>
+        {showResumeToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95, transition: { duration: 0.2 } }}
+            className="fixed bottom-6 right-6 z-50 max-w-sm bg-highlight border-3 border-ink p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] flex items-center gap-3 font-sans"
+          >
+            <div className="bg-emerald-100 border-2 border-ink text-emerald-800 p-1.5 rounded-lg shrink-0">
+              <Check className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <p className="font-hand font-extrabold text-ink text-sm sm:text-base">Download Confirmed!</p>
+              <p className="text-zinc-600 text-xs mt-0.5">Your resume PDF download has been initiated successfully.</p>
+            </div>
+            <button
+              onClick={() => setShowResumeToast(false)}
+              className="text-zinc-400 hover:text-ink shrink-0 font-bold self-start text-sm select-none cursor-pointer"
+              aria-label="Close notification"
+            >
+              ✕
+            </button>
+          </motion.div>
         )}
       </AnimatePresence>
 
