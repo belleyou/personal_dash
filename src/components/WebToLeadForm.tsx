@@ -61,10 +61,16 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
     let stateKey = name;
     if (name === "countrySelect") stateKey = "country";
     if (name === "descriptionInput") stateKey = "description";
-    setFormData(prev => ({
-      ...prev,
-      [stateKey]: value
-    }));
+    setFormData(prev => {
+      const updated = {
+        ...prev,
+        [stateKey]: value
+      };
+      if (stateKey === "companyEmail") {
+        updated.email = value;
+      }
+      return updated;
+    });
   };
 
   const handleCopyCode = () => {
@@ -297,32 +303,35 @@ San Jose, California`);
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Email Address *</label>
+                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Company Name *</label>
                 <input
-                  type="email"
-                  name="email"
-                  id="sf_email_input"
+                  type="text"
+                  name="company"
+                  id="sf_company_input"
                   required
-                  value={formData.email}
+                  value={formData.company}
                   onChange={handleInputChange}
-                  placeholder="e.g. client@company.com"
-                  maxLength={80}
+                  placeholder="e.g. Acme Corp"
+                  maxLength={40}
                   className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Company Name</label>
+                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Company Email *</label>
                 <input
-                  type="text"
-                  name="company"
-                  id="sf_company_input"
-                  value={formData.company}
+                  type="email"
+                  name="companyEmail"
+                  id="sf_company_email_input"
+                  required
+                  value={formData.companyEmail}
                   onChange={handleInputChange}
-                  placeholder="e.g. Acme Corp"
-                  maxLength={40}
-                  className="w-full px-3 py-2 border-2 border-zinc-500 rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
+                  placeholder="e.g. contact@company.com"
+                  maxLength={80}
+                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
                 />
+                <input type="hidden" name="email" value={formData.companyEmail} />
+                <input type="hidden" name={companyEmailField} value={formData.companyEmail} />
               </div>
             </div>
 
@@ -351,28 +360,30 @@ San Jose, California`);
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Project Description</label>
+              <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Project Description *</label>
               <textarea
                 name="descriptionInput"
                 id="sf_description_input"
                 rows={4}
+                required
                 value={formData.description}
                 onChange={handleInputChange}
                 placeholder="Elaborate on scope, target go-live times, architectural hurdles, etc..."
-                className="w-full px-3 py-2 border-2 border-zinc-500 rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400 resize-none"
+                className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400 resize-none"
               />
               <input type="hidden" name={projectDescriptionField} value={formData.description} />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Project Type</label>
+                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Project Type *</label>
                 <select
                   name="projectType"
                   id="sf_project_type_input"
+                  required
                   value={formData.projectType}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border-2 border-zinc-400 rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0"
+                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0"
                 >
                   <option value="Aries PCIe/CXL Smart DSP Retimers">Aries PCIe/CXL Smart DSP Retimers</option>
                   <option value="Taurus Ethernet Smart Cable Modules">Taurus Ethernet Smart Cable Modules</option>
@@ -385,13 +396,14 @@ San Jose, California`);
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Project Status</label>
+                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Project Status *</label>
                 <select
                   name="projectStatus"
                   id="sf_project_status_input"
+                  required
                   value={formData.projectStatus}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border-2 border-zinc-400 rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0"
+                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0"
                 >
                   <option value="New">New</option>
                   <option value="Planning/Initiation">Planning/Initiation</option>
@@ -400,20 +412,6 @@ San Jose, California`);
                   <option value="Critical Optimization">Critical Optimization</option>
                 </select>
                 <input type="hidden" name={projectStatusField} value={formData.projectStatus} />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Company Email</label>
-                <input
-                  type="email"
-                  name="companyEmail"
-                  id="sf_company_email_input"
-                  value={formData.companyEmail}
-                  onChange={handleInputChange}
-                  placeholder="e.g. billing@company.com"
-                  className="w-full px-3 py-2 border-2 border-zinc-500 rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
-                />
-                <input type="hidden" name={companyEmailField} value={formData.companyEmail} />
               </div>
             </div>
 
