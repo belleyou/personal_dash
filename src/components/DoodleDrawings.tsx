@@ -1680,3 +1680,41 @@ export const XaiLogoSketchSvg: React.FC<{ className?: string }> = ({ className =
 };
 
 
+/**
+ * Hand-drawn SpaceXRocketSketchSvg
+ */
+export const SpaceXRocketSketchSvg: React.FC<{ className?: string }> = ({ className = "h-12 w-12" }) => {
+  return (
+    <svg viewBox="0 0 100 100" className={`${className} inline-block select-none animate-bounce`} style={{ animationDuration: '3.5s' }} xmlns="http://www.w3.org/2000/svg" aria-label="SpaceX Rocket">
+      {/* Flame trail (cozy fire gradients) */}
+      <path d="M 50 70 Q 42 84 50 96 Q 58 84 50 70" fill="#f97316" stroke="#18181b" strokeWidth="2.5" />
+      <path d="M 50 72 Q 46 80 50 90 Q 54 80 50 72" fill="#facc15" />
+      
+      {/* Rocket body with whiteboard/crayon style fill */}
+      <path d="M 50 12 C 37 42, 37 68, 50 70 C 63 68, 63 42, 50 12 Z" fill="#ffffff" stroke="#18181b" strokeWidth="3" strokeLinejoin="round" />
+      
+      {/* SpaceX Style minimal logo stripe across the nose */}
+      <path d="M 46 36 L 54 44 M 54 36 L 46 44" stroke="#dc2626" strokeWidth="2.5" strokeLinecap="round" />
+      
+      {/* Left side booster wing */}
+      <path d="M 38 52 Q 22 66, 38 66 Z" fill="#dc2626" stroke="#18181b" strokeWidth="2.5" strokeLinejoin="round" />
+      
+      {/* Right side booster wing */}
+      <path d="M 62 52 Q 78 66, 62 66 Z" fill="#dc2626" stroke="#18181b" strokeWidth="2.5" strokeLinejoin="round" />
+      
+      {/* Central observation glass portal */}
+      <circle cx="50" cy="28" r="5" fill="#38bdf8" stroke="#18181b" strokeWidth="2" />
+      
+      {/* Micro sparkles as cosmic background stars */}
+      <g fill="#eab308" opacity="0.8">
+        <path d="M 18 20 L 21 23 L 18 26 L 15 23 Z" />
+        <path d="M 80 32 L 83 35 L 80 38 L 77 35 Z" />
+        <path d="M 22 58 L 24 60 L 22 62 L 20 60 Z" />
+        <path d="M 76 68 L 78 70 L 76 72 L 74 70 Z" />
+      </g>
+    </svg>
+  );
+};
+
+
+

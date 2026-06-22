@@ -49,7 +49,7 @@ import {
 } from "lucide-react";
 
 import baoSelfie from "./Selfie.png";
-import resumePdf from "./assets/bao_you_resume_all.pdf";
+import resumePdf from "./assets/Bao_You_Resume.pdf";
 
 import wingCover from "./Wing.jpeg";
 import padCover from "./PAD.jpeg";
@@ -90,7 +90,8 @@ import {
   GoogleLogoSketchSvg,
   SalesforceLogoSketchSvg,
   TwitterLogoSketchSvg,
-  XaiLogoSketchSvg
+  XaiLogoSketchSvg,
+  SpaceXRocketSketchSvg
 } from "./components/DoodleDrawings";
 
 // Import Crayon Animated Video Player
@@ -566,6 +567,31 @@ export default function App() {
                   </div>
                 </div>
 
+              </div>
+            </div>
+
+            {/* Special SpaceX IPO Business Systems Mission Highlight */}
+            <div className="w-full max-w-5xl mx-auto mb-6 p-4 md:p-6 border-3 border-ink rounded-xl bg-white/75 backdrop-blur-sm shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:scale-[1.005] transition-transform duration-200 relative overflow-hidden select-none">
+              {/* Highlight label taped on */}
+              <div className="absolute top-2.5 right-2.5 px-3 py-1 font-hand text-[10px] sm:text-xs bg-red-100 text-red-800 border-2 border-ink rotate-[1.5deg] rounded-sm select-none font-bold shadow-xs">
+                Business Systems Feature 🚀
+              </div>
+              
+              <div className="flex flex-col md:flex-row items-center gap-5 mt-2 md:mt-0">
+                <div className="shrink-0">
+                  <SpaceXRocketSketchSvg className="h-16 w-16 md:h-20 md:w-20 filter drop-shadow-sm animate-bounce" />
+                </div>
+                <div className="space-y-1 text-center md:text-left flex-1">
+                  <h4 className="font-hand text-2xl font-black text-ink flex items-center justify-center md:justify-start gap-2">
+                    <span>Enterprise Systems SpaceX IPO Enablement Readiness</span>
+                  </h4>
+                  <p className="font-sans text-xs md:text-sm text-zinc-700 leading-relaxed max-w-3xl">
+                    Spearheaded robust GTM systems, Salesforce custom products, and federation workflows—partnering across Engineering and SOX compliance pipelines to secure financial system auditability and system scalability, helping **SpaceX prepare for its historic IPO launch**.
+                  </p>
+                  <p className="font-sans text-[11px] text-emerald-800 font-bold italic mt-1.5 flex items-center justify-center md:justify-start gap-1">
+                    <span>✨ Deliverables: Billing pipelines, single-sign-on (SSO) systems integration, and high-efficiency Salesforce operations.</span>
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -1196,84 +1222,70 @@ export default function App() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 
-                {/* Category 1 */}
+                {/* Category 1: CRM & SSO Applications */}
                 <div className="p-4 bg-white border-2 border-ink rounded-lg shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] hover:scale-[1.01] transition-transform flex flex-col justify-between">
                   <div>
                     <h4 className="font-hand text-lg font-black text-emerald-800 flex items-center gap-1.5 border-b border-dashed border-zinc-200 pb-1.5 mb-2.5">
                       <span className="text-sm">🎯</span> CRM & SSO Applications
                     </h4>
-                    <div className="flex flex-wrap gap-1.55">
-                      {["Salesforce (Sales / Service / Marketing / Partner Community Cloud)", "CPQ", "Agentforce", "HubSpot CRM", "OKTA", "Zendesk", "ServiceMax"].map((s, i) => (
+                    <div className="flex flex-wrap gap-1.5">
+                      {["Salesforce (Sales / Service / Marketing / Partner Community Cloud)", "CPQ", "Dealhub", "Agentforce", "HubSpot CRM", "OKTA", "Zendesk", "ServiceMax", "Relevance AI", "Slack"].map((s, i) => (
                         <span key={i} className="px-2 py-0.5 text-[11px] bg-emerald-50 text-emerald-800 border-2 border-ink rounded-md font-sans font-bold shadow-sm">{s}</span>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Category 2 */}
+                {/* Category 2: CLM & ERP Integrations */}
                 <div className="p-4 bg-white border-2 border-ink rounded-lg shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] hover:scale-[1.01] transition-transform flex flex-col justify-between">
                   <div>
                     <h4 className="font-hand text-lg font-black text-indigo-800 flex items-center gap-1.5 border-b border-dashed border-zinc-200 pb-1.5 mb-2.5">
-                      <span className="text-sm">🔌</span> Enterprise & ERP Integrations
+                      <span className="text-sm">🔌</span> CLM & ERP Integrations
                     </h4>
-                    <div className="flex flex-wrap gap-1.55">
-                      {["Salesforce–SAP integrations", "O2C / Lead-to-Cash", "mobile application integrations", "middleware", "downstream ERP process support", "CloudBlue", "Apttus / Conga", "DocuSign", "SpringCM"].map((s, i) => (
+                    <div className="flex flex-wrap gap-1.5">
+                      {["Salesforce–SAP integrations", "Netsuite", "Oracle ERP", "O2C / Lead-to-Cash", "Mobile application integrations", "Middleware", "CloudBlue", "Apttus / Conga", "DocuSign", "SpringCM", "PandaDoc", "Ironclad"].map((s, i) => (
                         <span key={i} className="px-2 py-0.5 text-[11px] bg-indigo-50 text-indigo-800 border-2 border-ink rounded-md font-sans font-bold shadow-sm">{s}</span>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Category 3 */}
+                {/* Category 3: Analytics Apps & Web HTTP */}
                 <div className="p-4 bg-white border-2 border-ink rounded-lg shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] hover:scale-[1.01] transition-transform flex flex-col justify-between">
                   <div>
                     <h4 className="font-hand text-lg font-black text-rose-800 flex items-center gap-1.5 border-b border-dashed border-zinc-200 pb-1.5 mb-2.5">
-                      <span className="text-sm">📈</span> Analytics Apps
+                      <span className="text-sm">📈</span> Analytics Apps & Web HTTP
                     </h4>
-                    <div className="flex flex-wrap gap-1.55">
-                      {["Einstein Analytics", "Tableau", "Snowflake", "BigQuery", "SQL", "SOQL", "Python", "Data Loader / ETL", "Workbench"].map((s, i) => (
+                    <div className="flex flex-wrap gap-1.5">
+                      {["Einstein Analytics", "Tableau", "Snowflake", "BigQuery", "SQL", "SOQL", "Python", "Data Loader / ETL", "Workbench", "Jira", "Confluence", "Asana", "Smartsheet", "Lucidchart", "Google Sheets / Docs / Slides / Workspace", "Excel", "PowerBI", "SDLC", "HTML", "JSON"].map((s, i) => (
                         <span key={i} className="px-2 py-0.5 text-[11px] bg-rose-50 text-rose-800 border-2 border-ink rounded-md font-sans font-bold shadow-sm">{s}</span>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Category 4 */}
-                <div className="p-4 bg-white border-2 border-ink rounded-lg shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] hover:scale-[1.01] transition-transform flex flex-col justify-between">
-                  <div>
-                    <h4 className="font-hand text-lg font-black text-teal-800 flex items-center gap-1.5 border-b border-dashed border-zinc-200 pb-1.5 mb-2.5">
-                      <span className="text-sm">🛠️</span> Agile / PM Tools
-                    </h4>
-                    <div className="flex flex-wrap gap-1.55">
-                      {["Jira", "Confluence", "Asana", "Smartsheet", "Lucidchart", "Google Workspace", "Microsoft 365", "Slack", "SDLC / Product Lifecycle Management"].map((s, i) => (
-                        <span key={i} className="px-2 py-0.5 text-[11px] bg-teal-50 text-teal-800 border-2 border-ink rounded-md font-sans font-bold shadow-sm">{s}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Category 5 */}
+                {/* Category 4: Automation Middleware & AI */}
                 <div className="p-4 bg-white border-2 border-ink rounded-lg shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] hover:scale-[1.01] transition-transform flex flex-col justify-between">
                   <div>
                     <h4 className="font-hand text-lg font-black text-purple-800 flex items-center gap-1.5 border-b border-dashed border-zinc-200 pb-1.5 mb-2.5">
                       <span className="text-sm">🤖</span> Automation Middleware & AI
                     </h4>
-                    <div className="flex flex-wrap gap-1.55">
-                      {["Zapier", "Hightouch", "Traction Complete", "Einstein Copilot", "Gen AI Workflows", "DemandTools", "RingLead", "Mulesoft"].map((s, i) => (
+                    <div className="flex flex-wrap gap-1.5">
+                      {["Zapier", "Momentum", "Relevance AI", "Hightouch", "Traction Complete", "Einstein Copilot", "Gen AI Workflows", "DemandTools", "RingLead", "Mulesoft", "Cursor", "VSCode", "Codex", "Claude Code"].map((s, i) => (
                         <span key={i} className="px-2 py-0.5 text-[11px] bg-purple-50 text-purple-800 border-2 border-ink rounded-md font-sans font-bold shadow-sm">{s}</span>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Category 6 */}
-                <div className="p-4 bg-white border-2 border-ink rounded-lg shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] hover:scale-[1.01] transition-transform flex flex-col justify-between">
+                {/* Category 5: GTM Apps */}
+                <div className="p-4 bg-white border-2 border-ink rounded-lg shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] hover:scale-[1.01] transition-transform flex flex-col justify-between md:col-span-2 lg:col-span-2">
                   <div>
                     <h4 className="font-hand text-lg font-black text-amber-800 flex items-center gap-1.5 border-b border-dashed border-zinc-200 pb-1.5 mb-2.5">
-                      <span className="text-sm">🛡️</span> Delivery & Governance
+                      <span className="text-sm">🚀</span> GTM Apps
                     </h4>
-                    <div className="flex flex-wrap gap-1.55">
-                      {["Incident Management", "UAT / Test Script Creation", "Defect Tracking", "Release Validation", "Change Management", "SOX ITGC / SOD Compliance", "SOP Documentation", "Production Support"].map((s, i) => (
+                    <div className="flex flex-wrap gap-1.5">
+                      {["Outreach.io", "Groove.io", "Gong.io", "LinkedIn Sales Navigator", "Zoominfo", "Clay", "Clari", "SalesLoft", "Hightouch", "D&B Optimizer / Credit Monitor", "Revenue.io", "People.ai", "Drift", "Workramp", "Apollo.ai", "6Sense", "HighSpot", "Workday", "WorkMe", "Adobe Enterprise Manager", "Docebo", "RingLead", "Leandata", "ZinFi", "GCP", "MixMax", "Demandbase"].map((s, i) => (
                         <span key={i} className="px-2 py-0.5 text-[11px] bg-amber-50 text-amber-800 border-2 border-ink rounded-md font-sans font-bold shadow-sm">{s}</span>
                       ))}
                     </div>
