@@ -34,6 +34,7 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   const [projectStatusField, setProjectStatusField] = useState("00NgL000047B8P1"); // User's Salesforce Project Status Custom ID
   const [projectDescriptionField, setProjectDescriptionField] = useState("00NgL000047eJlpUAE"); // User's Salesforce Project Description Custom ID
   const [companyEmailField, setCompanyEmailField] = useState("company_email__c");
+  const [projectDeadlineField, setProjectDeadlineField] = useState("project_deadline__c");
 
   // Lead Form Fields
   const [formData, setFormData] = useState({
@@ -45,7 +46,8 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
     projectType: "Aries PCIe/CXL Smart DSP Retimers",
     projectStatus: "New",
     companyEmail: "",
-    country: "US"
+    country: "US",
+    projectDeadline: ""
   });
 
   // Intel reCAPTCHA verification states
@@ -118,6 +120,9 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   <label for="${companyEmailField}">Company Email</label>
   <input id="${companyEmailField}" name="${companyEmailField}" type="text" value="${formData.companyEmail}" /><br>
 
+  <label for="${projectDeadlineField}">Project Deadline</label>
+  <input id="${projectDeadlineField}" name="${projectDeadlineField}" type="date" value="${formData.projectDeadline}" required /><br>
+
   <input type="submit" name="submit" value="Submit Lead to Salesforce">
 
 </form>`;
@@ -135,20 +140,34 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
       return;
     }
 
-    // Deduplication check: hashing Company Name + Project Status + Project Type
-    const token = [formData.company, formData.projectStatus, formData.projectType]
-      .map(s => s.trim().toLowerCase())
+    // Deduplication check: Company Name + Project Status + Project Type + Project Deadline + Country / Region
+    const tokenByName = [formData.company, formData.projectStatus, formData.projectType, formData.projectDeadline, formData.country]
+      .map(s => (s || "").trim().toLowerCase())
       .join('|');
+
+    // Deduplication check: Company Email + Project Status + Project Type + Project Deadline + Country / Region
+    const tokenByEmail = [formData.companyEmail, formData.projectStatus, formData.projectType, formData.projectDeadline, formData.country]
+      .map(s => (s || "").trim().toLowerCase())
+      .join('|');
+
+    const now = Date.now();
+    const fiveMinutes = 5 * 60 * 1000;
 
     if (!allowBypass) {
       try {
-        const stored = localStorage.getItem("last_gtm_submission");
+        const stored = localStorage.getItem("last_gtm_submissions_list");
         if (stored) {
-          const parsed = JSON.parse(stored);
-          const fiveMinutes = 5 * 60 * 1000;
-          if (parsed.token === token && (Date.now() - parsed.timestamp) < fiveMinutes) {
+          const submissions = JSON.parse(stored);
+          const foundDuplicate = submissions.find((sub: any) => {
+            const isRecent = (now - sub.timestamp) < fiveMinutes;
+            const matchName = sub.tokenByName === tokenByName;
+            const matchEmail = sub.tokenByEmail === tokenByEmail;
+            return isRecent && (matchName || matchEmail);
+          });
+
+          if (foundDuplicate) {
             e.preventDefault();
-            setDuplicateError("Integrity Check: A submission for this Company, Project Type, and Status was processed in the last 5 minutes. Salesforce deduplication is active to prevent twin Opportunity/Project creation in the CRM.");
+            setDuplicateError("Integrity Check: A submission with the same configuration (Company Name/Email, Project Status, Project Type, Project Deadline, and Country/Region) was processed in the last 5 minutes. Salesforce deduplication is active to prevent twin Opportunity/Project creation in the CRM.");
             return;
           }
         }
@@ -157,16 +176,25 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
       }
     }
 
-    // Save token to localStorage to protect future submissions
+    // Save tokens to history
     try {
-      localStorage.setItem("last_gtm_submission", JSON.stringify({ token, timestamp: Date.now() }));
+      const stored = localStorage.getItem("last_gtm_submissions_list");
+      const list = stored ? JSON.parse(stored) : [];
+      list.push({ tokenByName, tokenByEmail, timestamp: now });
+      localStorage.setItem("last_gtm_submissions_list", JSON.stringify(list));
     } catch (err) {
-      console.warn("Saving storage token failed:", err);
+      console.warn("Saving storage token history failed:", err);
     }
 
     setDuplicateError("");
     // Show beautiful success card with live email dispatch info, letting the user verify/send the mail confirmation.
     setSubmitSuccess(true);
+    
+    // Auto-trigger confirmation email as requested: "After the form is submitted, send a confirmation email to the email in 'Company Email'."
+    setTimeout(() => {
+      handleSendConfirmationEmail();
+    }, 100);
+
     // Programmatically route to the dedicated Thank You page
     setTimeout(() => {
       window.location.hash = "thank-you";
@@ -179,19 +207,33 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
       return;
     }
 
-    // Deduplication check for email dispatch
-    const token = [formData.company, formData.projectStatus, formData.projectType]
-      .map(s => s.trim().toLowerCase())
+    // Deduplication check: Company Name + Project Status + Project Type + Project Deadline + Country / Region
+    const tokenByName = [formData.company, formData.projectStatus, formData.projectType, formData.projectDeadline, formData.country]
+      .map(s => (s || "").trim().toLowerCase())
       .join('|');
+
+    // Deduplication check: Company Email + Project Status + Project Type + Project Deadline + Country / Region
+    const tokenByEmail = [formData.companyEmail, formData.projectStatus, formData.projectType, formData.projectDeadline, formData.country]
+      .map(s => (s || "").trim().toLowerCase())
+      .join('|');
+
+    const now = Date.now();
+    const fiveMinutes = 5 * 60 * 1000;
 
     if (!allowBypass) {
       try {
-        const stored = localStorage.getItem("last_gtm_submission");
+        const stored = localStorage.getItem("last_gtm_submissions_list");
         if (stored) {
-          const parsed = JSON.parse(stored);
-          const fiveMinutes = 5 * 60 * 1000;
-          if (parsed.token === token && (Date.now() - parsed.timestamp) < fiveMinutes) {
-            setDuplicateError("Integrity Check: A submission for this Company, Project Type, and Status was processed in the last 5 minutes. Salesforce deduplication is active to prevent twin Opportunity/Project creation in the CRM.");
+          const submissions = JSON.parse(stored);
+          const foundDuplicate = submissions.find((sub: any) => {
+            const isRecent = (now - sub.timestamp) < fiveMinutes;
+            const matchName = sub.tokenByName === tokenByName;
+            const matchEmail = sub.tokenByEmail === tokenByEmail;
+            return isRecent && (matchName || matchEmail);
+          });
+
+          if (foundDuplicate) {
+            setDuplicateError("Integrity Check: A submission with the same configuration (Company Name/Email, Project Status, Project Type, Project Deadline, and Country/Region) was processed in the last 5 minutes. Salesforce deduplication is active to prevent twin Opportunity/Project creation in the CRM.");
             return;
           }
         }
@@ -200,11 +242,14 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
       }
     }
 
-    // Save token to localStorage to protect future submissions
+    // Save tokens to history
     try {
-      localStorage.setItem("last_gtm_submission", JSON.stringify({ token, timestamp: Date.now() }));
+      const stored = localStorage.getItem("last_gtm_submissions_list");
+      const list = stored ? JSON.parse(stored) : [];
+      list.push({ tokenByName, tokenByEmail, timestamp: now });
+      localStorage.setItem("last_gtm_submissions_list", JSON.stringify(list));
     } catch (err) {
-      console.warn("Saving storage token failed:", err);
+      console.warn("Saving storage token history failed:", err);
     }
 
     setDuplicateError("");
@@ -225,6 +270,7 @@ Project Details:
 ----------------------------------------
 * Project Type: ${formData.projectType || "Enterprise Integration"}
 * Project Status: ${formData.projectStatus || "Not Sandbox Tested"}
+* Project Deadline: ${formData.projectDeadline || "N/A"}
 * Description:
 ${formData.description || "Looking for enterprise CRM integrations, GTM workflow engineering, and revenue operations strategy alignment."}
 
@@ -252,6 +298,7 @@ PROJECT CONFIRMATION DETAILS
 * Project Reference: ${randomRef}
 * Selected Product/Service: ${formData.projectType}
 * Project Status: ${formData.projectStatus}
+* Project Deadline: ${formData.projectDeadline || "N/A"}
 * Company: ${formData.company || "N/A"}
 * Company Business Email: ${formData.companyEmail || "N/A"}
 
@@ -271,7 +318,7 @@ Intake Orchestrator
 Astera Labs Global GTM Hub
 San Jose, California`);
 
-    window.open(`mailto:${formData.email}?subject=${subject}&body=${body}`);
+    window.open(`mailto:${formData.companyEmail}?subject=${subject}&body=${body}`);
   };
 
   return (
@@ -469,13 +516,27 @@ San Jose, California`);
                   className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0"
                 >
                   <option value="New">New</option>
-                  <option value="Planning/Initiation">Planning/Initiation</option>
-                  <option value="RFP / Sourcing">RFP / Sourcing</option>
-                  <option value="Active Development">Active Development</option>
-                  <option value="Critical Optimization">Critical Optimization</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Paused">Paused</option>
+                  <option value="Cancelled">Cancelled</option>
+                  <option value="Completed">Completed</option>
                 </select>
                 <input type="hidden" name={projectStatusField} value={formData.projectStatus} />
               </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Project Deadline *</label>
+              <input
+                type="date"
+                name="projectDeadline"
+                id="sf_project_deadline_input"
+                required
+                value={formData.projectDeadline}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0"
+              />
+              <input type="hidden" name={projectDeadlineField} value={formData.projectDeadline} />
             </div>
 
             {/* Intelligent Hand-Drawn reCAPTCHA Challenge Card */}
@@ -664,6 +725,7 @@ San Jose, California`);
                     <strong className="text-yellow-400">Project Details:</strong><br />
                     • Product/Service: <span className="text-sky-300">{formData.projectType}</span><br />
                     • Status: <span className="text-emerald-400">{formData.projectStatus}</span><br />
+                    • Project Deadline: <span className="text-amber-400">{formData.projectDeadline || "N/A"}</span><br />
                     • Organization: {formData.company || "N/A"}<br /><br />
                     Our California-based systems and software integration engineers are reviewing your requirements. We will send a customized technical blueprint presentation to your inbox within 24-48 business hours.<br /><br />
                     Best regards,<br />
