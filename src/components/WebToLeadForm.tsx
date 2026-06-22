@@ -52,6 +52,8 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
   const [showCaptchaChallenge, setShowCaptchaChallenge] = useState(false);
   const [captchaError, setCaptchaError] = useState("");
+  const [duplicateError, setDuplicateError] = useState("");
+  const [allowBypass, setAllowBypass] = useState(false);
 
   const [copiedCode, setCopiedCode] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -132,6 +134,37 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
       setCaptchaError("Please solve the engineering visual challenge first to verify you are human!");
       return;
     }
+
+    // Deduplication check: hashing Company Name + Project Status + Project Type
+    const token = [formData.company, formData.projectStatus, formData.projectType]
+      .map(s => s.trim().toLowerCase())
+      .join('|');
+
+    if (!allowBypass) {
+      try {
+        const stored = localStorage.getItem("last_gtm_submission");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          const fiveMinutes = 5 * 60 * 1000;
+          if (parsed.token === token && (Date.now() - parsed.timestamp) < fiveMinutes) {
+            e.preventDefault();
+            setDuplicateError("Integrity Check: A submission for this Company, Project Type, and Status was processed in the last 5 minutes. Salesforce deduplication is active to prevent twin Opportunity/Project creation in the CRM.");
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Storage check failed:", err);
+      }
+    }
+
+    // Save token to localStorage to protect future submissions
+    try {
+      localStorage.setItem("last_gtm_submission", JSON.stringify({ token, timestamp: Date.now() }));
+    } catch (err) {
+      console.warn("Saving storage token failed:", err);
+    }
+
+    setDuplicateError("");
     // Show beautiful success card with live email dispatch info, letting the user verify/send the mail confirmation.
     setSubmitSuccess(true);
     // Programmatically route to the dedicated Thank You page
@@ -145,6 +178,36 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
       setCaptchaError("Please solve the engineering visual challenge first to verify you are human!");
       return;
     }
+
+    // Deduplication check for email dispatch
+    const token = [formData.company, formData.projectStatus, formData.projectType]
+      .map(s => s.trim().toLowerCase())
+      .join('|');
+
+    if (!allowBypass) {
+      try {
+        const stored = localStorage.getItem("last_gtm_submission");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          const fiveMinutes = 5 * 60 * 1000;
+          if (parsed.token === token && (Date.now() - parsed.timestamp) < fiveMinutes) {
+            setDuplicateError("Integrity Check: A submission for this Company, Project Type, and Status was processed in the last 5 minutes. Salesforce deduplication is active to prevent twin Opportunity/Project creation in the CRM.");
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Storage check failed:", err);
+      }
+    }
+
+    // Save token to localStorage to protect future submissions
+    try {
+      localStorage.setItem("last_gtm_submission", JSON.stringify({ token, timestamp: Date.now() }));
+    } catch (err) {
+      console.warn("Saving storage token failed:", err);
+    }
+
+    setDuplicateError("");
     const subject = encodeURIComponent(`New Project Proposal: ${formData.projectType || "Consulting"} - ${formData.company || "Interested Client"}`);
     
     // Draft a crisp, professional markdown email to Bao You
@@ -517,6 +580,29 @@ San Jose, California`);
                   <CheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
                   <span>Human Verification Successful! Design authorization granted.</span>
                 </p>
+              )}
+
+              {duplicateError && (
+                <div id="duplicate-warning-banner" className="border-3 border-amber-500 bg-amber-50 p-4 rounded-xl mt-4 text-left space-y-2 animate-fade-in w-full">
+                  <div className="flex items-start gap-2 text-amber-800 font-bold font-hand text-base">
+                    <span>⚠️ Double-Submission Prevention Active</span>
+                  </div>
+                  <p className="font-sans text-xs text-zinc-700 leading-relaxed">
+                    {duplicateError}
+                  </p>
+                  <div className="pt-1 flex items-center gap-2">
+                    <label className="flex items-center gap-2 text-xs font-mono font-bold text-amber-950 select-none cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={allowBypass}
+                        id="sf_bypass_checkbox"
+                        onChange={(e) => setAllowBypass(e.target.checked)}
+                        className="rounded border-2 border-amber-600 text-amber-600 focus:ring-amber-500 cursor-pointer h-4 w-4"
+                      />
+                      <span>Bypass protection and force submit this proposal anyway</span>
+                    </label>
+                  </div>
+                </div>
               )}
             </div>
 
