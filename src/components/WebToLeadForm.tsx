@@ -35,6 +35,7 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   const [projectDescriptionField, setProjectDescriptionField] = useState("00NgL000047eJlpUAE"); // User's Salesforce Project Description Custom ID
   const [companyEmailField, setCompanyEmailField] = useState("company_email__c");
   const [projectDeadlineField, setProjectDeadlineField] = useState("project_deadline__c");
+  const [projectNameField, setProjectNameField] = useState("project_name__c");
 
   // Lead Form Fields
   const [formData, setFormData] = useState({
@@ -42,6 +43,7 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
     lastName: "",
     email: "",
     company: "",
+    projectName: "",
     description: "",
     projectType: "Aries PCIe/CXL Smart DSP Retimers",
     projectStatus: "New",
@@ -65,6 +67,7 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
     let stateKey = name;
     if (name === "countrySelect") stateKey = "country";
     if (name === "descriptionInput") stateKey = "description";
+    if (name === "projectNameInput") stateKey = "projectName";
     setFormData(prev => {
       const updated = {
         ...prev,
@@ -106,6 +109,9 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
 
   <label for="company">Company</label>
   <input id="company" maxlength="40" name="company" size="20" type="text" value="${formData.company}" /><br>
+
+  <label for="${projectNameField}">Project Name</label>
+  <input id="${projectNameField}" name="${projectNameField}" type="text" value="${formData.projectName}" required /><br>
 
   <label for="${projectDescriptionField}">Project Description</label>
   <textarea id="${projectDescriptionField}" name="${projectDescriptionField}">${formData.description}</textarea><br>
@@ -268,6 +274,7 @@ I am reaching out regarding a new project opportunity. Here are the primary deta
 
 Project Details:
 ----------------------------------------
+* Project Name: ${formData.projectName || "N/A"}
 * Project Type: ${formData.projectType || "Enterprise Integration"}
 * Project Status: ${formData.projectStatus || "Not Sandbox Tested"}
 * Project Deadline: ${formData.projectDeadline || "N/A"}
@@ -296,6 +303,7 @@ PROJECT CONFIRMATION DETAILS
 ============================================
 * Form Submitter: ${formData.firstName || ""} ${formData.lastName || ""}
 * Project Reference: ${randomRef}
+* Project Name: ${formData.projectName || "N/A"}
 * Selected Product/Service: ${formData.projectType}
 * Project Status: ${formData.projectStatus}
 * Project Deadline: ${formData.projectDeadline || "N/A"}
@@ -467,6 +475,22 @@ San Jose, California`);
                 <option value="Other">Other / International</option>
               </select>
               <input type="hidden" name="country_code" value={formData.country} />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Project Name *</label>
+              <input
+                type="text"
+                name="projectNameInput"
+                id="sf_project_name_input"
+                required
+                value={formData.projectName}
+                onChange={handleInputChange}
+                placeholder="e.g. Next-Gen PCIe Retimer Expansion"
+                maxLength={100}
+                className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
+              />
+              <input type="hidden" name={projectNameField} value={formData.projectName} />
             </div>
 
             <div>
@@ -723,6 +747,7 @@ San Jose, California`);
                     Hi {formData.firstName || "Innovative Builder"},<br /><br />
                     Thank you for your interest in Astera Labs' connectivity hardware. We have successfully registered your project request in our lead intake portal.<br /><br />
                     <strong className="text-yellow-400">Project Details:</strong><br />
+                    • Project Name: <span className="text-white font-bold">{formData.projectName || "N/A"}</span><br />
                     • Product/Service: <span className="text-sky-300">{formData.projectType}</span><br />
                     • Status: <span className="text-emerald-400">{formData.projectStatus}</span><br />
                     • Project Deadline: <span className="text-amber-400">{formData.projectDeadline || "N/A"}</span><br />
