@@ -49,7 +49,7 @@ import {
 } from "lucide-react";
 
 import baoSelfie from "./Selfie.png";
-import resumePdf from "./assets/Bao_You_Resume.pdf";
+const resumePdf = "/Bao_You_Resume.pdf";
 
 import wingCover from "./Wing.jpeg";
 import padCover from "./PAD.jpeg";
@@ -273,6 +273,7 @@ export default function App() {
   const [activeProjectTab, setActiveProjectTab] = useState<"traditional" | "ai" | "crm" | "evaluation" | "modeling" | "sales">("crm");
   const [certFilter, setCertFilter] = useState<"all" | "salesforce" | "other">("all");
   const [isMusicModalOpen, setIsMusicModalOpen] = useState(false);
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [showResumeToast, setShowResumeToast] = useState(false);
 
   // Live Calendar & Booking states
@@ -1125,7 +1126,7 @@ export default function App() {
         {activePage === "career" && (
           <div className="space-y-12 mb-12">
             
-            <div className="border-b-3 border-ink pb-4 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div className="border-b-3 border-ink pb-4">
               <div>
                 <h2 className="font-hand text-3xl md:text-4xl font-extrabold text-ink flex items-center flex-wrap gap-2.5">
                   <span>Work Experience & System Impact</span>
@@ -1135,23 +1136,6 @@ export default function App() {
                   Quantified performance improvements, revenue scale, and career history across top technology companies.
                 </p>
               </div>
-              <a 
-                href={resumePdf} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                onClick={() => {
-                  setShowResumeToast(true);
-                  // Hide after 4 seconds automatically
-                  setTimeout(() => {
-                    setShowResumeToast(false);
-                  }, 4000);
-                }}
-                className="self-start md:self-auto px-5 py-2.5 font-hand text-base font-extrabold transition-all duration-150 border-3 border-ink rounded-lg bg-highlight hover:bg-yellow-300 text-ink shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] flex items-center gap-2 cursor-pointer"
-              >
-                <FileText className="h-5 w-5 shrink-0" />
-                VIEW FULL RESUME (PDF)
-                <ArrowUpRight className="h-4 w-4 shrink-0" />
-              </a>
             </div>
 
             {/* Hand-drawn partner/portfolio company logos in order: iHerb, Google, Salesforce, Twitter, XAI */}
@@ -2080,6 +2064,87 @@ export default function App() {
               <div className="bg-zinc-100 border-t-2 border-ink p-2.5 rounded-b-xl flex items-center justify-between text-ink select-none font-mono text-[9px] sm:text-[10px] uppercase font-bold text-zinc-500 shrink-0">
                 <span>SYSTEM: COMPACT FOCUS VIBES</span>
                 <span className="text-pink-600 font-extrabold animate-pulse">● BAO'S MUSIC OK</span>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* 📄 RESUME PDF VIEWER MODAL 📄 */}
+      <AnimatePresence>
+        {isResumeModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsResumeModalOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-xs cursor-pointer"
+            />
+            
+            {/* Window Dialog */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ type: "spring", damping: 28, stiffness: 380 }}
+              className="relative bg-white border-4 border-ink rounded-2xl w-full max-w-4xl md:max-w-5xl shadow-[8px_8px_0px_0px_rgba(34,197,94,1)] z-10 flex flex-col h-[90vh] max-h-[90vh] select-none"
+            >
+              {/* Header bar */}
+              <div className="bg-emerald-600 text-white border-b-4 border-ink p-3 flex items-center justify-between select-none relative z-20 shrink-0">
+                <div className="flex items-center gap-2 mr-3 min-w-0">
+                  <span className="w-3.5 h-3.5 rounded-full bg-white border-2 border-ink flex items-center justify-center text-[8px] font-black font-sans text-emerald-600 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] shrink-0">
+                    ★
+                  </span>
+                  <span className="font-hand text-lg md:text-xl font-black text-white drop-shadow-sm tracking-wide truncate">
+                    📄 Bao You - Professional Resume PDF
+                  </span>
+                </div>
+                
+                {/* Control Action Buttons */}
+                <div className="flex items-center gap-2 shrink-0 select-none relative z-30">
+                  <a 
+                    href={resumePdf} 
+                    download="Bao_You_Resume.pdf"
+                    className="px-2.5 py-1 bg-white hover:bg-neutral-100 text-ink text-xs font-hand font-extrabold border-2 border-ink rounded-lg shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer flex items-center gap-1 shrink-0"
+                    title="Download PDF directly"
+                  >
+                    Download PDF ⬇
+                  </a>
+                  <a 
+                    href={resumePdf} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2.5 py-1 bg-white hover:bg-neutral-100 text-ink text-xs font-hand font-extrabold border-2 border-ink rounded-lg shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer flex items-center gap-1 shrink-0"
+                    title="Open PDF in a new tab"
+                  >
+                    Open New Tab ↗
+                  </a>
+                  <button 
+                    onClick={() => setIsResumeModalOpen(false)}
+                    className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-950 border-2 border-ink font-black hover:bg-emerald-200 active:translate-y-0.5 flex items-center justify-center transition-all cursor-pointer shrink-0"
+                    aria-label="Close Pop Up"
+                    title="Close Window"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              {/* PDF Frame Area */}
+              <div className="flex-1 bg-zinc-150 p-2 relative z-10 overflow-hidden flex flex-col">
+                <iframe 
+                  src={resumePdf} 
+                  className="w-full h-full border-3 border-ink rounded-lg bg-white shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1)]" 
+                  title="Bao You Resume PDF Viewer"
+                />
+              </div>
+
+              {/* Footer status bar */}
+              <div className="bg-zinc-100 border-t-2 border-ink p-2.5 rounded-b-xl flex items-center justify-between text-ink select-none font-mono text-[9px] sm:text-[10px] uppercase font-bold text-zinc-500 shrink-0">
+                <span>FILE SOURCE: SECURE PORTFOLIO ENGINE</span>
+                <span className="text-emerald-600 font-extrabold animate-pulse">● ONLINE PDF VIEWER OK</span>
               </div>
             </motion.div>
           </div>
