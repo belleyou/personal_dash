@@ -308,6 +308,19 @@ export default function App() {
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
+  // Track page transitions in Google Analytics
+  useEffect(() => {
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      const trackingId = (import.meta as any).env.VITE_GA_TRACKING_ID;
+      if (trackingId) {
+        (window as any).gtag("config", trackingId, {
+          page_title: activePage.charAt(0).toUpperCase() + activePage.slice(1) + " | Portfolio",
+          page_path: activePage === "home" ? "/" : `/${activePage}`,
+        });
+      }
+    }
+  }, [activePage]);
+
   const navigateToPage = (pageName: string) => {
     window.location.hash = pageName === "home" ? "" : pageName;
     setActivePage(pageName);

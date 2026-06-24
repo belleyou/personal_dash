@@ -32,10 +32,10 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   // Custom Field mapping inputs (allows mapping to actual Salesforce Custom Field API names/IDs)
   const [projectTypeField, setProjectTypeField] = useState("00NgL000047BQPJ"); // User's Salesforce Project Type Custom ID
   const [projectStatusField, setProjectStatusField] = useState("00NgL000047B8P1"); // User's Salesforce Project Status Custom ID
-  const [projectDescriptionField, setProjectDescriptionField] = useState("00NgL000047eJlpUAE"); // User's Salesforce Project Description Custom ID
+  const [projectDescriptionField, setProjectDescriptionField] = useState("00NgL000047eJlp"); // User's Salesforce Project Description Custom ID
   const [companyEmailField, setCompanyEmailField] = useState("company_email__c");
-  const [projectDeadlineField, setProjectDeadlineField] = useState("project_deadline__c");
-  const [projectNameField, setProjectNameField] = useState("project_name__c");
+  const [projectDeadlineField, setProjectDeadlineField] = useState("00NgL000047vQ7l");
+  const [projectNameField, setProjectNameField] = useState("00NgL000048ALHR");
 
   // Lead Form Fields
   const [formData, setFormData] = useState({
