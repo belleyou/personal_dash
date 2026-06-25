@@ -736,47 +736,8 @@ San Jose, California`);
                   </div>
                 </div>
 
-                {/* Simulated Email Confirmation Box */}
-                <div className="space-y-1 bg-zinc-900 text-zinc-200 p-4 rounded-lg font-mono text-xs border border-zinc-700 shadow-inner max-h-[220px] overflow-y-auto select-none">
-                  <div className="text-zinc-500 border-b border-zinc-800 pb-1.5 mb-2 font-mono flex flex-col gap-0.5">
-                    <span className="text-[10px]"><strong className="text-zinc-400">From:</strong> system-dispatch@asteralabs-gtm.com</span>
-                    <span className="text-[10px]"><strong className="text-zinc-400">To:</strong> {formData.email || "client@company.com"}</span>
-                    <span className="text-[10px]"><strong className="text-zinc-400">Subject:</strong> Project Proposal Confirmation [Ref: AST-71285] - Astera Labs Connectivity Solutions</span>
-                  </div>
-                  <p className="text-zinc-300 leading-relaxed">
-                    Hi {formData.firstName || "Innovative Builder"},<br /><br />
-                    Thank you for your interest in Astera Labs' connectivity hardware. We have successfully registered your project request in our lead intake portal.<br /><br />
-                    <strong className="text-yellow-400">Project Details:</strong><br />
-                    • Project Name: <span className="text-white font-bold">{formData.projectName || "N/A"}</span><br />
-                    • Product/Service: <span className="text-sky-300">{formData.projectType}</span><br />
-                    • Status: <span className="text-emerald-400">{formData.projectStatus}</span><br />
-                    • Project Deadline: <span className="text-amber-400">{formData.projectDeadline || "N/A"}</span><br />
-                    • Organization: {formData.company || "N/A"}<br /><br />
-                    Our California-based systems and software integration engineers are reviewing your requirements. We will send a customized technical blueprint presentation to your inbox within 24-48 business hours.<br /><br />
-                    Best regards,<br />
-                    <strong>Intake Orchestrator</strong><br />
-                    Astera Labs Global GTM Hub
-                  </p>
-                </div>
-
-                {/* Submitter Notification Notice & Action Button */}
-                <div className="p-3 bg-sky-50 border border-sky-200 rounded-lg text-xs text-sky-850 flex flex-col sm:flex-row items-center justify-between gap-3 font-sans">
-                  <div className="space-y-0.5 text-center sm:text-left">
-                    <p className="font-bold">Dispatch Real Email Confirmation</p>
-                    <p className="text-[11px] text-sky-700">Send a real confirmation message to this submitter's address: <strong>{formData.email}</strong></p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleSendConfirmationEmail}
-                    className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded border border-sky-800 shadow-sm flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 transition-all text-[11px]"
-                  >
-                    <Mail className="h-3.5 w-3.5" />
-                    <span>Send Real Email</span>
-                  </button>
-                </div>
-
                 {/* Bottom dialog dismiss keys */}
-                <div className="flex items-center justify-end gap-3 pt-2 border-t border-zinc-200">
+                <div className="flex items-center justify-end gap-3 pt-2">
                   <button
                     type="button"
                     onClick={() => setSubmitSuccess(false)}
