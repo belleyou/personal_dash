@@ -594,18 +594,13 @@ San Jose, California`);
                 <select
                   name="projectStatus"
                   id="sf_project_status_input"
-                  required
-                  value={formData.projectStatus}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0"
+                  disabled
+                  value="New"
+                  className="w-full px-3 py-2 border-2 border-ink rounded bg-zinc-100 text-zinc-500 text-sm cursor-not-allowed opacity-75 focus:outline-none"
                 >
                   <option value="New">New</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Paused">Paused</option>
-                  <option value="Cancelled">Cancelled</option>
-                  <option value="Completed">Completed</option>
                 </select>
-                <input type="hidden" name={projectStatusField} value={formData.projectStatus} />
+                <input type="hidden" name={projectStatusField} value="New" />
               </div>
             </div>
 
