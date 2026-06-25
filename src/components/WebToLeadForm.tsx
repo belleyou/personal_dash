@@ -141,6 +141,9 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   <label for="${projectDeadlineField}">Project Deadline</label>
   <input id="${projectDeadlineField}" name="${projectDeadlineField}" type="date" value="${formData.projectDeadline}" required /><br>
 
+  <!-- Lead Source Identifier -->
+  <input type="hidden" name="lead_source" value="Web">
+
   <input type="submit" name="submit" value="Submit Lead to Salesforce">
 
 </form>`;
@@ -616,6 +619,7 @@ San Jose, California`);
                 className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0"
               />
               <input type="hidden" name={projectDeadlineField} value={formData.projectDeadline} />
+              <input type="hidden" name="lead_source" value="Web" />
             </div>
 
             {/* Intelligent Hand-Drawn reCAPTCHA Challenge Card */}
