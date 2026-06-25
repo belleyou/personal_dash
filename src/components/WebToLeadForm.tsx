@@ -193,13 +193,8 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
     }
 
     setDuplicateError("");
-    // Show beautiful success card with live email dispatch info, letting the user verify/send the mail confirmation.
+    // Show beautiful success card
     setSubmitSuccess(true);
-    
-    // Auto-trigger confirmation email as requested: "After the form is submitted, send a confirmation email to the email in 'Company Email'."
-    setTimeout(() => {
-      handleSendConfirmationEmail();
-    }, 100);
 
     // Programmatically route to the dedicated Thank You page
     setTimeout(() => {
