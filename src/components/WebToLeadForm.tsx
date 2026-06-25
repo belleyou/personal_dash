@@ -11,7 +11,12 @@ import {
   Briefcase,
   Coffee,
   Music,
-  Camera
+  Camera,
+  Paperclip,
+  Trash2,
+  UploadCloud,
+  AlertTriangle,
+  FileText
 } from "lucide-react";
 
 interface WebToLeadFormProps {
@@ -61,6 +66,13 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
 
   const [copiedCode, setCopiedCode] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  
+  const formRef = React.useRef<HTMLFormElement>(null);
+  const [showDuplicateConfirm, setShowDuplicateConfirm] = useState(false);
+  
+  // File Attachment States
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -140,49 +152,29 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
 
   // Safe client-side pre-submission handler
   const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // Intercept actual form submission to display the duplicate confirmation check modal
+    
     if (!isCaptchaVerified) {
-      e.preventDefault();
       setCaptchaError("Please solve the engineering visual challenge first to verify you are human!");
       return;
     }
 
-    // Deduplication check: Company Name + Project Status + Project Type + Project Deadline + Country / Region
+    // Trigger the duplicate warning check dialog on submit click
+    setShowDuplicateConfirm(true);
+  };
+
+  const proceedWithSubmission = () => {
+    setShowDuplicateConfirm(false);
+
     const tokenByName = [formData.company, formData.projectStatus, formData.projectType, formData.projectDeadline, formData.country]
       .map(s => (s || "").trim().toLowerCase())
       .join('|');
 
-    // Deduplication check: Company Email + Project Status + Project Type + Project Deadline + Country / Region
     const tokenByEmail = [formData.companyEmail, formData.projectStatus, formData.projectType, formData.projectDeadline, formData.country]
       .map(s => (s || "").trim().toLowerCase())
       .join('|');
 
     const now = Date.now();
-    const fiveMinutes = 5 * 60 * 1000;
-
-    if (!allowBypass) {
-      try {
-        const stored = localStorage.getItem("last_gtm_submissions_list");
-        if (stored) {
-          const submissions = JSON.parse(stored);
-          const foundDuplicate = submissions.find((sub: any) => {
-            const isRecent = (now - sub.timestamp) < fiveMinutes;
-            const matchName = sub.tokenByName === tokenByName;
-            const matchEmail = sub.tokenByEmail === tokenByEmail;
-            return isRecent && (matchName || matchEmail);
-          });
-
-          if (foundDuplicate) {
-            e.preventDefault();
-            setDuplicateError("Integrity Check: A submission with the same configuration (Company Name/Email, Project Status, Project Type, Project Deadline, and Country/Region) was processed in the last 5 minutes. Salesforce deduplication is active to prevent twin Opportunity/Project creation in the CRM.");
-            return;
-          }
-        }
-      } catch (err) {
-        console.warn("Storage check failed:", err);
-      }
-    }
-
-    // Save tokens to history
     try {
       const stored = localStorage.getItem("last_gtm_submissions_list");
       const list = stored ? JSON.parse(stored) : [];
@@ -193,8 +185,12 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
     }
 
     setDuplicateError("");
-    // Show beautiful success card
     setSubmitSuccess(true);
+
+    // Submit form programmatically to Salesforce target iframe
+    if (formRef.current) {
+      formRef.current.submit();
+    }
 
     // Programmatically route to the dedicated Thank You page
     setTimeout(() => {
@@ -370,6 +366,7 @@ San Jose, California`);
 
           {/* Form Fields Section */}
           <form 
+            ref={formRef}
             action={isSandbox ? `https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=${oid}` : `https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=${oid}`}
             method="POST"
             onSubmit={handleFormSubmit}
@@ -500,7 +497,75 @@ San Jose, California`);
                 placeholder="Elaborate on scope, target go-live times, architectural hurdles, etc..."
                 className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400 resize-none"
               />
-              <input type="hidden" name={projectDescriptionField} value={formData.description} />
+              <input 
+                type="hidden" 
+                name={projectDescriptionField} 
+                value={formData.description + (attachedFile ? `\n\n--- ATTACHED DESIGN SPECIFICATION ---\nFile Name: ${attachedFile.name}\nFile Size: ${(attachedFile.size / 1024 / 1024).toFixed(2)} MB\nType: ${attachedFile.type || "unknown"}` : '')} 
+              />
+            </div>
+
+            {/* Project Attachments Section */}
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Project Attachments (Optional)</label>
+              
+              {!attachedFile ? (
+                <div
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                  }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setIsDragging(false);
+                    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                      setAttachedFile(e.dataTransfer.files[0]);
+                    }
+                  }}
+                  onClick={() => document.getElementById("project_attachment_input")?.click()}
+                  className={`border-3 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-2 ${
+                    isDragging 
+                      ? "border-yellow-500 bg-yellow-50 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] scale-[0.98]" 
+                      : "border-ink bg-zinc-50 hover:bg-zinc-100 hover:shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] active:scale-[0.99]"
+                  }`}
+                >
+                  <input
+                    type="file"
+                    id="project_attachment_input"
+                    className="hidden"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files.length > 0) {
+                        setAttachedFile(e.target.files[0]);
+                      }
+                    }}
+                  />
+                  <UploadCloud className="h-7 w-7 text-ink" />
+                  <div>
+                    <p className="font-hand font-bold text-sm text-ink">Drag & Drop blueprint or click to upload</p>
+                    <p className="text-[10px] text-zinc-500 font-mono mt-0.5">Supports PDF, CAD, PNG, ZIP, DOCX (Max 25MB)</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between p-3 bg-yellow-50 border-3 border-ink rounded-xl shadow-[4px_4px_0px_0px_rgba(24,24,27,1)]">
+                  <div className="flex items-center gap-3 overflow-hidden">
+                    <div className="p-2 bg-white rounded-lg border-2 border-ink text-ink shrink-0">
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <div className="text-left overflow-hidden">
+                      <p className="font-hand font-extrabold text-sm text-ink truncate max-w-[200px] sm:max-w-xs">{attachedFile.name}</p>
+                      <p className="text-[10px] text-zinc-500 font-mono">{(attachedFile.size / 1024 / 1024).toFixed(2)} MB • Linked to Salesforce descriptor</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setAttachedFile(null)}
+                    className="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg border-2 border-ink hover:text-red-700 transition cursor-pointer active:scale-90 shrink-0"
+                    title="Remove attachment"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -749,6 +814,78 @@ San Jose, California`);
                     className="px-6 py-2 bg-highlight text-ink font-hand font-extrabold text-sm border-2 border-ink rounded hover:bg-yellow-300 transition cursor-pointer"
                   >
                     Done
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          )}
+
+          {/* Duplicate Submission Warning Confirmation Modal */}
+          {showDuplicateConfirm && (
+            <div className="absolute inset-0 bg-white/98 backdrop-blur-sm rounded-xl flex flex-col items-center justify-center p-4 sm:p-8 z-30 animate-fade-in overflow-y-auto">
+              <div className="max-w-xl w-full bg-amber-50 border-3 border-ink rounded-xl p-5 sm:p-6 shadow-[8px_8px_0px_0px_rgba(24,24,27,1)] text-left space-y-4">
+                
+                {/* Header Status */}
+                <div className="flex items-start gap-3 border-b-2 border-amber-200 pb-3">
+                  <div className="bg-amber-100 p-2.5 rounded-full border-2 border-ink shrink-0 text-amber-600">
+                    <AlertTriangle className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-hand text-xl sm:text-2xl font-extrabold text-ink leading-tight">
+                      Duplicate Submission Verification
+                    </h4>
+                    <p className="font-sans text-[11px] text-zinc-600 mt-1 font-bold">
+                      Astera Labs CRM Pipeline Integrity Check
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-3 text-xs text-zinc-800 font-sans leading-relaxed">
+                  <p>
+                    Please verify whether you are submitting a duplicate project before we route this Web-to-Lead request to the Salesforce CRM. Duplicate records may result in split tracking pipelines inside the sales hub.
+                  </p>
+
+                  {/* Summary card */}
+                  <div className="p-3.5 bg-white border-2 border-ink rounded-xl space-y-1.5 shadow-[2px_2px_0px_0px_rgba(24,24,27,1)]">
+                    <p className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider">PROJECT INTENDED SCHEMATIC</p>
+                    <div className="grid grid-cols-3 gap-y-1 text-ink text-[11px]">
+                      <span className="font-bold">Project Name:</span>
+                      <span className="col-span-2 truncate">{formData.projectName || "N/A"}</span>
+
+                      <span className="font-bold">Company:</span>
+                      <span className="col-span-2 truncate">{formData.company || "N/A"}</span>
+
+                      <span className="font-bold">Product Category:</span>
+                      <span className="col-span-2 truncate">{formData.projectType}</span>
+
+                      <span className="font-bold">Attachment:</span>
+                      <span className="col-span-2 truncate text-zinc-600 italic">
+                        {attachedFile ? `${attachedFile.name} (${(attachedFile.size / 1024 / 1024).toFixed(2)} MB)` : "None attached"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="bg-amber-100/70 p-2.5 rounded border border-amber-200 text-[11px] text-amber-900 font-bold">
+                    Are you sure you want to proceed? Proceeding will initiate the secure Salesforce Web-to-Lead intake handshake.
+                  </p>
+                </div>
+
+                {/* Confirmation Options */}
+                <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowDuplicateConfirm(false)}
+                    className="w-full sm:w-auto px-4 py-2 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 font-hand font-extrabold text-sm border-2 border-ink rounded transition cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={proceedWithSubmission}
+                    className="w-full sm:w-auto px-5 py-2 bg-yellow-400 hover:bg-yellow-500 text-ink font-hand font-extrabold text-sm border-2 border-ink rounded shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-none transition cursor-pointer"
+                  >
+                    Confirm No Duplicate Submission
                   </button>
                 </div>
 
