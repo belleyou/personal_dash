@@ -270,7 +270,7 @@ export default function App() {
   const [hoveredNav, setHoveredNav] = useState<string>("home");
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // Career experience expansion
-  const [activeProjectTab, setActiveProjectTab] = useState<"traditional" | "ai" | "crm" | "evaluation" | "modeling" | "sales">("crm");
+  const [activeProjectTab, setActiveProjectTab] = useState<"innovations_video" | "traditional" | "ai" | "crm" | "evaluation" | "modeling" | "sales">("innovations_video");
   const [certFilter, setCertFilter] = useState<"all" | "salesforce" | "other">("all");
   const [isMusicModalOpen, setIsMusicModalOpen] = useState(false);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
@@ -904,6 +904,17 @@ export default function App() {
             {/* Folder Tabs - Compact single row, horizontal scrollable without wrapping */}
             <div className="flex flex-nowrap overflow-x-auto border-b-3 border-ink w-full gap-x-1.5 select-none pb-[3px] scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-track-transparent">
               <button
+                onClick={() => setActiveProjectTab("innovations_video")}
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
+                  activeProjectTab === "innovations_video"
+                    ? "bg-amber-100 text-ink border-b-3 border-b-amber-100 z-10 scale-105"
+                    : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
+                }`}
+              >
+                <PlayCircle className="h-4 w-4 text-amber-600 animate-pulse" />
+                Architectural Innovations 🎥
+              </button>
+              <button
                 onClick={() => setActiveProjectTab("crm")}
                 className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
                   activeProjectTab === "crm"
@@ -972,7 +983,82 @@ export default function App() {
             </div>
 
             {/* Project Cards Grid / Walkthrough */}
-            {activeProjectTab === "crm" ? (
+            {activeProjectTab === "innovations_video" ? (
+              <div className="bg-white border-3 border-ink rounded-xl p-6 md:p-8 shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] space-y-6 animate-fade-in">
+                <div className="flex flex-col md:flex-row md:items-center justify-between border-b-2 border-dashed border-zinc-200 pb-4 gap-4">
+                  <div>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 mb-2 rounded-full bg-amber-50 border-2 border-amber-200 text-amber-800 font-hand text-xs font-bold leading-none rotate-[-1deg]">
+                      <Sparkles className="h-3 w-3 shrink-0 animate-spin" />
+                      Architectural Innovations Showcase
+                    </span>
+                    <h3 className="font-hand text-2xl md:text-3xl font-black text-ink flex items-center gap-2">
+                      <PlayCircle className="h-6 w-6 text-amber-600 shrink-0" />
+                      GTM Systems & Architecture Video
+                    </h3>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["Systems Design", "Salesforce RevOps", "Enterprise GTM", "Workflow Automation", "API Integration"].map((tag, tIdx) => (
+                      <span key={tIdx} className="px-2 py-0.5 font-mono text-[10px] font-bold text-zinc-700 bg-zinc-100 border border-zinc-200 rounded-md">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Subtitle / Intro */}
+                <p className="font-sans text-sm text-zinc-650 leading-relaxed md:max-w-4xl">
+                  Take a comprehensive look at standard enterprise architecture patterns, advanced custom systems orchestration, and strategic Salesforce lifecycle execution. This demonstration outlines robust ways to scale customer operations databases, design high-integrity routing funnels, and connect modular APIs to streamline commercial revenue flows.
+                </p>
+
+                {/* Embedded YouTube Video Container */}
+                <div className="w-full aspect-video bg-zinc-950 border-3 border-ink rounded-xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] relative">
+                  <iframe 
+                    width="100%" 
+                    height="100%" 
+                    src="https://www.youtube.com/embed/2NPEc0dxfhI" 
+                    title="GTM Systems & Architecture Video Overview" 
+                    frameBorder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerPolicy="strict-origin-when-cross-origin" 
+                    allowFullScreen
+                    className="w-full h-full min-h-[300px] md:min-h-[450px]"
+                  ></iframe>
+                </div>
+
+                {/* Additional context & bullet descriptions */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-dashed border-zinc-200">
+                  <div className="p-4 bg-zinc-50 border-2 border-ink rounded-lg shadow-sm">
+                    <h4 className="font-sans font-extrabold text-sm text-zinc-900 mb-1.5 flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
+                      Global Process Mapping
+                    </h4>
+                    <p className="font-sans text-xs text-zinc-650 leading-relaxed">
+                      Detailed decomposition of multi-system business structures, from raw web-to-lead landing page ingestion into core Salesforce org objects.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-[#fbfbfb] border-2 border-ink rounded-lg shadow-sm">
+                    <h4 className="font-sans font-extrabold text-sm text-zinc-900 mb-1.5 flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 shrink-0"></span>
+                      Advanced RevOps Engine
+                    </h4>
+                    <p className="font-sans text-xs text-zinc-650 leading-relaxed">
+                      Optimizing routing mechanisms, validation constraints, and lead qualification logic to maximize velocity across sales representative channels.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-zinc-50 border-2 border-ink rounded-lg shadow-sm">
+                    <h4 className="font-sans font-extrabold text-sm text-zinc-900 mb-1.5 flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+                      Custom REST Pipelines
+                    </h4>
+                    <p className="font-sans text-xs text-zinc-650 leading-relaxed">
+                      Connecting backend server relays with secure token handshakes, ensuring customer properties sync flawlessly with zero data leakage.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : activeProjectTab === "crm" ? (
               <div className="bg-white border-3 border-ink rounded-xl p-6 md:p-8 shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] space-y-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between border-b-2 border-dashed border-zinc-200 pb-4 gap-4">
                   <div>

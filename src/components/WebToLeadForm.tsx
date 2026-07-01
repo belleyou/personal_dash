@@ -50,7 +50,7 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
     company: "",
     projectName: "",
     description: "",
-    projectType: "Aries PCIe/CXL Smart DSP Retimers",
+    projectType: "Aries PCIE/CXL Smart DSP Retimers",
     projectStatus: "New",
     companyEmail: "",
     country: "US",
@@ -582,7 +582,7 @@ San Jose, California`);
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0"
                 >
-                  <option value="Aries PCIe/CXL Smart DSP Retimers">Aries PCIe/CXL Smart DSP Retimers</option>
+                  <option value="Aries PCIE/CXL Smart DSP Retimers">Aries PCIE/CXL Smart DSP Retimers</option>
                   <option value="Taurus Ethernet Smart Cable Modules">Taurus Ethernet Smart Cable Modules</option>
                   <option value="Leo CXL Memory Connectivity Controllers">Leo CXL Memory Connectivity Controllers</option>
                   <option value="Intelligent Connectivity for Cloud & High-Speed Infrastructure">Intelligent Connectivity for Cloud & High-Speed Infrastructure</option>
