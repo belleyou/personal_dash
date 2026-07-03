@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Experience, Education, Certification, SkillCategory, Project, MetricCard } from "./types";
+import { Experience, Education, Certification, SkillCategory, Project, MetricCard, Article } from "./types";
 
 // ==========================================
 // 1. EDITABLE CONTACT INFORMATION
@@ -529,3 +529,35 @@ export const HOBBIES = [
     coverImage: "/src/Doc.jpeg",
   },
 ];
+
+// ==========================================
+// 6. RECENT PUBLISHED ARTICLES (LINKEDIN POSTS)
+// ==========================================
+export const ARTICLES: Article[] = [
+  {
+    title: "Architecting Salesforce & CPQ for $150M+ Scale: A Masterclass in RevOps Integrity",
+    excerpt: "How we redesigned lead-to-opportunity flows, integrated advanced CPQ rulesets, and optimized schema models to support over 3,500 active global enterprise users without downstream data leakage.",
+    publishDate: "July 2026",
+    readTime: "6 min read",
+    linkedInUrl: "https://www.linkedin.com/posts/baoyingyou_architecting-salesforce-cpq-for-scale-activity-7212345678901234567-xxxx",
+    category: "RevOps & Architecture",
+    featured: true,
+  },
+  {
+    title: "The Ultimate Guide to Incident Management & Production SLA Controls in Commercial Tech Org",
+    excerpt: "A look into establishing production support playbooks, running zero-downtime UAT, and managing complex escalations across hundreds of SaaS and e-commerce integrations.",
+    publishDate: "June 2026",
+    readTime: "5 min read",
+    linkedInUrl: "https://www.linkedin.com/posts/baoyingyou_crm-incident-management-playbook-activity-7208311548231845120-B5xz",
+    category: "Incident Ops & Systems",
+  },
+  {
+    title: "Transitioning Standard CRM Pipelines into Intelligent Agentic Workspaces with Gemini",
+    excerpt: "How server-side Google-GenAI SDK integrations can enrich raw lead attributes, automate service ticket categorization, and bolster overall workspace productivity.",
+    publishDate: "May 2026",
+    readTime: "8 min read",
+    linkedInUrl: "https://www.linkedin.com/posts/baoyingyou_agentic-ai-salesforce-integration-activity-7195821034927394816-C3yz",
+    category: "AI & Automation",
+  }
+];
+

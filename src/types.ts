@@ -49,3 +49,15 @@ export interface MetricCard {
   explanation: string;
   markerColor: "marker-blue" | "marker-green" | "marker-orange" | "highlight";
 }
+
+export interface Article {
+  title: string;
+  excerpt: string;
+  publishDate: string;
+  readTime: string;
+  linkedInUrl: string;
+  category: string;
+  imageUrl?: string;
+  featured?: boolean;
+}
+

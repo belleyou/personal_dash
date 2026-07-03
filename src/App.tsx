@@ -71,7 +71,8 @@ import {
   HOBBIES,
   EVALUATION_PROJECTS,
   MODELING_PROJECTS,
-  SALES_PRO_PROJECTS
+  SALES_PRO_PROJECTS,
+  ARTICLES
 } from "./data";
 
 // Import custom whiteboard component sketches
@@ -293,7 +294,7 @@ export default function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace("#", "");
-      if (["home", "about", "certifications", "projects", "career", "contact", "meet", "thank-you"].includes(hash)) {
+      if (["home", "about", "certifications", "projects", "articles", "career", "contact", "meet", "thank-you"].includes(hash)) {
         setActivePage(hash);
         setHoveredNav(hash);
       } else {
@@ -411,12 +412,13 @@ export default function App() {
             { id: "about", label: "ABOUT", color: "bg-white hover:bg-emerald-100" },
             { id: "certifications", label: "CERTIFICATIONS", color: "bg-white hover:bg-orange-100" },
             { id: "projects", label: "PROJECTS", color: "bg-white hover:bg-amber-100" },
+            { id: "articles", label: "ARTICLES", color: "bg-white hover:bg-sky-100" },
             { id: "career", label: "CAREER", color: "bg-white hover:bg-purple-100" },
             { id: "contact", label: "CONTACT & HOBBIES", color: "bg-white hover:bg-rose-100" },
             { id: "meet", label: "MEET ME", color: "bg-white hover:bg-lime-150" },
           ].map((item) => {
             const isSelected = activePage === item.id;
-            const tilt = item.id === "home" ? "rotate-[-1deg]" : item.id === "about" ? "rotate-[1deg]" : item.id === "certifications" ? "rotate-[-0.8deg]" : item.id === "projects" ? "rotate-[-1.5deg]" : item.id === "career" ? "rotate-[0.5deg]" : item.id === "contact" ? "rotate-[1.2deg]" : item.id === "meet" ? "rotate-[-1.1deg]" : "rotate-[-1.5deg]";
+            const tilt = item.id === "home" ? "rotate-[-1deg]" : item.id === "about" ? "rotate-[1deg]" : item.id === "certifications" ? "rotate-[-0.8deg]" : item.id === "projects" ? "rotate-[-1.5deg]" : item.id === "articles" ? "rotate-[1.5deg]" : item.id === "career" ? "rotate-[0.5deg]" : item.id === "contact" ? "rotate-[1.2deg]" : item.id === "meet" ? "rotate-[-1.1deg]" : "rotate-[-1.5deg]";
             return (
               <button
                 key={item.id}
@@ -451,6 +453,18 @@ export default function App() {
               {/* Outer delicate frame housing the childlike character - compact padding with Botanical Vines framing it */}
               <div className="relative p-5 md:p-6 bg-white/15 rounded-2xl border-3 border-emerald-800/40 hover:border-emerald-800/60 transition-all duration-300 transform hover:scale-[1.01] shadow-sm">
                 
+                {/* Clickable New Article Published Tape Button */}
+                <a 
+                  href={ARTICLES[0].linkedInUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute -top-4 -left-4 sm:-left-6 bg-amber-200 hover:bg-amber-300 text-ink border-2 border-ink px-4 py-1.5 rounded font-hand text-xs font-black tracking-wider rotate-[-5deg] shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] hover:scale-105 active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(24,24,27,1)] transition-all flex items-center gap-1.5 z-30 cursor-pointer"
+                  title={`Read Article: ${ARTICLES[0].title}`}
+                >
+                  <Sparkles className="h-3.5 w-3.5 text-amber-600 animate-pulse shrink-0" />
+                  <span>NEW ARTICLE PUBLISHED! 📣</span>
+                </a>
+
                 {/* Botanical Vine flourishes in opposite corners */}
                 <BotanicalVine className="absolute -left-6 -top-6 h-14 w-14 animate-pulse" rotate="-15deg" />
                 <BotanicalVine className="absolute -right-6 -bottom-6 h-14 w-14 animate-pulse" flip={true} rotate="-15deg" />
@@ -1217,6 +1231,108 @@ export default function App() {
                 })}
               </div>
             )}
+
+          </div>
+        )}
+
+        {/* ARTICLES HUB SCREEN */}
+        {activePage === "articles" && (
+          <div className="space-y-12 mb-12 animate-fade-in text-ink">
+            
+            <div className="border-b-3 border-ink pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div>
+                <h2 className="font-hand text-3xl md:text-4xl font-extrabold text-ink flex items-center flex-wrap gap-2.5 animate-fade-in">
+                  <span>Articles & Strategic Insights Hub</span>
+                  <FileText className="h-9 w-9 text-sky-600 shrink-0 hover:rotate-6 transition-transform duration-150 cursor-pointer" />
+                </h2>
+                <p className="font-sans text-sm text-zinc-650 mt-1">
+                  Exploring high-velocity systems design, strategic CRM deployments, and advanced automation pipelines.
+                </p>
+              </div>
+              <div className="shrink-0">
+                <a 
+                  href={CONTACT_INFO.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 border-2 border-ink rounded-lg font-hand text-sm font-bold shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] hover:translate-y-[-1px] transition-all cursor-pointer"
+                >
+                  <Linkedin className="h-4 w-4 fill-current text-blue-700" />
+                  Connect on LinkedIn
+                </a>
+              </div>
+            </div>
+
+
+
+            {/* Other Articles Grid */}
+            <div className="space-y-6">
+              <h3 className="font-hand text-2xl font-black text-ink flex items-center gap-2 border-b-2 border-dashed border-zinc-200 pb-2">
+                <span>📚 Latest Releases & System Logs</span>
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {ARTICLES.map((art, artIdx) => (
+                  <div 
+                    key={artIdx}
+                    className="bg-white border-3 border-ink rounded-xl p-6 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] hover:translate-y-[-1px] transition-all flex flex-col justify-between"
+                  >
+                    <div className="space-y-4 text-left">
+                      <div className="flex items-center justify-between font-mono text-xs text-zinc-400">
+                        <span className="px-2 py-0.5 rounded bg-zinc-100 border border-zinc-200 font-bold text-zinc-700 uppercase tracking-wider text-[9px]">
+                          {art.category}
+                        </span>
+                        <span className="font-semibold">{art.publishDate}</span>
+                      </div>
+
+                      <h4 className="font-hand text-xl font-black text-ink leading-snug">
+                        {art.title}
+                      </h4>
+
+                      <p className="font-sans text-xs text-zinc-650 leading-relaxed line-clamp-3">
+                        {art.excerpt}
+                      </p>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-dashed border-zinc-200 flex items-center justify-between">
+                      <span className="font-sans text-xs font-semibold text-zinc-500">
+                        {art.readTime}
+                      </span>
+
+                      <a 
+                        href={art.linkedInUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 bg-white hover:bg-zinc-50 text-ink font-hand text-sm font-bold border-2 border-ink rounded-md shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] hover:translate-y-[-1px] transition-all flex items-center gap-1.5 cursor-pointer select-none"
+                      >
+                        <span>LinkedIn Page</span>
+                        <ArrowUpRight className="h-3.5 w-3.5 stroke-[2]" />
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Beautiful CTA card */}
+            <div className="bg-sky-50 border-3 border-ink rounded-xl p-6 md:p-8 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] text-center relative overflow-hidden select-none">
+              <div className="absolute top-2 left-3 font-mono text-[9px] text-zinc-400 uppercase tracking-widest">// newsletter sync</div>
+              <h3 className="font-hand text-2xl font-black text-ink">Want real-time RevOps audits or custom diagrams?</h3>
+              <p className="font-sans text-xs text-zinc-650 mt-2 max-w-xl mx-auto">
+                Connect with me on LinkedIn where I regularly publish complete multi-system blueprints, Salesforce release checklists, and operations strategy.
+              </p>
+              <div className="mt-5 flex justify-center">
+                <a 
+                  href={CONTACT_INFO.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-blue-650 hover:bg-blue-700 text-white font-hand text-base font-extrabold border-2 border-ink rounded-lg shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] hover:translate-y-[-1.5px] transition-all flex items-center gap-2 cursor-pointer"
+                >
+                  <Linkedin className="h-4.5 w-4.5 fill-current text-white" />
+                  FOLLOW ON LINKEDIN
+                  <ArrowUpRight className="h-4.5 w-4.5" />
+                </a>
+              </div>
+            </div>
 
           </div>
         )}
