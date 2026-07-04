@@ -104,6 +104,9 @@ import { MyFavoriteMusic } from "./components/MyFavoriteMusic";
 // Import Salesforce Web-to-Lead configuration form
 import { WebToLeadForm } from "./components/WebToLeadForm";
 
+// Import TIMES Magazine Component & Presets
+import { TimesMagazine, PRESET_ARTICLES } from "./components/TimesMagazine";
+
 // Helper helper function to return specific hand-crafted corporate badges matching credentials
 const getCompanyIcon = (issuer: string) => {
   const canonical = issuer.toLowerCase();
@@ -277,26 +280,44 @@ export default function App() {
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [showResumeToast, setShowResumeToast] = useState(false);
 
-  // Live Calendar & Booking states
-  const [activeCalendarTab, setActiveCalendarTab] = useState<"embed" | "booking">("embed");
-  const [bookingForm, setBookingForm] = useState({
-    name: "",
-    email: "",
-    date: "2026-06-12",
-    time: "10:00 AM",
-    type: "30m Strategy consultation",
-    notes: ""
-  });
-  const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
-  const [customCalendlyUrl, setCustomCalendlyUrl] = useState<string>(CONTACT_INFO.calendlyUrl || "https://calendly.com/you-bell521");
+   // TIMES Magazine selected article state
+   const [selectedArticleId, setSelectedArticleId] = useState<string | null>("gtm-vc");
 
-  // True multi-page mock router using hash changes
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace("#", "");
-      if (["home", "about", "certifications", "projects", "articles", "career", "contact", "meet", "thank-you"].includes(hash)) {
-        setActivePage(hash);
-        setHoveredNav(hash);
+   // Live Calendar & Booking states
+   const [activeCalendarTab, setActiveCalendarTab] = useState<"embed" | "booking">("embed");
+   const [bookingForm, setBookingForm] = useState({
+     name: "",
+     email: "",
+     date: "2026-06-12",
+     time: "10:00 AM",
+     type: "30m Strategy consultation",
+     notes: ""
+   });
+   const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
+   const [customCalendlyUrl, setCustomCalendlyUrl] = useState<string>(CONTACT_INFO.calendlyUrl || "https://calendly.com/you-bell521");
+
+   // True multi-page mock router using hash changes
+   useEffect(() => {
+     const handleHashChange = () => {
+       const fullHash = window.location.hash.replace("#", "");
+       // Support path and queries like articles?id=salesforce-scale
+       const [pagePath, queryStr] = fullHash.split("?");
+
+       if (["home", "about", "certifications", "projects", "articles", "career", "contact", "meet", "thank-you"].includes(pagePath)) {
+         setActivePage(pagePath);
+         setHoveredNav(pagePath);
+         
+         // If they requested a specific article, open it!
+         if (pagePath === "articles" && queryStr) {
+           const params = new URLSearchParams(queryStr);
+           const artId = params.get("id");
+           if (artId) {
+             setSelectedArticleId(artId);
+           }
+         } else if (pagePath === "articles") {
+           // If no query string, default to gtm-vc!
+           setSelectedArticleId("gtm-vc");
+         }
       } else {
         setActivePage("home");
         setHoveredNav("home");
@@ -326,6 +347,9 @@ export default function App() {
     window.location.hash = pageName === "home" ? "" : pageName;
     setActivePage(pageName);
     setHoveredNav(pageName);
+    if (pageName === "articles") {
+      setSelectedArticleId("gtm-vc");
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -455,11 +479,9 @@ export default function App() {
                 
                 {/* Clickable New Article Published Tape Button */}
                 <a 
-                  href={ARTICLES[0].linkedInUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="https://ais-dev-iyjgt37sy4lkbmdlpraexn-784706440739.us-east1.run.app/#articles?id=gtm-vc"
                   className="absolute -top-4 -left-4 sm:-left-6 bg-amber-200 hover:bg-amber-300 text-ink border-2 border-ink px-4 py-1.5 rounded font-hand text-xs font-black tracking-wider rotate-[-5deg] shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] hover:scale-105 active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(24,24,27,1)] transition-all flex items-center gap-1.5 z-30 cursor-pointer"
-                  title={`Read Article: ${ARTICLES[0].title}`}
+                  title="Read Article: Sellers Are Vibe-Coding Their Own Tools. Why do we still need a GTM System Team?"
                 >
                   <Sparkles className="h-3.5 w-3.5 text-amber-600 animate-pulse shrink-0" />
                   <span>NEW ARTICLE PUBLISHED! 📣</span>
@@ -1237,102 +1259,19 @@ export default function App() {
 
         {/* ARTICLES HUB SCREEN */}
         {activePage === "articles" && (
-          <div className="space-y-12 mb-12 animate-fade-in text-ink">
+          <div className="mb-12 animate-fade-in text-ink">
             
-            <div className="border-b-3 border-ink pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
-              <div>
-                <h2 className="font-hand text-3xl md:text-4xl font-extrabold text-ink flex items-center flex-wrap gap-2.5 animate-fade-in">
-                  <span>Articles & Strategic Insights Hub</span>
-                  <FileText className="h-9 w-9 text-sky-600 shrink-0 hover:rotate-6 transition-transform duration-150 cursor-pointer" />
-                </h2>
-                <p className="font-sans text-sm text-zinc-650 mt-1">
-                  Exploring high-velocity systems design, strategic CRM deployments, and advanced automation pipelines.
-                </p>
-              </div>
-              <div className="shrink-0">
-                <a 
-                  href={CONTACT_INFO.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 border-2 border-ink rounded-lg font-hand text-sm font-bold shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] hover:translate-y-[-1px] transition-all cursor-pointer"
-                >
-                  <Linkedin className="h-4 w-4 fill-current text-blue-700" />
-                  Connect on LinkedIn
-                </a>
-              </div>
-            </div>
-
-
-
-            {/* Other Articles Grid */}
-            <div className="space-y-6">
-              <h3 className="font-hand text-2xl font-black text-ink flex items-center gap-2 border-b-2 border-dashed border-zinc-200 pb-2">
-                <span>📚 Latest Releases & System Logs</span>
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {ARTICLES.map((art, artIdx) => (
-                  <div 
-                    key={artIdx}
-                    className="bg-white border-3 border-ink rounded-xl p-6 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] hover:translate-y-[-1px] transition-all flex flex-col justify-between"
-                  >
-                    <div className="space-y-4 text-left">
-                      <div className="flex items-center justify-between font-mono text-xs text-zinc-400">
-                        <span className="px-2 py-0.5 rounded bg-zinc-100 border border-zinc-200 font-bold text-zinc-700 uppercase tracking-wider text-[9px]">
-                          {art.category}
-                        </span>
-                        <span className="font-semibold">{art.publishDate}</span>
-                      </div>
-
-                      <h4 className="font-hand text-xl font-black text-ink leading-snug">
-                        {art.title}
-                      </h4>
-
-                      <p className="font-sans text-xs text-zinc-650 leading-relaxed line-clamp-3">
-                        {art.excerpt}
-                      </p>
-                    </div>
-
-                    <div className="mt-6 pt-4 border-t border-dashed border-zinc-200 flex items-center justify-between">
-                      <span className="font-sans text-xs font-semibold text-zinc-500">
-                        {art.readTime}
-                      </span>
-
-                      <a 
-                        href={art.linkedInUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-4 py-2 bg-white hover:bg-zinc-50 text-ink font-hand text-sm font-bold border-2 border-ink rounded-md shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] hover:translate-y-[-1px] transition-all flex items-center gap-1.5 cursor-pointer select-none"
-                      >
-                        <span>LinkedIn Page</span>
-                        <ArrowUpRight className="h-3.5 w-3.5 stroke-[2]" />
-                      </a>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Beautiful CTA card */}
-            <div className="bg-sky-50 border-3 border-ink rounded-xl p-6 md:p-8 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] text-center relative overflow-hidden select-none">
-              <div className="absolute top-2 left-3 font-mono text-[9px] text-zinc-400 uppercase tracking-widest">// newsletter sync</div>
-              <h3 className="font-hand text-2xl font-black text-ink">Want real-time RevOps audits or custom diagrams?</h3>
-              <p className="font-sans text-xs text-zinc-650 mt-2 max-w-xl mx-auto">
-                Connect with me on LinkedIn where I regularly publish complete multi-system blueprints, Salesforce release checklists, and operations strategy.
-              </p>
-              <div className="mt-5 flex justify-center">
-                <a 
-                  href={CONTACT_INFO.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 bg-blue-650 hover:bg-blue-700 text-white font-hand text-base font-extrabold border-2 border-ink rounded-lg shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] hover:translate-y-[-1.5px] transition-all flex items-center gap-2 cursor-pointer"
-                >
-                  <Linkedin className="h-4.5 w-4.5 fill-current text-white" />
-                  FOLLOW ON LINKEDIN
-                  <ArrowUpRight className="h-4.5 w-4.5" />
-                </a>
-              </div>
-            </div>
+            <TimesMagazine 
+              articleId={selectedArticleId || "gtm-vc"}
+              onClose={() => {
+                setSelectedArticleId("gtm-vc");
+                navigateToPage("home");
+              }}
+              onArticleSelect={(id) => {
+                setSelectedArticleId(id);
+                window.location.hash = `articles?id=${id}`;
+              }}
+            />
 
           </div>
         )}
