@@ -97,6 +97,7 @@ import {
 
 // Import Crayon Animated Video Player
 import { CrayonVideoPlayer } from "./components/CrayonVideoPlayer";
+import { DoodleTV } from "./components/DoodleTV";
 
 // Import Apple Music Playlist Connector
 import { MyFavoriteMusic } from "./components/MyFavoriteMusic";
@@ -664,23 +665,30 @@ export default function App() {
         {activePage === "about" && (
           <div className="space-y-12 mb-12">
             
-            <div className="border-b-3 border-ink pb-4">
-              <h2 className="font-hand text-3xl md:text-4xl font-extrabold text-ink flex items-center flex-wrap gap-2.5">
-                <span>Who Am I? About Bao You</span>
-                <WavingHandSketchSvg className="h-9 w-9 shrink-0 hover:scale-110 active:scale-95 transition-transform duration-150 cursor-pointer" />
-              </h2>
-              <p className="font-sans text-sm text-zinc-650 mt-1">
-                Global GTM CRM / Revenue Systems / Enterprise Applications Product Manager based in San Francisco Bay Area, CA.
-              </p>
+            {/* Split layout: About text & partner logos on left, interactive Retro TV on right */}
+            <div className="flex flex-col lg:flex-row gap-8 items-center justify-between border-b-3 border-ink pb-6">
+              <div className="flex-1 space-y-4">
+                <h2 className="font-hand text-3xl md:text-4xl font-extrabold text-ink flex items-center flex-wrap gap-2.5">
+                  <span>Who Am I? About Bao You</span>
+                  <WavingHandSketchSvg className="h-9 w-9 shrink-0 hover:scale-110 active:scale-95 transition-transform duration-150 cursor-pointer" />
+                </h2>
+                <p className="font-sans text-sm text-zinc-650 leading-relaxed max-w-2xl">
+                  Global GTM CRM / Revenue Systems / Enterprise Applications Product Manager based in San Francisco Bay Area, CA.
+                </p>
+                
+                {/* Hand-drawn partner/portfolio company logos in order: iHerb, Google, Salesforce, Twitter, XAI */}
+                <div className="flex flex-wrap items-center justify-start gap-x-5 gap-y-2 select-none bg-white/20 p-2.5 rounded-lg border-2 border-dashed border-zinc-200 w-fit">
+                  <span className="font-hand text-xs font-black text-zinc-600 tracking-wider mr-2">EXPERIENCE STACKS & LEADERSHIPS:</span>
+                  <IHerbLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                  <GoogleLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                  <SalesforceLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                  <TwitterLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                  <XaiLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                </div>
+              </div>
               
-              {/* Hand-drawn partner/portfolio company logos in order: iHerb, Google, Salesforce, Twitter, XAI */}
-              <div className="flex flex-wrap items-center justify-start gap-x-5 gap-y-2 mt-4 select-none bg-white/20 p-2.5 rounded-lg border-2 border-dashed border-zinc-200 w-fit">
-                <span className="font-hand text-xs font-black text-zinc-600 tracking-wider mr-2">EXPERIENCE STACKS & LEADERSHIPS:</span>
-                <IHerbLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-                <GoogleLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-                <SalesforceLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-                <TwitterLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-                <XaiLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
+              <div className="w-full lg:w-96 shrink-0">
+                <DoodleTV />
               </div>
             </div>
 
