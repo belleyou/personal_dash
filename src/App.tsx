@@ -275,7 +275,7 @@ export default function App() {
   const [hoveredNav, setHoveredNav] = useState<string>("home");
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // Career experience expansion
-  const [activeProjectTab, setActiveProjectTab] = useState<"innovations_video" | "traditional" | "ai" | "crm" | "evaluation" | "modeling" | "sales">("innovations_video");
+  const [activeProjectTab, setActiveProjectTab] = useState<"innovations_video" | "crm" | "jira_automation" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("innovations_video");
   const [certFilter, setCertFilter] = useState<"all" | "salesforce" | "other">("all");
   const [isMusicModalOpen, setIsMusicModalOpen] = useState(false);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
@@ -970,6 +970,17 @@ export default function App() {
                 Custom CRM Prototype 🎥
               </button>
               <button
+                onClick={() => setActiveProjectTab("jira_automation")}
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
+                  activeProjectTab === "jira_automation"
+                    ? "bg-sky-100 text-ink border-b-3 border-b-sky-100 z-10 scale-105"
+                    : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
+                }`}
+              >
+                <Workflow className="h-4 w-4 text-sky-600 animate-pulse" />
+                Salesforce JIRA Automation 🎥
+              </button>
+              <button
                 onClick={() => setActiveProjectTab("ai")}
                 className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
                   activeProjectTab === "ai"
@@ -1173,6 +1184,81 @@ export default function App() {
                     </h4>
                     <p className="font-sans text-xs text-zinc-650 leading-relaxed">
                       Generates dynamic business performance graphics, highlighting leakage areas in routing queues and suggesting optimizations for pipeline speed.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : activeProjectTab === "jira_automation" ? (
+              <div className="bg-white border-3 border-ink rounded-xl p-6 md:p-8 shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] space-y-6 animate-fade-in">
+                <div className="flex flex-col md:flex-row md:items-center justify-between border-b-2 border-dashed border-zinc-200 pb-4 gap-4">
+                  <div>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 mb-2 rounded-full bg-sky-50 border-2 border-sky-200 text-sky-800 font-hand text-xs font-bold leading-none rotate-[-1deg]">
+                      <Sparkles className="h-3 w-3 shrink-0 animate-spin" />
+                      Salesforce & JIRA Bi-Directional Synchronization
+                    </span>
+                    <h3 className="font-hand text-2xl md:text-3xl font-black text-ink flex items-center gap-2">
+                      <Workflow className="h-6 w-6 text-sky-600 shrink-0" />
+                      Salesforce JIRA Automation
+                    </h3>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["Salesforce", "JIRA API", "Mulesoft / Zapier", "Webhooks", "Issue Sync", "Agile Ops"].map((tag, tIdx) => (
+                      <span key={tIdx} className="px-2 py-0.5 font-mono text-[10px] font-bold text-zinc-700 bg-zinc-100 border border-zinc-200 rounded-md">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Subtitle / Intro */}
+                <p className="font-sans text-sm text-zinc-650 leading-relaxed md:max-w-4xl">
+                  Watch the full workflow demonstration of an enterprise-grade bi-directional integration. Automatically synchronizes support cases, engineering issues, state changes, and feedback loops between commercial CRM environments and engineering backlogs.
+                </p>
+
+                {/* Embedded YouTube Video Container */}
+                <div className="w-full aspect-video bg-zinc-950 border-3 border-ink rounded-xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] relative">
+                  <iframe 
+                    width="100%" 
+                    height="100%" 
+                    src="https://www.youtube.com/embed/4nzhgySW6Qg" 
+                    title="Salesforce JIRA Automation Video Demonstration" 
+                    frameBorder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerPolicy="strict-origin-when-cross-origin" 
+                    allowFullScreen
+                    className="w-full h-full min-h-[300px] md:min-h-[450px]"
+                  ></iframe>
+                </div>
+
+                {/* Additional context & bullet descriptions */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-dashed border-zinc-200">
+                  <div className="p-4 bg-zinc-50 border-2 border-ink rounded-lg shadow-sm">
+                    <h4 className="font-sans font-extrabold text-sm text-zinc-900 mb-1.5 flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-sky-500 shrink-0"></span>
+                      Enterprise State Mapping
+                    </h4>
+                    <p className="font-sans text-xs text-zinc-650 leading-relaxed">
+                      Flawlessly maps CRM opportunity, account, or case fields with JIRA custom fields, automatically triggering issue creation upon pipeline milestones.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-[#fbfbfb] border-2 border-ink rounded-lg shadow-sm">
+                    <h4 className="font-sans font-extrabold text-sm text-zinc-900 mb-1.5 flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0"></span>
+                      Bi-Directional Handshake
+                    </h4>
+                    <p className="font-sans text-xs text-zinc-650 leading-relaxed">
+                      Secure webhook listeners synchronize commenting history, priority updates, and bug status fixes in real-time, bridging sales and engineering instantly.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-zinc-50 border-2 border-ink rounded-lg shadow-sm">
+                    <h4 className="font-sans font-extrabold text-sm text-zinc-900 mb-1.5 flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 shrink-0"></span>
+                      Agile Revenue Alignment
+                    </h4>
+                    <p className="font-sans text-xs text-zinc-650 leading-relaxed">
+                      Enables business development teams to track engineering velocity and deliver transparent release status updates directly to enterprise customers.
                     </p>
                   </div>
                 </div>
