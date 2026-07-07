@@ -54,6 +54,8 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
     projectStatus: "New",
     companyEmail: "",
     country: "US",
+    countryCode: "+1",
+    phone: "",
     projectDeadline: ""
   });
 
@@ -80,6 +82,7 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
     if (name === "countrySelect") stateKey = "country";
     if (name === "descriptionInput") stateKey = "description";
     if (name === "projectNameInput") stateKey = "projectName";
+    if (name === "phoneInput") stateKey = "phone";
     setFormData(prev => {
       const updated = {
         ...prev,
@@ -87,6 +90,23 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
       };
       if (stateKey === "companyEmail") {
         updated.email = value;
+      }
+      if (stateKey === "country") {
+        const codeMap: Record<string, string> = {
+          US: "+1",
+          CA: "+1",
+          TW: "+886",
+          DE: "+49",
+          JP: "+81",
+          KR: "+82",
+          GB: "+44",
+          NL: "+31",
+          SG: "+65",
+          Other: "Other"
+        };
+        if (codeMap[value]) {
+          updated.countryCode = codeMap[value];
+        }
       }
       return updated;
     });
@@ -118,6 +138,9 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
 
   <label for="email">Email</label>
   <input id="email" maxlength="80" name="email" size="20" type="text" value="${formData.email}" required /><br>
+
+  <label for="phone">Phone</label>
+  <input id="phone" maxlength="40" name="phone" size="20" type="text" value="${formData.countryCode === 'Other' ? formData.phone : (formData.countryCode + ' ' + formData.phone)}" /><br>
 
   <label for="company">Company</label>
   <input id="company" maxlength="40" name="company" size="20" type="text" value="${formData.company}" /><br>
@@ -265,6 +288,7 @@ I am reaching out regarding a new project opportunity. Here are the primary deta
 * Sender Email: ${formData.email || "N/A"}
 * Company: ${formData.company || "N/A"}
 * Company Contact Email: ${formData.companyEmail || "N/A"}
+* Company Contact Phone: ${formData.countryCode === "Other" ? "" : formData.countryCode} ${formData.phone || "N/A"}
 
 Project Details:
 ----------------------------------------
@@ -303,6 +327,7 @@ PROJECT CONFIRMATION DETAILS
 * Project Deadline: ${formData.projectDeadline || "N/A"}
 * Company: ${formData.company || "N/A"}
 * Company Business Email: ${formData.companyEmail || "N/A"}
+* Company Contact Phone: ${formData.countryCode === "Other" ? "" : formData.countryCode} ${formData.phone || "N/A"}
 
 Selected Configuration Summary:
 --------------------------------------------
@@ -470,6 +495,47 @@ San Jose, California`);
                 <option value="Other">Other / International</option>
               </select>
               <input type="hidden" name="country_code" value={formData.country} />
+            </div>
+
+            {/* Country Code and Phone fields */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="sm:col-span-1">
+                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Country Code *</label>
+                <select
+                  name="countryCode"
+                  id="sf_country_code_input"
+                  required
+                  value={formData.countryCode}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 font-sans"
+                >
+                  <option value="+1">+1 (US/CA)</option>
+                  <option value="+886">+886 (TW)</option>
+                  <option value="+49">+49 (DE)</option>
+                  <option value="+81">+81 (JP)</option>
+                  <option value="+82">+82 (KR)</option>
+                  <option value="+44">+44 (GB)</option>
+                  <option value="+31">+31 (NL)</option>
+                  <option value="+65">+65 (SG)</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Phone Number *</label>
+                <input
+                  type="tel"
+                  name="phoneInput"
+                  id="sf_phone_input"
+                  required
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="e.g. (555) 000-1234"
+                  maxLength={40}
+                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
+                />
+              </div>
+              <input type="hidden" name="phone" value={formData.countryCode === "Other" ? formData.phone : (formData.countryCode + " " + formData.phone)} />
             </div>
 
             <div>
@@ -854,6 +920,9 @@ San Jose, California`);
 
                       <span className="font-bold">Company:</span>
                       <span className="col-span-2 truncate">{formData.company || "N/A"}</span>
+
+                      <span className="font-bold">Contact Phone:</span>
+                      <span className="col-span-2 truncate">{formData.countryCode === "Other" ? "" : formData.countryCode} {formData.phone || "N/A"}</span>
 
                       <span className="font-bold">Product Category:</span>
                       <span className="col-span-2 truncate">{formData.projectType}</span>
