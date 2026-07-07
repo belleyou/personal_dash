@@ -312,7 +312,7 @@ export default function App() {
    const handleAdminLogin = (e: React.FormEvent) => {
      e.preventDefault();
      if (adminEmail.trim().toLowerCase() !== "you.bell521@gmail.com") {
-       setAdminAuthError("Access Denied: Only Bao You (you.bell521@gmail.com) is permitted to access settings.");
+       setAdminAuthError("Access Denied: Only authorized portfolio administrators are permitted to access settings.");
        return;
      }
      const cleanPass = adminPasscode.trim();
@@ -2544,7 +2544,7 @@ export default function App() {
                       </div>
                       <h3 className="font-hand text-2xl md:text-3xl font-black text-ink">Admin Authentication</h3>
                       <p className="font-sans text-xs text-zinc-500 leading-relaxed max-w-xs mx-auto">
-                        This section is restricted. Only the portfolio owner (<span className="font-bold font-mono text-zinc-700">you.bell521@gmail.com</span>) is authorized.
+                        This section is restricted. Only authorized portfolio administrators are permitted to enter.
                       </p>
                     </div>
 
@@ -2565,7 +2565,7 @@ export default function App() {
                           required
                           value={adminEmail}
                           onChange={(e) => setAdminEmail(e.target.value)}
-                          placeholder="you.bell521@gmail.com"
+                          placeholder="admin@example.com"
                           className="w-full px-3 py-2 border-2 border-ink rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-amber-400 bg-zinc-50 text-ink"
                         />
                       </div>
@@ -2582,8 +2582,7 @@ export default function App() {
                           placeholder="••••••••"
                           className="w-full px-3 py-2 border-2 border-ink rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-amber-400 bg-zinc-50 text-ink"
                         />
-                        <div className="text-[10px] text-zinc-400 mt-1 flex justify-between">
-                          <span>Hint: Enter "admin123" or "revops2026"</span>
+                        <div className="text-[10px] text-zinc-400 mt-1 flex justify-end">
                           <span>Bi-directional Auth</span>
                         </div>
                       </div>
@@ -2614,7 +2613,7 @@ export default function App() {
                         </p>
                       </div>
                       <div className="bg-white border-2 border-ink rounded-lg px-3 py-1.5 font-mono text-[10px] text-zinc-500 shrink-0 shadow-sm">
-                        <span className="font-bold text-ink">ACTIVE USER:</span> you.bell521@gmail.com
+                        <span className="font-bold text-ink">ACTIVE SESSION:</span> Authorized Administrator
                       </div>
                     </div>
 
