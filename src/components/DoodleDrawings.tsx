@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from "react";
-import { motion } from "motion/react";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 
 /**
  * Clean hand-drawn styled SVG icon of the Handshake ("Who Am I?")
@@ -747,452 +747,590 @@ export const DoodleBoyWithBubble: React.FC<DoodleBoyProps> = ({
     }
   };
 
+  // Stop-motion hand-drawn wiggle state (switches seeds every 120ms to make outlines "boil" organically)
+  const [wiggleSeed, setWiggleSeed] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWiggleSeed(prev => (prev + 1) % 4);
+    }, 120);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Use framer motion values for 3D perspective tilt coordinates
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  // Smooth, spring-loaded 3D motion to make it feel tactile and physical (like a real paper popup book)
+  const springConfig = { damping: 25, stiffness: 120, mass: 1 };
+  
+  // Outer tilts
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [12, -12]), springConfig);
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-12, 12]), springConfig);
+  
+  // Parallax layer offsets inside the SVG (each depth layer has different motion velocities)
+  const shadowTranslateX = useSpring(useTransform(x, [-0.5, 0.5], [3, -3]), springConfig);
+  const shadowTranslateY = useSpring(useTransform(y, [-0.5, 0.5], [1.5, -1.5]), springConfig);
+  const shadowScale = useSpring(useTransform(y, [-0.5, 0.5], [0.95, 1.05]), springConfig);
+
+  const bodyTranslateX = useSpring(useTransform(x, [-0.5, 0.5], [-2, 2]), springConfig);
+  const bodyTranslateY = useSpring(useTransform(y, [-0.5, 0.5], [-2, 2]), springConfig);
+
+  const headTranslateX = useSpring(useTransform(x, [-0.5, 0.5], [-5, 5]), springConfig);
+  const headTranslateY = useSpring(useTransform(y, [-0.5, 0.5], [-5, 5]), springConfig);
+  const headRotate = useSpring(useTransform(x, [-0.5, 0.5], [-4, 4]), springConfig);
+
+  const balloonTranslateX = useSpring(useTransform(x, [-0.5, 0.5], [-9, 9]), springConfig);
+  const balloonTranslateY = useSpring(useTransform(y, [-0.5, 0.5], [-12, 8]), springConfig);
+  const balloonRotate = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), springConfig);
+
+  const bubbleTranslateX = useSpring(useTransform(x, [-0.5, 0.5], [-15, 15]), springConfig);
+  const bubbleTranslateY = useSpring(useTransform(y, [-0.5, 0.5], [-18, 12]), springConfig);
+
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = event.clientX - rect.left - width / 2;
+    const mouseY = event.clientY - rect.top - height / 2;
+    x.set(mouseX / width);
+    y.set(mouseY / height);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
   return (
-    <div className={`relative flex flex-col items-center justify-center ${className}`}>
-      
-      {/* 2. Thought Bubble Container (positioned above/to the right of the boy) */}
-      {currentHoverSection !== "home" && (
-        <div className="absolute top-[-30px] right-[-15px] z-20 transition-all duration-300 transform scale-100 hover:scale-105">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 120 100"
-            className="w-36 h-30 filter drop-shadow-sm select-none"
-          >
-            {/* Main Thought Cloud Ellipse */}
-            <ellipse cx="50" cy="38" rx="42" ry="32" fill="#fbf8f3" stroke="#18181b" strokeWidth="2.5" />
-            
-            {/* Cloud secondary overlaps for a hand-drawn bubble effect */}
-            <ellipse cx="20" cy="33" rx="14" ry="12" fill="#fbf8f3" stroke="#18181b" strokeWidth="2" />
-            <ellipse cx="80" cy="35" rx="15" ry="14" fill="#fbf8f3" stroke="#18181b" strokeWidth="2" />
-            {/* Re-fill inside white over borders */}
-            <ellipse cx="50" cy="38" rx="40" ry="30" fill="#fbf8f3" />
-            <ellipse cx="20" cy="33" rx="12" ry="10" fill="#fbf8f3" />
-            <ellipse cx="80" cy="35" rx="13" ry="12" fill="#fbf8f3" />
-
-            {/* Dynamic inside drawing based on hovered section */}
-            {renderThoughtContent()}
-
-            {/* Little thought helper circles leading down to the boy's head */}
-            <circle cx="16" cy="74" r="6" fill="#fbf8f3" stroke="#18181b" strokeWidth="2" />
-            <circle cx="8" cy="85" r="4" fill="#fbf8f3" stroke="#18181b" strokeWidth="2" />
-          </svg>
-        </div>
-      )}
-
-      {/* 1. Main Doodle Boy character drawing holding a real balloon */}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 100 130"
-        className="w-full h-full select-none z-10"
+    <div 
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={`relative flex flex-col items-center justify-center ${className} cursor-pointer`}
+      style={{
+        perspective: 1000
+      }}
+    >
+      <motion.div
+        style={{
+          rotateX: rotateX,
+          rotateY: rotateY,
+          transformStyle: "preserve-3d",
+          width: "100%",
+          height: "100%"
+        }}
+        className="relative"
       >
-        <defs>
-          {/* Gaussian blur for beautiful, realistic soft 3D shadows on the ground */}
-          <filter id="shadow-blur" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="1.5" />
-          </filter>
-          {/* Multi-layered drop shadow for a stellar 3D layered/cut-out paper art feel */}
-          <filter id="pop-shadow" x="-10%" y="-10%" width="125%" height="125%">
-            <feDropShadow dx="1.4" dy="2.4" stdDeviation="1.2" floodColor="#1c1917" floodOpacity="0.22" />
-          </filter>
-          
-          {/* Beautiful gradients for polished 3D modeling effects */}
-          {/* Soft 3D spherical radial gradient for the floating balloon */}
-          <radialGradient id="balloon-grad" cx="35%" cy="35%" r="65%">
-            <stop offset="0%" stopColor="#bae6fd" />
-            <stop offset="45%" stopColor="#38bdf8" />
-            <stop offset="100%" stopColor="#0284c7" />
-          </radialGradient>
-          
-          {/* Warm professional camel-to-orange gradient for the camel trench coat */}
-          <linearGradient id="coat-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#ffedd5" />
-            <stop offset="35%" stopColor="#fed7aa" />
-            <stop offset="100%" stopColor="#ea580c" />
-          </linearGradient>
+        {/* 2. Thought Bubble Container (positioned above/to the right of the boy) with front-most 3D parallax */}
+        {currentHoverSection !== "home" && (
+          <motion.div 
+            className="absolute top-[-30px] right-[-15px] z-30 select-none"
+            style={{
+              x: bubbleTranslateX,
+              y: bubbleTranslateY,
+              transformStyle: "preserve-3d"
+            }}
+          >
+            <div className="transition-all duration-300 transform scale-100 hover:scale-105">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 120 100"
+                className="w-36 h-30 filter drop-shadow-sm select-none"
+              >
+                {/* Main Thought Cloud Ellipse */}
+                <ellipse cx="50" cy="38" rx="42" ry="32" fill="#fbf8f3" stroke="#18181b" strokeWidth="2.5" />
+                
+                {/* Cloud secondary overlaps for a hand-drawn bubble effect */}
+                <ellipse cx="20" cy="33" rx="14" ry="12" fill="#fbf8f3" stroke="#18181b" strokeWidth="2" />
+                <ellipse cx="80" cy="35" rx="15" ry="14" fill="#fbf8f3" stroke="#18181b" strokeWidth="2" />
+                {/* Re-fill inside white over borders */}
+                <ellipse cx="50" cy="38" rx="40" ry="30" fill="#fbf8f3" />
+                <ellipse cx="20" cy="33" rx="12" ry="10" fill="#fbf8f3" />
+                <ellipse cx="80" cy="35" rx="13" ry="12" fill="#fbf8f3" />
 
-          {/* Golden yellow gradient for lapels */}
-          <linearGradient id="lapel-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fef08a" />
-            <stop offset="100%" stopColor="#ca8a04" />
-          </linearGradient>
+                {/* Dynamic inside drawing based on hovered section */}
+                {renderThoughtContent()}
 
-          {/* Rich charcoal gradient for top hat */}
-          <linearGradient id="hat-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#4b5563" />
-            <stop offset="50%" stopColor="#1f2937" />
-            <stop offset="100%" stopColor="#111827" />
-          </linearGradient>
+                {/* Little thought helper circles leading down to the boy's head */}
+                <circle cx="16" cy="74" r="6" fill="#fbf8f3" stroke="#18181b" strokeWidth="2" />
+                <circle cx="8" cy="85" r="4" fill="#fbf8f3" stroke="#18181b" strokeWidth="2" />
+              </svg>
+            </div>
+          </motion.div>
+        )}
 
-          {/* Sneaker red gradient */}
-          <linearGradient id="shoe-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#fca5a5" />
-            <stop offset="40%" stopColor="#ef4444" />
-            <stop offset="100%" stopColor="#b91c1c" />
-          </linearGradient>
-        </defs>
-
-        {/* Soft 3D Grounding shadows underneath the boy's feet (drawn first for correct background rendering) */}
-        <ellipse cx="50" cy="126" rx="20" ry="3.5" fill="#18181b" opacity="0.14" filter="url(#shadow-blur)" />
-        <ellipse cx="50" cy="126" rx="10" ry="1.8" fill="#18181b" opacity="0.22" filter="url(#shadow-blur)" />
-
-        {/* Group the entire boy structure with a realistic drop-shadow filter to separate him from the paper page */}
-        <motion.g 
-          filter="url(#pop-shadow)"
-          animate={{
-            y: [0, -1.8, 0]
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 4,
-            ease: "easeInOut"
-          }}
+        {/* 1. Main Doodle Boy character drawing holding a real balloon */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 100 130"
+          className="w-full h-full select-none z-10"
         >
-          {/* Trouser legs peeking out */}
-          <path d="M 42 110 L 42 119 C 42 119, 45 119, 45 119" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
-          <path d="M 58 110 L 58 119 C 58 119, 55 119, 55 119" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
+          <defs>
+            {/* Gaussian blur for beautiful, realistic soft 3D shadows on the ground */}
+            <filter id="shadow-blur" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="1.5" />
+            </filter>
+            {/* Multi-layered drop shadow for a stellar 3D layered/cut-out paper art feel */}
+            <filter id="pop-shadow" x="-10%" y="-10%" width="125%" height="125%">
+              <feDropShadow dx="1.4" dy="2.4" stdDeviation="1.2" floodColor="#1c1917" floodOpacity="0.22" />
+            </filter>
+            
+            {/* Hand-drawn organic sketch wiggle filters (cycles to give stop-motion "boiling" line effects) */}
+            <filter id="hand-drawn-wiggle-0" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="0" result="noise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.4" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+            <filter id="hand-drawn-wiggle-1" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="1" result="noise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.4" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+            <filter id="hand-drawn-wiggle-2" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="2" result="noise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.4" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+            <filter id="hand-drawn-wiggle-3" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="3" result="noise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.4" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+            
+            {/* Beautiful gradients for polished 3D modeling effects */}
+            {/* Soft 3D spherical radial gradient for the floating balloon */}
+            <radialGradient id="balloon-grad" cx="35%" cy="35%" r="65%">
+              <stop offset="0%" stopColor="#bae6fd" />
+              <stop offset="45%" stopColor="#38bdf8" />
+              <stop offset="100%" stopColor="#0284c7" />
+            </radialGradient>
+            
+            {/* Warm professional camel-to-orange gradient for the camel trench coat */}
+            <linearGradient id="coat-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#ffedd5" />
+              <stop offset="35%" stopColor="#fed7aa" />
+              <stop offset="100%" stopColor="#ea580c" />
+            </linearGradient>
 
-          {/* Left Polished Sneaker */}
-          <g>
-            {/* Red Sneaker Canvas Upper */}
-            <path
-              d="M 37.5 118.5 C 36 120.5, 34.5 122.5, 34.5 124.5 C 39.5 125.5, 44 125, 46.5 122 L 44 118.5 Z"
-              fill="url(#shoe-grad)"
-              stroke="#18181b"
-              strokeWidth="2.2"
-              strokeLinejoin="round"
-            />
-            {/* White Rubber Sneaker Sole */}
-            <path
-              d="M 33.8 124 L 33.8 126 C 37.5 127.5, 43.5 127, 46.5 124.5 L 46.2 123 C 43.8 124.8, 37.8 124.8, 33.8 124 Z"
-              fill="#fafafa"
-              stroke="#18181b"
-              strokeWidth="2"
-              strokeLinejoin="round"
-            />
-            {/* White Rubber Toe Cap */}
-            <path
-              d="M 33.8 122.8 C 33.8 121.2, 36.8 120.5, 37.8 123.5 Z"
-              fill="#fafafa"
-              stroke="#18181b"
-              strokeWidth="1.5"
-            />
-            {/* White Sneaker Lace Lines */}
-            <line x1="38" y1="120" x2="42" y2="123" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" />
-            <line x1="39" y1="122" x2="43" y2="125" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" />
-            {/* Cute knotted laces bow */}
-            <path d="M 40.5 116.5 C 39.5 114.5, 36.5 113.5, 38 116.5 C 39 118, 40.5 118, 40.5 118" fill="none" stroke="#18181b" strokeWidth="1.2" />
-            <path d="M 42.5 116.5 C 43.5 114.5, 46.5 113.5, 45 116.5 C 44 118, 42.5 118, 42.5 118" fill="none" stroke="#18181b" strokeWidth="1.2" />
-          </g>
+            {/* Golden yellow gradient for lapels */}
+            <linearGradient id="lapel-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#fef08a" />
+              <stop offset="100%" stopColor="#ca8a04" />
+            </linearGradient>
 
-          {/* Right Polished Sneaker */}
-          <g>
-            {/* Red Sneaker Canvas Upper */}
-            <path
-              d="M 62.5 118.5 C 64 120.5, 65.5 122.5, 65.5 124.5 C 60.5 125.5, 56 125, 53.5 122 L 56 118.5 Z"
-              fill="url(#shoe-grad)"
-              stroke="#18181b"
-              strokeWidth="2.2"
-              strokeLinejoin="round"
-            />
-            {/* White Rubber Sneaker Sole */}
-            <path
-              d="M 66.2 124 L 66.2 126 C 62.5 127.5, 56.5 127, 53.5 124.5 L 53.8 123 C 56.2 124.8, 62.2 124.8, 66.2 124 Z"
-              fill="#fafafa"
-              stroke="#18181b"
-              strokeWidth="2"
-              strokeLinejoin="round"
-            />
-            {/* White Rubber Toe Cap */}
-            <path
-              d="M 66.2 122.8 C 66.2 121.2, 63.2 120.5, 62.2 123.5 Z"
-              fill="#fafafa"
-              stroke="#18181b"
-              strokeWidth="1.5"
-            />
-            {/* White Sneaker Lace Lines */}
-            <line x1="62" y1="120" x2="58" y2="123" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" />
-            <line x1="61" y1="122" x2="57" y2="125" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" />
-            {/* Cute knotted laces bow */}
-            <path d="M 59.5 116.5 C 60.5 114.5, 63.5 113.5, 62 116.5 C 61 118, 59.5 118, 59.5 118" fill="none" stroke="#18181b" strokeWidth="1.2" />
-            <path d="M 57.5 116.5 C 56.5 114.5, 53.5 113.5, 55 116.5 C 56 118, 57.5 118, 57.5 118" fill="none" stroke="#18181b" strokeWidth="1.2" />
-          </g>
+            {/* Rich charcoal gradient for top hat */}
+            <linearGradient id="hat-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#4b5563" />
+              <stop offset="50%" stopColor="#1f2937" />
+              <stop offset="100%" stopColor="#111827" />
+            </linearGradient>
 
-          {/* Left Hand peeking out of sleeve */}
-          <path
-            d="M 23 98 C 21 98, 19 101, 21 104 C 23 107, 27 107, 28 103 C 28 100, 26 98, 23 98 Z"
-            fill="#fafafa"
-            stroke="#18181b"
-            strokeWidth="2.5"
-            strokeLinejoin="round"
+            {/* Sneaker red gradient */}
+            <linearGradient id="shoe-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#fca5a5" />
+              <stop offset="40%" stopColor="#ef4444" />
+              <stop offset="100%" stopColor="#b91c1c" />
+            </linearGradient>
+          </defs>
+
+          {/* Grounding shadow (shifts dynamically opposite to tilt to simulate lighting parallax) */}
+          <motion.ellipse 
+            cx="50" 
+            cy="126" 
+            rx="20" 
+            ry="3.5" 
+            fill="#18181b" 
+            opacity="0.14" 
+            filter="url(#shadow-blur)"
+            style={{
+              x: shadowTranslateX,
+              y: shadowTranslateY,
+              scale: shadowScale,
+              transformOrigin: "50px 126px"
+            }}
+          />
+          <motion.ellipse 
+            cx="50" 
+            cy="126" 
+            rx="10" 
+            ry="1.8" 
+            fill="#18181b" 
+            opacity="0.22" 
+            filter="url(#shadow-blur)"
+            style={{
+              x: shadowTranslateX,
+              y: shadowTranslateY,
+              scale: shadowScale,
+              transformOrigin: "50px 126px"
+            }}
           />
 
-          {/* Right Hand peeking out of sleeve */}
-          <path
-            d="M 77 98 C 79 98, 81 101, 79 104 C 77 107, 73 107, 72 103 C 72 100, 74 98, 77 98 Z"
-            fill="#fafafa"
-            stroke="#18181b"
-            strokeWidth="2.5"
-            strokeLinejoin="round"
-          />
-
-          {/* Real Crayon Sky Blue Balloon floating on the right side of the child (held by the right hand) */}
-          <motion.g
+          {/* Body structure with stop-motion hand-drawn boil filter applied */}
+          <motion.g 
+            filter={`url(#pop-shadow) url(#hand-drawn-wiggle-${wiggleSeed})`}
+            style={{
+              x: bodyTranslateX,
+              y: bodyTranslateY
+            }}
             animate={{
-              rotate: [-5, 6, -5],
-              y: [0, -3.5, 0],
-              x: [0, 1.2, 0]
+              y: [0, -1.2, 0]
             }}
             transition={{
               repeat: Infinity,
-              duration: 4.5,
+              duration: 4.2,
               ease: "easeInOut"
             }}
-            style={{ transformOrigin: "77px 98px" }}
           >
-            {/* Balloon Polish Fill: Base Sky Blue with dynamic radial 3D gradient */}
-            <path
-              d="M 79 17 C 69.5 17, 65 32, 65 39 C 65 47.5, 72 55, 79 55 C 86 55, 93 47.5, 93 39 C 93 32, 88.5 17, 79 17 Z"
-              fill="url(#balloon-grad)"
-              opacity="0.95"
-            />
-            
-            {/* Hand-drawn scribble / colored pencil shading strokes inside the balloon */}
-            <g stroke="#0369a1" strokeWidth="1.2" opacity="0.75" strokeLinecap="round">
-              <path d="M 71 28 Q 79 38 87 28" fill="none" />
-              <path d="M 69 35 Q 79 45 89 35" fill="none" />
-              <path d="M 73 21 Q 79 29 85 21" fill="none" />
+            {/* Trouser legs peeking out */}
+            <path d="M 42 110 L 42 119 C 42 119, 45 119, 45 119" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M 58 110 L 58 119 C 58 119, 55 119, 55 119" fill="none" stroke="#18181b" strokeWidth="2.2" strokeLinecap="round" />
+
+            {/* Left Polished Sneaker */}
+            <g>
+              {/* Red Sneaker Canvas Upper */}
+              <path
+                d="M 37.5 118.5 C 36 120.5, 34.5 122.5, 34.5 124.5 C 39.5 125.5, 44 125, 46.5 122 L 44 118.5 Z"
+                fill="url(#shoe-grad)"
+                stroke="#18181b"
+                strokeWidth="2.2"
+                strokeLinejoin="round"
+              />
+              {/* White Rubber Sneaker Sole */}
+              <path
+                d="M 33.8 124 L 33.8 126 C 37.5 127.5, 43.5 127, 46.5 124.5 L 46.2 123 C 43.8 124.8, 37.8 124.8, 33.8 124 Z"
+                fill="#fafafa"
+                stroke="#18181b"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
+              {/* White Rubber Toe Cap */}
+              <path
+                d="M 33.8 122.8 C 33.8 121.2, 36.8 120.5, 37.8 123.5 Z"
+                fill="#fafafa"
+                stroke="#18181b"
+                strokeWidth="1.5"
+              />
+              {/* White Sneaker Lace Lines */}
+              <line x1="38" y1="120" x2="42" y2="123" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" />
+              <line x1="39" y1="122" x2="43" y2="125" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" />
+              {/* Cute knotted laces bow */}
+              <path d="M 40.5 116.5 C 39.5 114.5, 36.5 113.5, 38 116.5 C 39 118, 40.5 118, 40.5 118" fill="none" stroke="#18181b" strokeWidth="1.2" />
+              <path d="M 42.5 116.5 C 43.5 114.5, 46.5 113.5, 45 116.5 C 44 118, 42.5 118, 42.5 118" fill="none" stroke="#18181b" strokeWidth="1.2" />
             </g>
 
-            {/* Whimsical shine highlight to add glossy polished 3D glass effect */}
+            {/* Right Polished Sneaker */}
+            <g>
+              {/* Red Sneaker Canvas Upper */}
+              <path
+                d="M 62.5 118.5 C 64 120.5, 65.5 122.5, 65.5 124.5 C 60.5 125.5, 56 125, 53.5 122 L 56 118.5 Z"
+                fill="url(#shoe-grad)"
+                stroke="#18181b"
+                strokeWidth="2.2"
+                strokeLinejoin="round"
+              />
+              {/* White Rubber Sneaker Sole */}
+              <path
+                d="M 66.2 124 L 66.2 126 C 62.5 127.5, 56.5 127, 53.5 124.5 L 53.8 123 C 56.2 124.8, 62.2 124.8, 66.2 124 Z"
+                fill="#fafafa"
+                stroke="#18181b"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
+              {/* White Rubber Toe Cap */}
+              <path
+                d="M 66.2 122.8 C 66.2 121.2, 63.2 120.5, 62.2 123.5 Z"
+                fill="#fafafa"
+                stroke="#18181b"
+                strokeWidth="1.5"
+              />
+              {/* White Sneaker Lace Lines */}
+              <line x1="62" y1="120" x2="58" y2="123" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" />
+              <line x1="61" y1="122" x2="57" y2="125" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" />
+              {/* Cute knotted laces bow */}
+              <path d="M 59.5 116.5 C 60.5 114.5, 63.5 113.5, 62 116.5 C 61 118, 59.5 118, 59.5 118" fill="none" stroke="#18181b" strokeWidth="1.2" />
+              <path d="M 57.5 116.5 C 56.5 114.5, 53.5 113.5, 55 116.5 C 56 118, 57.5 118, 57.5 118" fill="none" stroke="#18181b" strokeWidth="1.2" />
+            </g>
+
+            {/* Left Hand peeking out of sleeve */}
             <path
-              d="M 85 23.5 C 88 28.5, 87.5 35, 85 39"
-              fill="none"
-              stroke="#ffffff"
+              d="M 23 98 C 21 98, 19 101, 21 104 C 23 107, 27 107, 28 103 C 28 100, 26 98, 23 98 Z"
+              fill="#fafafa"
+              stroke="#18181b"
+              strokeWidth="2.5"
+              strokeLinejoin="round"
+            />
+
+            {/* Right Hand peeking out of sleeve */}
+            <path
+              d="M 77 98 C 79 98, 81 101, 79 104 C 77 107, 73 107, 72 103 C 72 100, 74 98, 77 98 Z"
+              fill="#fafafa"
+              stroke="#18181b"
+              strokeWidth="2.5"
+              strokeLinejoin="round"
+            />
+
+            {/* Balloon Interactive 3D Parallax & Float container */}
+            <motion.g
+              style={{
+                x: balloonTranslateX,
+                y: balloonTranslateY,
+                rotate: balloonRotate,
+                transformOrigin: "77px 98px"
+              }}
+            >
+              {/* Balloon swaying in the wind */}
+              <motion.g
+                animate={{
+                  rotate: [-4, 5, -4],
+                  y: [0, -3.5, 0],
+                  x: [0, 1.2, 0]
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 4.5,
+                  ease: "easeInOut"
+                }}
+                style={{ transformOrigin: "77px 98px" }}
+              >
+                {/* Balloon Polish Fill: Base Sky Blue with dynamic radial 3D gradient */}
+                <path
+                  d="M 79 17 C 69.5 17, 65 32, 65 39 C 65 47.5, 72 55, 79 55 C 86 55, 93 47.5, 93 39 C 93 32, 88.5 17, 79 17 Z"
+                  fill="url(#balloon-grad)"
+                  opacity="0.95"
+                />
+                
+                {/* Hand-drawn scribble / colored pencil shading strokes inside the balloon */}
+                <g stroke="#0369a1" strokeWidth="1.2" opacity="0.75" strokeLinecap="round">
+                  <path d="M 71 28 Q 79 38 87 28" fill="none" />
+                  <path d="M 69 35 Q 79 45 89 35" fill="none" />
+                  <path d="M 73 21 Q 79 29 85 21" fill="none" />
+                </g>
+
+                {/* Whimsical shine highlight to add glossy polished 3D glass effect */}
+                <path
+                  d="M 85 23.5 C 88 28.5, 87.5 35, 85 39"
+                  fill="none"
+                  stroke="#ffffff"
+                  strokeWidth="2.8"
+                  strokeLinecap="round"
+                  opacity="0.9"
+                />
+                <circle cx="83" cy="24" r="1.5" fill="#ffffff" opacity="0.95" />
+
+                {/* Balloon outer ink outline */}
+                <path
+                  d="M 79 17 C 69.5 17, 65 32, 65 39 C 65 47.5, 72 55, 79 55 C 86 55, 93 47.5, 93 39 C 93 32, 88.5 17, 79 17 Z"
+                  fill="none"
+                  stroke="#18181b"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+
+                {/* Balloon bottom knot */}
+                <path
+                  d="M 79 55 L 76 59 L 82 59 Z"
+                  fill="url(#balloon-grad)"
+                  stroke="#18181b"
+                  strokeWidth="1.8"
+                  strokeLinejoin="round"
+                />
+
+                {/* Balloon String */}
+                <path
+                  d="M 79 59 Q 86 72 81 84 T 77 98"
+                  fill="none"
+                  stroke="#18181b"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M 79.5 59.5 Q 86.5 72.5 81.5 84.5 T 77.5 97.5"
+                  fill="none"
+                  stroke="#18181b"
+                  strokeWidth="1"
+                  opacity="0.55"
+                  strokeLinecap="round"
+                />
+              </motion.g>
+            </motion.g>
+
+            {/* Oversized Trench Coat Body - Colored in polished 3D Camel orange gradient */}
+            <path
+              d="M 34 65 L 29 111 Q 50 115 71 111 L 66 65 Z"
+              fill="url(#coat-grad)"
+              stroke="#18181b"
               strokeWidth="2.8"
-              strokeLinecap="round"
-              opacity="0.9"
-            />
-            <circle cx="83" cy="24" r="1.5" fill="#ffffff" opacity="0.95" />
-
-            {/* Balloon outer ink outline */}
-            <path
-              d="M 79 17 C 69.5 17, 65 32, 65 39 C 65 47.5, 72 55, 79 55 C 86 55, 93 47.5, 93 39 C 93 32, 88.5 17, 79 17 Z"
-              fill="none"
-              stroke="#18181b"
-              strokeWidth="2.4"
-              strokeLinecap="round"
               strokeLinejoin="round"
             />
-
-            {/* Balloon bottom knot */}
+            {/* Shaky secondary line for custom hand-drawn feeling */}
             <path
-              d="M 79 55 L 76 59 L 82 59 Z"
-              fill="url(#balloon-grad)"
+              d="M 34.5 66 L 29.5 110 L 70.5 110 L 65.5 66"
+              fill="none"
               stroke="#18181b"
-              strokeWidth="1.8"
+              strokeWidth="1.2"
+              opacity="0.75"
+            />
+
+            {/* Delicate hand-shaded pencil scribble texture inside the coat */}
+            <g stroke="#7c2d12" strokeWidth="1" strokeLinecap="round" opacity="0.35">
+              <line x1="33" y1="73" x2="42" y2="70" />
+              <line x1="32" y1="81" x2="41" y2="78" />
+              <line x1="31" y1="89" x2="40" y2="86" />
+              <line x1="31" y1="97" x2="40" y2="94" />
+              <line x1="32" y1="105" x2="42" y2="101" />
+
+              <line x1="67" y1="73" x2="58" y2="76" />
+              <line x1="68" y1="81" x2="59" y2="84" />
+              <line x1="69" y1="89" x2="60" y2="92" />
+              <line x1="69" y1="97" x2="60" y2="100" />
+              <line x1="68" y1="105" x2="58" y2="108" />
+            </g>
+
+            {/* Coat folds and details */}
+            <line x1="50.5" y1="65" x2="49.5" y2="113.5" stroke="#18181b" strokeWidth="2" />
+            <line x1="51.2" y1="67" x2="50.2" y2="111.5" stroke="#18181b" strokeWidth="1.2" opacity="0.6" />
+
+            {/* Breast pocket with sky blue highlight! */}
+            <path d="M 34 78 H 40.5 V 84 H 34 Z" fill="url(#balloon-grad)" stroke="#18181b" strokeWidth="2" strokeLinejoin="round" />
+            <line x1="33" y1="78" x2="41.5" y2="78" stroke="#18181b" strokeWidth="2" />
+
+            {/* Placket/buttons of the coat */}
+            <circle cx="53" cy="85" r="3.2" fill="#18181b" stroke="#18181b" strokeWidth="1" />
+            <circle cx="52" cy="98" r="3.2" fill="#18181b" stroke="#18181b" strokeWidth="1" />
+            <line x1="51.5" y1="83.5" x2="54.5" y2="86.5" stroke="#ffffff" strokeWidth="0.8" />
+            <line x1="50.5" y1="96.5" x2="53.5" y2="99.5" stroke="#ffffff" strokeWidth="0.8" />
+
+            {/* Baggy Oversized Sleeves */}
+            {/* Left Sleeve */}
+            <path
+              d="M 34 65 C 20 76, 22 93, 26 98 C 29 95, 33 96, 36 67"
+              fill="url(#coat-grad)"
+              stroke="#18181b"
+              strokeWidth="2.5"
               strokeLinejoin="round"
             />
+            <path d="M 26.2 98 Q 29.5 95 32.8 98" fill="none" stroke="#18181b" strokeWidth="1.5" />
 
-            {/* Balloon String: goes from knot (79, 59) down to the Right Hand at (77, 98) */}
+            {/* Right Sleeve */}
             <path
-              d="M 79 59 Q 86 72 81 84 T 77 98"
-              fill="none"
+              d="M 66 65 C 80 76, 78 93, 74 98 C 71 95, 67 96, 64 67"
+              fill="url(#coat-grad)"
               stroke="#18181b"
-              strokeWidth="2"
-              strokeLinecap="round"
+              strokeWidth="2.5"
+              strokeLinejoin="round"
             />
-            <path
-              d="M 79.5 59.5 Q 86.5 72.5 81.5 84.5 T 77.5 97.5"
-              fill="none"
-              stroke="#18181b"
-              strokeWidth="1"
-              opacity="0.55"
-              strokeLinecap="round"
-            />
+            <path d="M 73.8 98 Q 70.5 95 67.2 98" fill="none" stroke="#18181b" strokeWidth="1.5" />
+
+            {/* High pointed Lapels with yellow gold gradient contrast! */}
+            <path d="M 41 64 L 34 74 L 46 78 Z" fill="url(#lapel-grad)" stroke="#18181b" strokeWidth="2.2" strokeLinejoin="round" />
+            <line x1="41" y1="64" x2="46" y2="78" stroke="#18181b" strokeWidth="1.5" />
+
+            <path d="M 59 64 L 66 74 L 54 78 Z" fill="url(#lapel-grad)" stroke="#18181b" strokeWidth="2.2" strokeLinejoin="round" />
+            <line x1="59" y1="64" x2="54" y2="78" stroke="#18181b" strokeWidth="1.5" />
+
+            {/* Collar Neck opening & peeking shirt */}
+            <path d="M 45 64 Q 50 67 55 64" fill="none" stroke="#18181b" strokeWidth="2.2" />
+            <path d="M 46 66 Q 50 69 54 66" fill="none" stroke="#18181b" strokeWidth="1.2" opacity="0.6" />
+
+            {/* Head Structure 3D Parallax & Bob container */}
+            <motion.g
+              style={{
+                x: headTranslateX,
+                y: headTranslateY,
+                rotate: headRotate,
+                transformOrigin: "50px 64px"
+              }}
+            >
+              {/* Head gentle breathing bounce */}
+              <motion.g
+                animate={{
+                  rotate: [-1.8, 1.8, -1.8],
+                  y: [0, 0.4, 0]
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 5,
+                  ease: "easeInOut"
+                }}
+                style={{ transformOrigin: "50px 64px" }}
+              >
+                {/* Main Head Structure */}
+                <ellipse cx="50" cy="49" rx="14.5" ry="13.5" fill="#fafafa" stroke="#18181b" strokeWidth="2.8" />
+                <ellipse cx="50" cy="49" rx="14" ry="13" fill="none" stroke="#18181b" strokeWidth="1" opacity="0.6" />
+
+                {/* Side protruding round ears */}
+                <path d="M 35.5 44 C 31.5 44, 30.5 50, 35.5 52" fill="#fafafa" stroke="#18181b" strokeWidth="2.2" />
+                <path d="M 64.5 44 C 68.5 44, 69.5 50, 64.5 52" fill="#fafafa" stroke="#18181b" strokeWidth="2.2" />
+                <path d="M 34.5 46 Q 32.5 48 34.5 50" fill="none" stroke="#18181b" strokeWidth="1.2" />
+                <path d="M 65.5 46 Q 67.5 48 65.5 50" fill="none" stroke="#18181b" strokeWidth="1.2" />
+
+                {/* Simple cute face elements */}
+                <circle cx="43" cy="48" r="1.8" fill="#18181b" />
+                <circle cx="57" cy="48" r="1.8" fill="#18181b" />
+                <path d="M 41 45.5 Q 43 44.5 45 45.5" fill="none" stroke="#18181b" strokeWidth="1" />
+                <path d="M 55 45.5 Q 57 44.5 59 45.5" fill="none" stroke="#18181b" strokeWidth="1" />
+
+                {/* Cute small smile line */}
+                <path d="M 46 51.5 Q 50 56.5 54 51.5" fill="none" stroke="#18181b" strokeWidth="2.5" strokeLinecap="round" />
+
+                {/* Cheeks with rosy circles */}
+                <circle cx="37" cy="52" r="1.8" fill="#f87171" opacity="0.45" />
+                <circle cx="63" cy="52" r="1.8" fill="#f87171" opacity="0.45" />
+
+                {/* Orange Crayon Hair */}
+                <path
+                  d="M 33 46 C 30 38, 32 30, 44 29 C 48 26, 56 25, 62 30 C 68 33, 70 39, 67 46 C 65 43, 62 44, 60 40 C 55 38, 50 41, 48 38 C 44 41, 38 42, 33 46 Z"
+                  fill="#ea580c"
+                  stroke="#18181b"
+                  strokeWidth="2.5"
+                  strokeLinejoin="round"
+                />
+                <g stroke="#d97706" strokeWidth="1.8" strokeLinecap="round">
+                  <path d="M 33 42 Q 43 32 55 35" fill="none" />
+                  <path d="M 38 45 Q 48 33 60 36" fill="none" />
+                  <path d="M 44 43 Q 54 29 65 34" fill="none" />
+                  <path d="M 32 38 Q 46 27 58 29" fill="none" />
+                  <path d="M 40 33 Q 52 24 64 30" fill="none" />
+                  <path d="M 45 37 L 42 45" fill="none" />
+                  <path d="M 52 38 L 49 46" fill="none" />
+                  <path d="M 58 37 L 55 45" fill="none" />
+                </g>
+                <path d="M 32 45 Q 36 38 31 32 Q 42 34 46 28 Q 50 33 55 26 Q 59 34 65 30 Q 64 38 68 44" fill="none" stroke="#18181b" strokeWidth="2" strokeLinecap="round" />
+
+                {/* Top Hat */}
+                <path
+                  d="M 34 31.5 C 44 29.5, 56 29.5, 66 31.5 C 66 31.5, 68 33, 50 33 C 32 33, 34 31.5, 34 31.5 Z"
+                  fill="url(#hat-grad)"
+                  stroke="#18181b"
+                  strokeWidth="3.2"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M 39 L 41.5 13.5 Q 49.5 12 58.5 13.5 L 61"
+                  fill="none"
+                  stroke="#18181b"
+                  strokeWidth="2.8"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M 39 31 L 41.5 13.5 Q 49.5 12 58.5 13.5 L 61 31 Z"
+                  fill="url(#hat-grad)"
+                />
+                <path d="M 39.5 30 L 42 14.5 Q 49.5 13 58 14.5 L 60.5 30" fill="none" stroke="#18181b" strokeWidth="1" opacity="0.6" />
+                <path d="M 42 21 H 58" fill="none" stroke="#ffffff" strokeWidth="1.2" opacity="0.3" />
+
+                {/* White / Light Gray Hatband */}
+                <path
+                  d="M 39.3 28.5 Q 50 26.5 60.7 28.5 L 60.8 30.5 Q 50 28.5 39.2 30.5 Z"
+                  fill="#e4e4e7"
+                  stroke="#18181b"
+                  strokeWidth="1.5"
+                />
+              </motion.g>
+            </motion.g>
           </motion.g>
-
-          {/* Oversized Trench Coat Body - Colored in polished 3D Camel orange gradient */}
-          <path
-            d="M 34 65 L 29 111 Q 50 115 71 111 L 66 65 Z"
-            fill="url(#coat-grad)"
-            stroke="#18181b"
-            strokeWidth="2.8"
-            strokeLinejoin="round"
-          />
-          {/* Shaky secondary line for custom hand-drawn feeling */}
-          <path
-            d="M 34.5 66 L 29.5 110 L 70.5 110 L 65.5 66"
-            fill="none"
-            stroke="#18181b"
-            strokeWidth="1.2"
-            opacity="0.75"
-          />
-
-          {/* Delicate hand-shaded pencil scribble texture inside the coat */}
-          <g stroke="#7c2d12" strokeWidth="1" strokeLinecap="round" opacity="0.35">
-            <line x1="33" y1="73" x2="42" y2="70" />
-            <line x1="32" y1="81" x2="41" y2="78" />
-            <line x1="31" y1="89" x2="40" y2="86" />
-            <line x1="31" y1="97" x2="40" y2="94" />
-            <line x1="32" y1="105" x2="42" y2="101" />
-
-            <line x1="67" y1="73" x2="58" y2="76" />
-            <line x1="68" y1="81" x2="59" y2="84" />
-            <line x1="69" y1="89" x2="60" y2="92" />
-            <line x1="69" y1="97" x2="60" y2="100" />
-            <line x1="68" y1="105" x2="58" y2="108" />
-          </g>
-
-          {/* Coat folds and details */}
-          {/* Fold line down the middle */}
-          <line x1="50.5" y1="65" x2="49.5" y2="113.5" stroke="#18181b" strokeWidth="2" />
-          <line x1="51.2" y1="67" x2="50.2" y2="111.5" stroke="#18181b" strokeWidth="1.2" opacity="0.6" />
-
-          {/* Breast pocket with sky blue highlight! */}
-          <path d="M 34 78 H 40.5 V 84 H 34 Z" fill="url(#balloon-grad)" stroke="#18181b" strokeWidth="2" strokeLinejoin="round" />
-          <line x1="33" y1="78" x2="41.5" y2="78" stroke="#18181b" strokeWidth="2" />
-
-          {/* Placket/buttons of the coat (2 large black solid buttons in vertical row) */}
-          <circle cx="53" cy="85" r="3.2" fill="#18181b" stroke="#18181b" strokeWidth="1" />
-          <circle cx="52" cy="98" r="3.2" fill="#18181b" stroke="#18181b" strokeWidth="1" />
-          {/* Buttons sketch cross details */}
-          <line x1="51.5" y1="83.5" x2="54.5" y2="86.5" stroke="#ffffff" strokeWidth="0.8" />
-          <line x1="50.5" y1="96.5" x2="53.5" y2="99.5" stroke="#ffffff" strokeWidth="0.8" />
-
-          {/* Baggy Oversized Sleeves - Colored in beautiful vertical gradient camel/tan! */}
-          {/* Left Sleeve */}
-          <path
-            d="M 34 65 C 20 76, 22 93, 26 98 C 29 95, 33 96, 36 67"
-            fill="url(#coat-grad)"
-            stroke="#18181b"
-            strokeWidth="2.5"
-            strokeLinejoin="round"
-          />
-          {/* Cuff shadow inside sleeve opening */}
-          <path d="M 26.2 98 Q 29.5 95 32.8 98" fill="none" stroke="#18181b" strokeWidth="1.5" />
-
-          {/* Right Sleeve */}
-          <path
-            d="M 66 65 C 80 76, 78 93, 74 98 C 71 95, 67 96, 64 67"
-            fill="url(#coat-grad)"
-            stroke="#18181b"
-            strokeWidth="2.5"
-            strokeLinejoin="round"
-          />
-          {/* Cuff shadow inside sleeve opening */}
-          <path d="M 73.8 98 Q 70.5 95 67.2 98" fill="none" stroke="#18181b" strokeWidth="1.5" />
-
-          {/* High pointed Lapels with yellow gold gradient contrast! */}
-          {/* Left pointed lapel block */}
-          <path d="M 41 64 L 34 74 L 46 78 Z" fill="url(#lapel-grad)" stroke="#18181b" strokeWidth="2.2" strokeLinejoin="round" />
-          <line x1="41" y1="64" x2="46" y2="78" stroke="#18181b" strokeWidth="1.5" />
-
-          {/* Right pointed lapel block */}
-          <path d="M 59 64 L 66 74 L 54 78 Z" fill="url(#lapel-grad)" stroke="#18181b" strokeWidth="2.2" strokeLinejoin="round" />
-          <line x1="59" y1="64" x2="54" y2="78" stroke="#18181b" strokeWidth="1.5" />
-
-          {/* Collar Neck opening & peeking shirt */}
-          <path d="M 45 64 Q 50 67 55 64" fill="none" stroke="#18181b" strokeWidth="2.2" />
-          <path d="M 46 66 Q 50 69 54 66" fill="none" stroke="#18181b" strokeWidth="1.2" opacity="0.6" />
-
-          {/* Head Structure motion container */}
-          <motion.g
-            animate={{
-              rotate: [-2, 2, -2],
-              y: [0, 0.3, 0]
-            }}
-            transition={{
-              repeat: Infinity,
-              duration: 5,
-              ease: "easeInOut"
-            }}
-            style={{ transformOrigin: "50px 64px" }}
-          >
-            {/* Main Head Structure */}
-            <ellipse cx="50" cy="49" rx="14.5" ry="13.5" fill="#fafafa" stroke="#18181b" strokeWidth="2.8" />
-          <ellipse cx="50" cy="49" rx="14" ry="13" fill="none" stroke="#18181b" strokeWidth="1" opacity="0.6" />
-
-          {/* Side protruding round ears */}
-          <path d="M 35.5 44 C 31.5 44, 30.5 50, 35.5 52" fill="#fafafa" stroke="#18181b" strokeWidth="2.2" />
-          <path d="M 64.5 44 C 68.5 44, 69.5 50, 64.5 52" fill="#fafafa" stroke="#18181b" strokeWidth="2.2" />
-          {/* Inner ear squiggles */}
-          <path d="M 34.5 46 Q 32.5 48 34.5 50" fill="none" stroke="#18181b" strokeWidth="1.2" />
-          <path d="M 65.5 46 Q 67.5 48 65.5 50" fill="none" stroke="#18181b" strokeWidth="1.2" />
-
-          {/* Simple cute face elements */}
-          {/* Eyes (wide set dots) */}
-          <circle cx="43" cy="48" r="1.8" fill="#18181b" />
-          <circle cx="57" cy="48" r="1.8" fill="#18181b" />
-          {/* Little eye highlights next to them to feel sketched */}
-          <path d="M 41 45.5 Q 43 44.5 45 45.5" fill="none" stroke="#18181b" strokeWidth="1" />
-          <path d="M 55 45.5 Q 57 44.5 59 45.5" fill="none" stroke="#18181b" strokeWidth="1" />
-
-          {/* Cute small smile line (happy smiling child!) */}
-          <path d="M 46 51.5 Q 50 56.5 54 51.5" fill="none" stroke="#18181b" strokeWidth="2.5" strokeLinecap="round" />
-
-          {/* Smooth clean cheeks with tiny warm rosy circles instead of wrinkle lines */}
-          <circle cx="37" cy="52" r="1.8" fill="#f87171" opacity="0.45" />
-          <circle cx="63" cy="52" r="1.8" fill="#f87171" opacity="0.45" />
-
-          {/* Orange Crayon Hair (chaotic shaggy layers matching attachment 2) */}
-          {/* Hair solid background */}
-          <path
-            d="M 33 46 C 30 38, 32 30, 44 29 C 48 26, 56 25, 62 30 C 68 33, 70 39, 67 46 C 65 43, 62 44, 60 40 C 55 38, 50 41, 48 38 C 44 41, 38 42, 33 46 Z"
-            fill="#ea580c"
-            stroke="#18181b"
-            strokeWidth="2.5"
-            strokeLinejoin="round"
-          />
-          {/* Crayon scribbly overlay line-work inside and over boundaries */}
-          <g stroke="#d97706" strokeWidth="1.8" strokeLinecap="round">
-            <path d="M 33 42 Q 43 32 55 35" fill="none" />
-            <path d="M 38 45 Q 48 33 60 36" fill="none" />
-            <path d="M 44 43 Q 54 29 65 34" fill="none" />
-            <path d="M 32 38 Q 46 27 58 29" fill="none" />
-            <path d="M 40 33 Q 52 24 64 30" fill="none" />
-            <path d="M 45 37 L 42 45" fill="none" />
-            <path d="M 52 38 L 49 46" fill="none" />
-            <path d="M 58 37 L 55 45" fill="none" />
-          </g>
-          {/* Ink shaggy hair outlines overlapping the hair */}
-          <path d="M 32 45 Q 36 38 31 32 Q 42 34 46 28 Q 50 33 55 26 Q 59 34 65 30 Q 64 38 68 44" fill="none" stroke="#18181b" strokeWidth="2" strokeLinecap="round" />
-
-          {/* Top Hat (tall and slightly tilted with charcoal 3D gradient) */}
-          {/* Brim of the Hat with triple-outline sketch */}
-          <path
-            d="M 34 31.5 C 44 29.5, 56 29.5, 66 31.5 C 66 31.5, 68 33, 50 33 C 32 33, 34 31.5, 34 31.5 Z"
-            fill="url(#hat-grad)"
-            stroke="#18181b"
-            strokeWidth="3.2"
-            strokeLinejoin="round"
-          />
-          {/* Crown of the Hat */}
-          <path
-            d="M 39 L 41.5 13.5 Q 49.5 12 58.5 13.5 L 61"
-            fill="none"
-            stroke="#18181b"
-            strokeWidth="2.8"
-            strokeLinejoin="round"
-          />
-          {/* Solid Hat fill */}
-          <path
-            d="M 39 31 L 41.5 13.5 Q 49.5 12 58.5 13.5 L 61 31 Z"
-            fill="url(#hat-grad)"
-          />
-          {/* Shaky secondary lines on top hat side */}
-          <path d="M 39.5 30 L 42 14.5 Q 49.5 13 58 14.5 L 60.5 30" fill="none" stroke="#18181b" strokeWidth="1" opacity="0.6" />
-          <path d="M 42 21 H 58" fill="none" stroke="#ffffff" strokeWidth="1.2" opacity="0.3" />
-
-          {/* White / Light Gray Hatband (mirrors original hair/hat transition ribbon) */}
-          <path
-            d="M 39.3 28.5 Q 50 26.5 60.7 28.5 L 60.8 30.5 Q 50 28.5 39.2 30.5 Z"
-            fill="#e4e4e7"
-            stroke="#18181b"
-            strokeWidth="1.5"
-          />
-          </motion.g>
-        </motion.g>
-      </svg>
+        </svg>
+      </motion.div>
     </div>
   );
 };
