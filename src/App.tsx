@@ -45,10 +45,13 @@ import {
   Leaf,
   Workflow,
   Compass,
-  Flower
+  Flower,
+  Settings,
+  Lock
 } from "lucide-react";
 
 import baoSelfie from "./Selfie.png";
+import privateImage from "./assets/images/gtm_architecture_diagram_1783409434452.jpg";
 const resumePdf = "/Bao_You_Resume.pdf";
 
 import wingCover from "./Wing.jpeg";
@@ -281,6 +284,15 @@ export default function App() {
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [showResumeToast, setShowResumeToast] = useState(false);
 
+  // Admin Portal & Authentication states
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
+    return sessionStorage.getItem("isAdminAuthenticated") === "true";
+  });
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminPasscode, setAdminPasscode] = useState("");
+  const [adminAuthError, setAdminAuthError] = useState("");
+
    // TIMES Magazine selected article state
    const [selectedArticleId, setSelectedArticleId] = useState<string | null>("gtm-vc");
 
@@ -296,6 +308,30 @@ export default function App() {
    });
    const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
    const [customCalendlyUrl, setCustomCalendlyUrl] = useState<string>(CONTACT_INFO.calendlyUrl || "https://calendly.com/you-bell521");
+
+   const handleAdminLogin = (e: React.FormEvent) => {
+     e.preventDefault();
+     if (adminEmail.trim().toLowerCase() !== "you.bell521@gmail.com") {
+       setAdminAuthError("Access Denied: Only Bao You (you.bell521@gmail.com) is permitted to access settings.");
+       return;
+     }
+     const cleanPass = adminPasscode.trim();
+     if (cleanPass === "admin123" || cleanPass === "revops2026") {
+       setIsAdminAuthenticated(true);
+       sessionStorage.setItem("isAdminAuthenticated", "true");
+       setAdminAuthError("");
+     } else {
+       setAdminAuthError("Invalid Passcode. Please enter the correct admin key.");
+     }
+   };
+
+   const handleAdminLogout = () => {
+     setIsAdminAuthenticated(false);
+     sessionStorage.removeItem("isAdminAuthenticated");
+     setAdminEmail("");
+     setAdminPasscode("");
+     setAdminAuthError("");
+   };
 
    // True multi-page mock router using hash changes
    useEffect(() => {
@@ -2423,6 +2459,275 @@ export default function App() {
               ✕
             </button>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ⚙️ ADMIN SETTINGS FLOATING BUTTON ⚙️ */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+        <motion.button
+          whileHover={{ scale: 1.1, rotate: 15 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setIsAdminModalOpen(true)}
+          className="w-12 h-12 bg-amber-400 text-ink border-3 border-ink rounded-full shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] hover:bg-amber-300 transition-colors flex items-center justify-center cursor-pointer relative group"
+          title="Admin Settings"
+          id="admin-settings-trigger-btn"
+        >
+          <Settings className="h-6 w-6 text-ink" />
+          <span className="absolute right-14 top-1/2 -translate-y-1/2 bg-ink text-white text-xs font-hand font-extrabold px-2.5 py-1 border-2 border-ink rounded-lg shadow-[2px_2px_0px_0px_rgba(251,191,36,1)] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+            Admin Settings ⚙️
+          </span>
+        </motion.button>
+      </div>
+
+      {/* ⚙️ ADMIN SETTINGS POPUP WINDOW MODAL ⚙️ */}
+      <AnimatePresence>
+        {isAdminModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsAdminModalOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-xs cursor-pointer"
+            />
+            
+            {/* Window Dialog */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ type: "spring", damping: 28, stiffness: 380 }}
+              className="relative bg-white border-4 border-ink rounded-2xl w-full max-w-4xl shadow-[8px_8px_0px_0px_rgba(251,191,36,1)] z-10 flex flex-col h-[90vh] max-h-[90vh] overflow-hidden select-none"
+            >
+              {/* Header bar */}
+              <div className="bg-zinc-900 text-white border-b-4 border-ink p-3.5 flex items-center justify-between select-none shrink-0 relative z-20">
+                <div className="flex items-center gap-2 mr-3 min-w-0">
+                  <span className="w-3.5 h-3.5 rounded-full bg-amber-400 border-2 border-ink flex items-center justify-center text-[8px] font-black font-sans text-ink shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] shrink-0 animate-pulse">
+                    ★
+                  </span>
+                  <span className="font-hand text-lg md:text-xl font-black text-amber-400 drop-shadow-sm tracking-wide truncate">
+                    {isAdminAuthenticated ? "⚙️ Admin Settings Portal" : "🔒 Secure Admin Login"}
+                  </span>
+                </div>
+                
+                {/* Control Action Buttons */}
+                <div className="flex items-center gap-2 shrink-0 select-none relative z-30">
+                  {isAdminAuthenticated && (
+                    <button 
+                      onClick={handleAdminLogout}
+                      className="px-2.5 py-1 bg-rose-500 hover:bg-rose-400 text-white text-xs font-hand font-extrabold border-2 border-ink rounded-lg shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer flex items-center gap-1 shrink-0"
+                      title="Log out of admin session"
+                    >
+                      Lock Terminal 🔒
+                    </button>
+                  )}
+                  <button 
+                    onClick={() => setIsAdminModalOpen(false)}
+                    className="w-8 h-8 rounded-lg bg-zinc-800 text-zinc-100 border-2 border-ink font-black hover:bg-zinc-700 active:translate-y-0.5 flex items-center justify-center transition-all cursor-pointer shrink-0"
+                    aria-label="Close Pop Up"
+                    title="Close Window"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Body */}
+              <div className="flex-1 bg-stone-50 overflow-y-auto p-6 md:p-8 relative z-10">
+                {!isAdminAuthenticated ? (
+                  /* --- AUTHENTICATION SCREEN --- */
+                  <div className="max-w-md mx-auto my-8 space-y-6">
+                    <div className="text-center space-y-2">
+                      <div className="w-16 h-16 bg-amber-100 border-3 border-ink rounded-2xl flex items-center justify-center mx-auto shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] rotate-[-4deg]">
+                        <Lock className="h-8 w-8 text-amber-600" />
+                      </div>
+                      <h3 className="font-hand text-2xl md:text-3xl font-black text-ink">Admin Authentication</h3>
+                      <p className="font-sans text-xs text-zinc-500 leading-relaxed max-w-xs mx-auto">
+                        This section is restricted. Only the portfolio owner (<span className="font-bold font-mono text-zinc-700">you.bell521@gmail.com</span>) is authorized.
+                      </p>
+                    </div>
+
+                    <form onSubmit={handleAdminLogin} className="bg-white border-3 border-ink rounded-xl p-6 shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] space-y-4">
+                      {adminAuthError && (
+                        <div className="p-3 bg-rose-50 border-2 border-rose-300 text-rose-800 rounded-lg text-xs font-sans leading-normal flex items-start gap-2">
+                          <span className="shrink-0 mt-0.5">⚠️</span>
+                          <span>{adminAuthError}</span>
+                        </div>
+                      )}
+
+                      <div className="space-y-1">
+                        <label className="block text-xs font-bold text-ink uppercase tracking-wide font-mono">
+                          Admin Email Address
+                        </label>
+                        <input 
+                          type="email"
+                          required
+                          value={adminEmail}
+                          onChange={(e) => setAdminEmail(e.target.value)}
+                          placeholder="you.bell521@gmail.com"
+                          className="w-full px-3 py-2 border-2 border-ink rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-amber-400 bg-zinc-50 text-ink"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="block text-xs font-bold text-ink uppercase tracking-wide font-mono">
+                          Secure Admin Passcode
+                        </label>
+                        <input 
+                          type="password"
+                          required
+                          value={adminPasscode}
+                          onChange={(e) => setAdminPasscode(e.target.value)}
+                          placeholder="••••••••"
+                          className="w-full px-3 py-2 border-2 border-ink rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-amber-400 bg-zinc-50 text-ink"
+                        />
+                        <div className="text-[10px] text-zinc-400 mt-1 flex justify-between">
+                          <span>Hint: Enter "admin123" or "revops2026"</span>
+                          <span>Bi-directional Auth</span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full py-3 bg-amber-400 text-ink font-hand text-base font-black border-2 border-ink rounded-lg shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer mt-2"
+                      >
+                        Unlock Config Terminal →
+                      </button>
+                    </form>
+                  </div>
+                ) : (
+                  /* --- FULLY AUTHENTICATED ADMIN PANEL --- */
+                  <div className="space-y-8">
+                    {/* Header Banner */}
+                    <div className="bg-emerald-50 border-3 border-ink rounded-xl p-5 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div>
+                        <div className="flex items-center gap-1.5 text-emerald-800 text-xs font-mono uppercase font-bold tracking-wider">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                          System Status: Secured & Connected
+                        </div>
+                        <h3 className="font-hand text-2xl md:text-3xl font-black text-ink mt-1">
+                          Welcome Back, Bao You!
+                        </h3>
+                        <p className="font-sans text-xs text-zinc-650 mt-1">
+                          You are currently viewing active systems architectures, client lead tables, and integration parameters.
+                        </p>
+                      </div>
+                      <div className="bg-white border-2 border-ink rounded-lg px-3 py-1.5 font-mono text-[10px] text-zinc-500 shrink-0 shadow-sm">
+                        <span className="font-bold text-ink">ACTIVE USER:</span> you.bell521@gmail.com
+                      </div>
+                    </div>
+
+                    {/* AI Systems Architecture Section (The Core Section) */}
+                    <div className="bg-white border-3 border-ink rounded-2xl p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] space-y-6">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between border-b-2 border-dashed border-zinc-200 pb-4 gap-4">
+                        <div>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 mb-2 rounded-full bg-purple-50 border-2 border-purple-200 text-purple-800 font-hand text-xs font-bold rotate-[-1deg]">
+                            <Sparkles className="h-3 w-3 shrink-0 text-purple-600 animate-spin" />
+                            Internal Systems Intelligence Module
+                          </span>
+                          <h4 className="font-hand text-2xl md:text-3xl font-black text-ink flex items-center gap-2">
+                            <Workflow className="h-6 w-6 text-purple-600" />
+                            AI Section: Agent Systems Architecture
+                          </h4>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {["Claude API", "LangChain", "Salesforce", "PostgreSQL", "LangSmith", "Guardrails"].map((tag, tIdx) => (
+                            <span key={tIdx} className="px-2 py-0.5 font-mono text-[10px] font-bold text-purple-800 bg-purple-50 border border-purple-200 rounded-md">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Architecture Image Container */}
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        {/* Image side */}
+                        <div className="lg:col-span-7 space-y-4">
+                          <div className="w-full bg-zinc-950 border-3 border-ink rounded-xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] p-2 bg-gradient-to-tr from-stone-900 to-zinc-950 relative group">
+                            <img 
+                              src={privateImage} 
+                              alt="AI GTM & RevOps System Architecture Diagram" 
+                              className="w-full h-auto rounded-lg"
+                              referrerPolicy="no-referrer"
+                            />
+                            <div className="absolute inset-0 bg-purple-500/10 mix-blend-color-dodge opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                          </div>
+                          <p className="font-mono text-[10px] text-center text-zinc-500 uppercase tracking-widest">
+                            ▲ Figure 1.0: Real-time Salesforce Opportunity & Case Trigger Orchestrator
+                          </p>
+                        </div>
+
+                        {/* Description details side */}
+                        <div className="lg:col-span-5 space-y-4">
+                          <h5 className="font-hand text-lg md:text-xl font-black text-ink flex items-center gap-1.5 border-b-2 border-dashed border-zinc-200 pb-2">
+                            <Zap className="h-4.5 w-4.5 text-amber-500 shrink-0" />
+                            Core Engine Execution Path
+                          </h5>
+                          
+                          <div className="space-y-3.5 font-sans text-xs text-zinc-650 leading-relaxed">
+                            <div className="p-3 bg-zinc-50 border border-zinc-200 rounded-lg hover:bg-purple-50 hover:border-purple-200 transition-colors">
+                              <span className="font-extrabold text-zinc-900 block mb-1">
+                                1. Decoupled Ingestion & Webhooks
+                              </span>
+                              Salesforce triggers emit commercial alerts directly to an Express-driven webhook listener upon crucial record shifts (e.g. Pipeline opportunity closes, client case escalation).
+                            </div>
+
+                            <div className="p-3 bg-[#fbfbfb] border border-zinc-200 rounded-lg hover:bg-purple-50 hover:border-purple-200 transition-colors">
+                              <span className="font-extrabold text-zinc-900 block mb-1">
+                                2. Guardrails Layer (Pre-flight Controls)
+                              </span>
+                              Enforces systemic limits (e.g., maximum daily dispatches, email consent lists, duplicate lead matching) before letting API transactions run unchecked.
+                            </div>
+
+                            <div className="p-3 bg-zinc-50 border border-zinc-200 rounded-lg hover:bg-purple-50 hover:border-purple-200 transition-colors">
+                              <span className="font-extrabold text-zinc-900 block mb-1">
+                                3. ReAct Cognitive Routing
+                              </span>
+                              Utilizes LangChain-directed orchestration and LLM queries (Claude API) to analyze histories, formulate sequential next-steps, and execute specialized system sub-tools (CRM Writes, Scheduling, Mail).
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bottom descriptive row of the AI architecture block */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-dashed border-zinc-200 text-xs font-sans text-zinc-650">
+                        <div className="p-3 bg-zinc-50 rounded-lg border border-zinc-150">
+                          <span className="font-bold text-zinc-900 flex items-center gap-1 mb-1">
+                            <Database className="h-3.5 w-3.5 text-purple-600" />
+                            Relational Memory State
+                          </span>
+                          Maintains long-term contextual state inside a PostgreSQL database instance, preserving thread IDs, history steps, and system parameters across cold boots.
+                        </div>
+                        <div className="p-3 bg-[#fbfbfb] rounded-lg border border-zinc-150">
+                          <span className="font-bold text-zinc-900 flex items-center gap-1 mb-1">
+                            <CheckCircle className="h-3.5 w-3.5 text-emerald-600" />
+                            Evals & Golden Datasets
+                          </span>
+                          Employs LangSmith alongside customized pytest matrices to run continuous LLM-as-a-judge score evaluations on generated copy quality and action paths.
+                        </div>
+                        <div className="p-3 bg-zinc-50 rounded-lg border border-zinc-150">
+                          <span className="font-bold text-zinc-900 flex items-center gap-1 mb-1">
+                            <Monitor className="h-3.5 w-3.5 text-sky-600" />
+                            Real-time Observability
+                          </span>
+                          Wires system velocities, transaction cost tracking, agent success ratios, and live escalation alerts directly to Datadog metrics and Slack notifications.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Footer status bar */}
+              <div className="bg-zinc-100 border-t-2 border-ink p-2.5 rounded-b-xl flex items-center justify-between text-ink select-none font-mono text-[9px] sm:text-[10px] uppercase font-bold text-zinc-500 shrink-0">
+                <span>TERMINAL REVOPS ID: SECURE-ADMIN-PORTAL</span>
+                <span className="text-amber-500 font-extrabold animate-pulse">
+                  ● {isAdminAuthenticated ? "AUTHORIZED STATE SECURE" : "AWAITING CREDENTIAL KEY"}
+                </span>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
