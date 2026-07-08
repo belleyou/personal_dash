@@ -278,7 +278,7 @@ export default function App() {
   const [hoveredNav, setHoveredNav] = useState<string>("home");
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // Career experience expansion
-  const [activeProjectTab, setActiveProjectTab] = useState<"innovations_video" | "crm" | "jira_automation" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("innovations_video");
+  const [activeProjectTab, setActiveProjectTab] = useState<"innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("innovations_video");
   const [certFilter, setCertFilter] = useState<"all" | "salesforce" | "other">("all");
   const [isMusicModalOpen, setIsMusicModalOpen] = useState(false);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
@@ -986,6 +986,17 @@ export default function App() {
                 Salesforce JIRA Automation 🎥
               </button>
               <button
+                onClick={() => setActiveProjectTab("n8n_orchestration")}
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
+                  activeProjectTab === "n8n_orchestration"
+                    ? "bg-indigo-100 text-ink border-b-3 border-b-indigo-100 z-10 scale-105"
+                    : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
+                }`}
+              >
+                <Workflow className="h-4 w-4 text-indigo-650 animate-pulse" />
+                n8n Orchestration in GTM 🎥
+              </button>
+              <button
                 onClick={() => setActiveProjectTab("ai")}
                 className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
                   activeProjectTab === "ai"
@@ -1264,6 +1275,81 @@ export default function App() {
                     </h4>
                     <p className="font-sans text-xs text-zinc-650 leading-relaxed">
                       Enables business development teams to track engineering velocity and deliver transparent release status updates directly to enterprise customers.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : activeProjectTab === "n8n_orchestration" ? (
+              <div className="bg-white border-3 border-ink rounded-xl p-6 md:p-8 shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] space-y-6 animate-fade-in">
+                <div className="flex flex-col md:flex-row md:items-center justify-between border-b-2 border-dashed border-zinc-200 pb-4 gap-4">
+                  <div>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 mb-2 rounded-full bg-indigo-50 border-2 border-indigo-200 text-indigo-800 font-hand text-xs font-bold leading-none rotate-[-1deg]">
+                      <Sparkles className="h-3 w-3 shrink-0 animate-spin" />
+                      Multi-SaaS Workflows & Visual Automation
+                    </span>
+                    <h3 className="font-hand text-2xl md:text-3xl font-black text-ink flex items-center gap-2">
+                      <Workflow className="h-6 w-6 text-indigo-650 shrink-0 animate-pulse" />
+                      n8n Orchestration in GTM
+                    </h3>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["n8n", "Workflow Engines", "APIs", "GTM Integration", "Webhooks", "SaaS Automation"].map((tag, tIdx) => (
+                      <span key={tIdx} className="px-2 py-0.5 font-mono text-[10px] font-bold text-zinc-700 bg-zinc-100 border border-zinc-200 rounded-md">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Subtitle / Intro */}
+                <p className="font-sans text-sm text-zinc-650 leading-relaxed md:max-w-4xl">
+                  Watch the full orchestration walkthrough powered by n8n. Seamlessly connect GTM tools, execute advanced API pipelines, and automate multi-system business intelligence processes in real-time.
+                </p>
+
+                {/* Embedded YouTube Video Container */}
+                <div className="w-full aspect-video bg-zinc-950 border-3 border-ink rounded-xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] relative">
+                  <iframe 
+                    width="100%" 
+                    height="100%" 
+                    src="https://www.youtube.com/embed/6xarHe_Em24" 
+                    title="n8n Orchestration in GTM Video Demonstration" 
+                    frameBorder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerPolicy="strict-origin-when-cross-origin" 
+                    allowFullScreen
+                    className="w-full h-full min-h-[300px] md:min-h-[450px]"
+                  ></iframe>
+                </div>
+
+                {/* Additional context & bullet descriptions */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-dashed border-zinc-200">
+                  <div className="p-4 bg-zinc-50 border-2 border-ink rounded-lg shadow-sm">
+                    <h4 className="font-sans font-extrabold text-sm text-zinc-900 mb-1.5 flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 shrink-0"></span>
+                      Node-Based Visual Workflows
+                    </h4>
+                    <p className="font-sans text-xs text-zinc-650 leading-relaxed">
+                      Build robust, self-documenting workflow maps utilizing n8n's visual canvas to orchestrate complex logic branches and multi-step actions.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-[#fbfbfb] border-2 border-ink rounded-lg shadow-sm">
+                    <h4 className="font-sans font-extrabold text-sm text-zinc-900 mb-1.5 flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shrink-0"></span>
+                      Advanced API Handlers
+                    </h4>
+                    <p className="font-sans text-xs text-zinc-650 leading-relaxed">
+                      Custom webhook processing and raw HTTP nodes process and mutate payloads dynamically across diverse marketing, sales, and analytics systems.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-zinc-50 border-2 border-ink rounded-lg shadow-sm">
+                    <h4 className="font-sans font-extrabold text-sm text-zinc-900 mb-1.5 flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-pink-500 shrink-0"></span>
+                      Event-Driven Triggers
+                    </h4>
+                    <p className="font-sans text-xs text-zinc-650 leading-relaxed">
+                      Instantly respond to GTM interactions with secure data loops, triggering automated customer messaging or CRM status mutations.
                     </p>
                   </div>
                 </div>
