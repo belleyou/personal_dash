@@ -47,7 +47,8 @@ import {
   Compass,
   Flower,
   Settings,
-  Lock
+  Lock,
+  Link
 } from "lucide-react";
 
 import baoSelfie from "./Selfie.png";
@@ -304,17 +305,35 @@ export default function App() {
 
    // True multi-page mock router using hash changes
    useEffect(() => {
+     let prevPagePath = "";
+
      const handleHashChange = () => {
        const fullHash = window.location.hash.replace("#", "");
-       // Support path and queries like articles?id=salesforce-scale
+       // Support path and queries like articles?id=salesforce-scale or projects?tab=n8n_orchestration
        const [pagePath, queryStr] = fullHash.split("?");
 
-       if (["home", "about", "certifications", "projects", "articles", "career", "contact", "meet", "thank-you"].includes(pagePath)) {
-         setActivePage(pagePath);
-         setHoveredNav(pagePath);
-         
+       const targetPage = ["home", "about", "certifications", "projects", "articles", "career", "contact", "meet", "thank-you"].includes(pagePath)
+         ? pagePath
+         : "home";
+
+       setActivePage(targetPage);
+       setHoveredNav(targetPage);
+       
+       // If projects page, check for project tab
+       if (targetPage === "projects") {
+         if (queryStr) {
+           const params = new URLSearchParams(queryStr);
+           const tabId = params.get("tab");
+           if (tabId) {
+             setActiveProjectTab(tabId as any);
+           }
+         } else {
+           // Default tab if none specified
+           setActiveProjectTab("innovations_video");
+         }
+       } else if (targetPage === "articles") {
          // If they requested a specific article, open it!
-         if (pagePath === "articles" && queryStr) {
+         if (queryStr) {
            const params = new URLSearchParams(queryStr);
            const artId = params.get("id");
            if (artId) {
@@ -324,17 +343,19 @@ export default function App() {
            // If no query string, default to gtm-vc!
            setSelectedArticleId("gtm-vc");
          }
-      } else {
-        setActivePage("home");
-        setHoveredNav("home");
-      }
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+       }
 
-    handleHashChange(); // Run on initial mount
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, []);
+       // Only scroll to top if we switched to a different page, not when we just switched project tabs
+       if (targetPage !== prevPagePath) {
+         window.scrollTo({ top: 0, behavior: "smooth" });
+         prevPagePath = targetPage;
+       }
+     };
+
+     handleHashChange(); // Run on initial mount
+     window.addEventListener("hashchange", handleHashChange);
+     return () => window.removeEventListener("hashchange", handleHashChange);
+   }, []);
 
   // Track page transitions in Google Analytics
   useEffect(() => {
@@ -952,9 +973,9 @@ export default function App() {
 
             {/* Folder Tabs - Compact single row, horizontal scrollable without wrapping */}
             <div className="flex flex-nowrap overflow-x-auto border-b-3 border-ink w-full gap-x-1.5 select-none pb-[3px] scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-track-transparent">
-              <button
-                onClick={() => setActiveProjectTab("innovations_video")}
-                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
+              <a
+                href="#projects?tab=innovations_video"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
                   activeProjectTab === "innovations_video"
                     ? "bg-amber-100 text-ink border-b-3 border-b-amber-100 z-10 scale-105"
                     : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
@@ -962,10 +983,10 @@ export default function App() {
               >
                 <PlayCircle className="h-4 w-4 text-amber-600 animate-pulse" />
                 Architectural Innovations 🎥
-              </button>
-              <button
-                onClick={() => setActiveProjectTab("crm")}
-                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
+              </a>
+              <a
+                href="#projects?tab=crm"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
                   activeProjectTab === "crm"
                     ? "bg-marker-green text-ink border-b-3 border-b-marker-green z-10 scale-105"
                     : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
@@ -973,10 +994,10 @@ export default function App() {
               >
                 <Monitor className="h-4 w-4 text-emerald-600 animate-pulse" />
                 Custom CRM Prototype 🎥
-              </button>
-              <button
-                onClick={() => setActiveProjectTab("jira_automation")}
-                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
+              </a>
+              <a
+                href="#projects?tab=jira_automation"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
                   activeProjectTab === "jira_automation"
                     ? "bg-sky-100 text-ink border-b-3 border-b-sky-100 z-10 scale-105"
                     : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
@@ -984,10 +1005,10 @@ export default function App() {
               >
                 <Workflow className="h-4 w-4 text-sky-600 animate-pulse" />
                 Salesforce JIRA Automation 🎥
-              </button>
-              <button
-                onClick={() => setActiveProjectTab("n8n_orchestration")}
-                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
+              </a>
+              <a
+                href="#projects?tab=n8n_orchestration"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
                   activeProjectTab === "n8n_orchestration"
                     ? "bg-indigo-100 text-ink border-b-3 border-b-indigo-100 z-10 scale-105"
                     : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
@@ -995,10 +1016,10 @@ export default function App() {
               >
                 <Workflow className="h-4 w-4 text-indigo-650 animate-pulse" />
                 n8n Orchestration in GTM 🎥
-              </button>
-              <button
-                onClick={() => setActiveProjectTab("ai")}
-                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
+              </a>
+              <a
+                href="#projects?tab=ai"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
                   activeProjectTab === "ai"
                     ? "bg-highlight text-ink border-b-3 border-b-highlight z-10 scale-105"
                     : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
@@ -1006,10 +1027,10 @@ export default function App() {
               >
                 <Workflow className="h-4 w-4 text-emerald-800" />
                 Intelligent Workflows ({AI_GTM_PROJECTS.length})
-              </button>
-              <button
-                onClick={() => setActiveProjectTab("traditional")}
-                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
+              </a>
+              <a
+                href="#projects?tab=traditional"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
                   activeProjectTab === "traditional"
                     ? "bg-marker-blue text-ink border-b-3 border-b-marker-blue z-10 scale-105"
                     : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
@@ -1017,10 +1038,10 @@ export default function App() {
               >
                 <FolderDot className="h-4 w-4 text-teal-700" />
                 Core GTM Systems ({TRADITIONAL_PROJECTS.length})
-              </button>
-              <button
-                onClick={() => setActiveProjectTab("evaluation")}
-                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
+              </a>
+              <a
+                href="#projects?tab=evaluation"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
                   activeProjectTab === "evaluation"
                     ? "bg-marker-orange text-ink border-b-3 border-b-marker-orange z-10 scale-105"
                     : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
@@ -1028,10 +1049,10 @@ export default function App() {
               >
                 <FileText className="h-4 w-4 text-amber-600" />
                 System Evaluation ({EVALUATION_PROJECTS.length})
-              </button>
-              <button
-                onClick={() => setActiveProjectTab("modeling")}
-                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
+              </a>
+              <a
+                href="#projects?tab=modeling"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
                   activeProjectTab === "modeling"
                     ? "bg-rose-100 text-ink border-b-3 border-b-rose-100 z-10 scale-105"
                     : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
@@ -1039,10 +1060,10 @@ export default function App() {
               >
                 <Database className="h-4 w-4 text-rose-600 animate-pulse" />
                 Data Modeling ({MODELING_PROJECTS.length})
-              </button>
-              <button
-                onClick={() => setActiveProjectTab("sales")}
-                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none ${
+              </a>
+              <a
+                href="#projects?tab=sales"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
                   activeProjectTab === "sales"
                     ? "bg-purple-100 text-ink border-b-3 border-b-purple-100 z-10 scale-105"
                     : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
@@ -1050,7 +1071,7 @@ export default function App() {
               >
                 <Leaf className="h-4 w-4 text-emerald-800" />
                 Revenue Growth Ops ({SALES_PRO_PROJECTS.length})
-              </button>
+              </a>
             </div>
 
             {/* Project Cards Grid / Walkthrough */}
@@ -1067,7 +1088,26 @@ export default function App() {
                       GTM Systems & Architecture Video
                     </h3>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={() => {
+                        const link = `${window.location.origin}/#projects?tab=innovations_video`;
+                        copyToClipboard(link, "Link to innovations_video");
+                      }}
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 border-2 border-amber-300 rounded font-hand text-xs font-bold transition-all shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(24,24,27,1)] cursor-pointer select-none"
+                    >
+                      {copiedText === "Link to innovations_video" ? (
+                        <>
+                          <Check className="h-3 w-3 text-amber-700 animate-scale-up shrink-0" />
+                          <span>Copied Tab Link!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Link className="h-3 w-3 text-amber-700 shrink-0" />
+                          <span>Copy Tab Link</span>
+                        </>
+                      )}
+                    </button>
                     {["Systems Design", "Salesforce RevOps", "Enterprise GTM", "Workflow Automation", "API Integration"].map((tag, tIdx) => (
                       <span key={tIdx} className="px-2 py-0.5 font-mono text-[10px] font-bold text-zinc-700 bg-zinc-100 border border-zinc-200 rounded-md">
                         {tag}
@@ -1142,7 +1182,26 @@ export default function App() {
                       Custom CRM Prototype Demonstration
                     </h3>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={() => {
+                        const link = `${window.location.origin}/#projects?tab=crm`;
+                        copyToClipboard(link, "Link to crm");
+                      }}
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border-2 border-emerald-300 rounded font-hand text-xs font-bold transition-all shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(24,24,27,1)] cursor-pointer select-none"
+                    >
+                      {copiedText === "Link to crm" ? (
+                        <>
+                          <Check className="h-3 w-3 text-emerald-700 animate-scale-up shrink-0" />
+                          <span>Copied Tab Link!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Link className="h-3 w-3 text-emerald-700 shrink-0" />
+                          <span>Copy Tab Link</span>
+                        </>
+                      )}
+                    </button>
                     {["React 18", "Tailwind CSS", "Express Server", "Salesforce API", "Google Cloud", "LLM Pipelines"].map((tag, tIdx) => (
                       <span key={tIdx} className="px-2 py-0.5 font-mono text-[10px] font-bold text-zinc-700 bg-zinc-100 border border-zinc-200 rounded-md">
                         {tag}
@@ -1217,7 +1276,26 @@ export default function App() {
                       Salesforce JIRA Automation
                     </h3>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={() => {
+                        const link = `${window.location.origin}/#projects?tab=jira_automation`;
+                        copyToClipboard(link, "Link to jira_automation");
+                      }}
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-sky-50 hover:bg-sky-100 text-sky-900 border-2 border-sky-300 rounded font-hand text-xs font-bold transition-all shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(24,24,27,1)] cursor-pointer select-none"
+                    >
+                      {copiedText === "Link to jira_automation" ? (
+                        <>
+                          <Check className="h-3 w-3 text-sky-700 animate-scale-up shrink-0" />
+                          <span>Copied Tab Link!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Link className="h-3 w-3 text-sky-700 shrink-0" />
+                          <span>Copy Tab Link</span>
+                        </>
+                      )}
+                    </button>
                     {["Salesforce", "JIRA API", "Mulesoft / Zapier", "Webhooks", "Issue Sync", "Agile Ops"].map((tag, tIdx) => (
                       <span key={tIdx} className="px-2 py-0.5 font-mono text-[10px] font-bold text-zinc-700 bg-zinc-100 border border-zinc-200 rounded-md">
                         {tag}
@@ -1292,7 +1370,26 @@ export default function App() {
                       n8n Orchestration in GTM
                     </h3>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={() => {
+                        const link = `${window.location.origin}/#projects?tab=n8n_orchestration`;
+                        copyToClipboard(link, "Link to n8n_orchestration");
+                      }}
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border-2 border-indigo-300 rounded font-hand text-xs font-bold transition-all shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(24,24,27,1)] cursor-pointer select-none"
+                    >
+                      {copiedText === "Link to n8n_orchestration" ? (
+                        <>
+                          <Check className="h-3 w-3 text-indigo-700 animate-scale-up shrink-0" />
+                          <span>Copied Tab Link!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Link className="h-3 w-3 text-indigo-700 shrink-0" />
+                          <span>Copy Tab Link</span>
+                        </>
+                      )}
+                    </button>
                     {["n8n", "Workflow Engines", "APIs", "GTM Integration", "Webhooks", "SaaS Automation"].map((tag, tIdx) => (
                       <span key={tIdx} className="px-2 py-0.5 font-mono text-[10px] font-bold text-zinc-700 bg-zinc-100 border border-zinc-200 rounded-md">
                         {tag}
