@@ -547,7 +547,7 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
     company: "",
     projectName: "",
     description: "",
-    projectType: "Aries PCIE/CXL Smart DSP Retimers",
+    projectType: "Aries PCIE",
     projectStatus: "New",
     companyEmail: "",
     country: "US",
@@ -653,14 +653,27 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   <label for="country_code">Country</label>
   <input id="country_code" name="country_code" type="text" value="${formData.country}" /><br>
 
-  <label for="state_code">State/Province</label>
-  <input id="state_code" name="state_code" type="text" value="${formData.stateCode}" /><br>
+  <label for="00NgL00004ERNsr">Country Code</label>
+  <input id="00NgL00004ERNsr" name="00NgL00004ERNsr" type="text" value="${formData.countryCode}" /><br>
 
   <label for="phone">Phone</label>
   <input id="phone" maxlength="40" name="phone" size="20" type="text" value="${formData.phone}" /><br>
 
-  <label for="00NgL00004ERNsr">Country Code</label>
-  <input id="00NgL00004ERNsr" name="00NgL00004ERNsr" type="text" value="${formData.countryCode}" /><br>
+  <!-- Custom Salesforce Fields -->
+  <label for="00NgL000047eJlp">Project Description</label>
+  <textarea id="00NgL000047eJlp" name="00NgL000047eJlp" rows="5" wrap="soft">${formData.description}</textarea><br>
+
+  <label for="00NgL000048ALHR">Project Name</label>
+  <textarea id="00NgL000048ALHR" name="00NgL000048ALHR" rows="2" wrap="soft">${formData.projectName}</textarea><br>
+
+  <label for="00NgL000047BQPJ">Project Type</label>
+  <input id="00NgL000047BQPJ" name="00NgL000047BQPJ" type="text" value="${formData.projectType}" /><br>
+
+  <label for="00NgL000047B8P1">Project Status</label>
+  <input id="00NgL000047B8P1" name="00NgL000047B8P1" type="text" value="${formData.projectStatus}" /><br>
+
+  <label for="00NgL000047vQ7l">Project Deadline</label>
+  <input id="00NgL000047vQ7l" name="00NgL000047vQ7l" type="text" value="${formData.projectDeadline}" /><br>
 
   <!-- Lead Source Identifier -->
   <input type="hidden" name="lead_source" value="Web">
@@ -1164,10 +1177,10 @@ San Jose, California`);
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0"
                 >
-                  <option value="Aries PCIE/CXL Smart DSP Retimers">Aries PCIE/CXL Smart DSP Retimers</option>
+                  <option value="Aries PCIE">Aries PCIE</option>
                   <option value="Taurus Ethernet Smart Cable Modules">Taurus Ethernet Smart Cable Modules</option>
                   <option value="Leo CXL Memory Connectivity Controllers">Leo CXL Memory Connectivity Controllers</option>
-                  <option value="Intelligent Connectivity for Cloud & High-Speed Infrastructure">Intelligent Connectivity for Cloud & High-Speed Infrastructure</option>
+                  <option value="Intelligent Connectivity for Cloud & AI Infrastructure">Intelligent Connectivity for Cloud & AI Infrastructure</option>
                   <option value="Custom Semiconductor Connectivity Integration">Custom Semiconductor Connectivity Integration</option>
                 </select>
                 {/* Custom fields in salesforce are injected with custom name */}
