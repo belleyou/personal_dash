@@ -19,6 +19,503 @@ import {
   FileText
 } from "lucide-react";
 
+const COUNTRY_CODES = [
+  { value: "", label: "--None--" },
+  { value: "AF", label: "AF (Afghanistan)" },
+  { value: "AX", label: "AX (Aland Islands)" },
+  { value: "AL", label: "AL (Albania)" },
+  { value: "DZ", label: "DZ (Algeria)" },
+  { value: "AD", label: "AD (Andorra)" },
+  { value: "AO", label: "AO (Angola)" },
+  { value: "AI", label: "AI (Anguilla)" },
+  { value: "AQ", label: "AQ (Antarctica)" },
+  { value: "AG", label: "AG (Antigua and Barbuda)" },
+  { value: "AR", label: "AR (Argentina)" },
+  { value: "AM", label: "AM (Armenia)" },
+  { value: "AW", label: "AW (Aruba)" },
+  { value: "AU", label: "AU (Australia)" },
+  { value: "AT", label: "AT (Austria)" },
+  { value: "AZ", label: "AZ (Azerbaijan)" },
+  { value: "BS", label: "BS (Bahamas)" },
+  { value: "BH", label: "BH (Bahrain)" },
+  { value: "BD", label: "BD (Bangladesh)" },
+  { value: "BB", label: "BB (Barbados)" },
+  { value: "BY", label: "BY (Belarus)" },
+  { value: "BE", label: "BE (Belgium)" },
+  { value: "BZ", label: "BZ (Belize)" },
+  { value: "BJ", label: "BJ (Benin)" },
+  { value: "BM", label: "BM (Bermuda)" },
+  { value: "BT", label: "BT (Bhutan)" },
+  { value: "BO", label: "BO (Bolivia)" },
+  { value: "BQ", label: "BQ (Bonaire)" },
+  { value: "BA", label: "BA (Bosnia and Herzegovina)" },
+  { value: "BW", label: "BW (Botswana)" },
+  { value: "BV", label: "BV (Bouvet Island)" },
+  { value: "BR", label: "BR (Brazil)" },
+  { value: "IO", label: "IO (British Indian Ocean Territory)" },
+  { value: "BN", label: "BN (Brunei)" },
+  { value: "BG", label: "BG (Bulgaria)" },
+  { value: "BF", label: "BF (Burkina Faso)" },
+  { value: "BI", label: "BI (Burundi)" },
+  { value: "KH", label: "KH (Cambodia)" },
+  { value: "CM", label: "CM (Cameroon)" },
+  { value: "CA", label: "CA (Canada)" },
+  { value: "CV", label: "CV (Cape Verde)" },
+  { value: "KY", label: "KY (Cayman Islands)" },
+  { value: "CF", label: "CF (Central African Republic)" },
+  { value: "TD", label: "TD (Chad)" },
+  { value: "CL", label: "CL (Chile)" },
+  { value: "CN", label: "CN (China)" },
+  { value: "CX", label: "CX (Christmas Island)" },
+  { value: "CC", label: "CC (Cocos Islands)" },
+  { value: "CO", label: "CO (Colombia)" },
+  { value: "KM", label: "KM (Comoros)" },
+  { value: "CG", label: "CG (Congo)" },
+  { value: "CD", label: "CD (Congo, Democratic Republic)" },
+  { value: "CK", label: "CK (Cook Islands)" },
+  { value: "CR", label: "CR (Costa Rica)" },
+  { value: "CI", label: "CI (Cote d'Ivoire)" },
+  { value: "HR", label: "HR (Croatia)" },
+  { value: "CW", label: "CW (Curacao)" },
+  { value: "CY", label: "CY (Cyprus)" },
+  { value: "CZ", label: "CZ (Czech Republic)" },
+  { value: "DK", label: "DK (Denmark)" },
+  { value: "DJ", label: "DJ (Djibouti)" },
+  { value: "DM", label: "DM (Dominica)" },
+  { value: "DO", label: "DO (Dominican Republic)" },
+  { value: "EC", label: "EC (Ecuador)" },
+  { value: "EG", label: "EG (Egypt)" },
+  { value: "SV", label: "SV (El Salvador)" },
+  { value: "GQ", label: "GQ (Equatorial Guinea)" },
+  { value: "ER", label: "ER (Eritrea)" },
+  { value: "EE", label: "EE (Estonia)" },
+  { value: "SZ", label: "SZ (Swaziland)" },
+  { value: "ET", label: "ET (Ethiopia)" },
+  { value: "FK", label: "FK (Falkland Islands)" },
+  { value: "FO", label: "FO (Faroe Islands)" },
+  { value: "FJ", label: "FJ (Fiji)" },
+  { value: "FI", label: "FI (Finland)" },
+  { value: "FR", label: "FR (France)" },
+  { value: "GF", label: "GF (French Guiana)" },
+  { value: "PF", label: "PF (French Polynesia)" },
+  { value: "TF", label: "TF (French Southern Territories)" },
+  { value: "GA", label: "GA (Gabon)" },
+  { value: "GM", label: "GM (Gambia)" },
+  { value: "GE", label: "GE (Georgia)" },
+  { value: "DE", label: "DE (Germany)" },
+  { value: "GH", label: "GH (Ghana)" },
+  { value: "GI", label: "GI (Gibraltar)" },
+  { value: "GR", label: "GR (Greece)" },
+  { value: "GL", label: "GL (Greenland)" },
+  { value: "GD", label: "GD (Grenada)" },
+  { value: "GP", label: "GP (Guadeloupe)" },
+  { value: "GT", label: "GT (Guatemala)" },
+  { value: "GG", label: "GG (Guernsey)" },
+  { value: "GN", label: "GN (Guinea)" },
+  { value: "GW", label: "GW (Guinea-Bissau)" },
+  { value: "GY", label: "GY (Guyana)" },
+  { value: "HT", label: "HT (Haiti)" },
+  { value: "HM", label: "HM (Heard Island and McDonald Islands)" },
+  { value: "VA", label: "VA (Vatican)" },
+  { value: "HN", label: "HN (Honduras)" },
+  { value: "HU", label: "HU (Hungary)" },
+  { value: "IS", label: "IS (Iceland)" },
+  { value: "IN", label: "IN (India)" },
+  { value: "ID", label: "ID (Indonesia)" },
+  { value: "IQ", label: "IQ (Iraq)" },
+  { value: "IE", label: "IE (Ireland)" },
+  { value: "IM", label: "IM (Isle of Man)" },
+  { value: "IL", label: "IL (Israel)" },
+  { value: "IT", label: "IT (Italy)" },
+  { value: "JM", label: "JM (Jamaica)" },
+  { value: "JP", label: "JP (Japan)" },
+  { value: "JE", label: "JE (Jersey)" },
+  { value: "JO", label: "JO (Jordan)" },
+  { value: "KZ", label: "KZ (Kazakhstan)" },
+  { value: "KE", label: "KE (Kenya)" },
+  { value: "KI", label: "KI (Kiribati)" },
+  { value: "KR", label: "KR (South Korea)" },
+  { value: "XK", label: "XK (Kosovo)" },
+  { value: "KW", label: "KW (Kuwait)" },
+  { value: "KG", label: "KG (Kyrgyzstan)" },
+  { value: "LA", label: "LA (Laos)" },
+  { value: "LV", label: "LV (Latvia)" },
+  { value: "LB", label: "LB (Lebanon)" },
+  { value: "LS", label: "LS (Lesotho)" },
+  { value: "LR", label: "LR (Liberia)" },
+  { value: "LY", label: "LY (Libya)" },
+  { value: "LI", label: "LI (Liechtenstein)" },
+  { value: "LT", label: "LT (Lithuania)" },
+  { value: "LU", label: "LU (Luxembourg)" },
+  { value: "MO", label: "MO (Macao)" },
+  { value: "MG", label: "MG (Madagascar)" },
+  { value: "MW", label: "MW (Malawi)" },
+  { value: "MY", label: "MY (Malaysia)" },
+  { value: "MV", label: "MV (Maldives)" },
+  { value: "ML", label: "ML (Mali)" },
+  { value: "MT", label: "MT (Malta)" },
+  { value: "MQ", label: "MQ (Martinique)" },
+  { value: "MR", label: "MR (Mauritania)" },
+  { value: "MU", label: "MU (Mauritius)" },
+  { value: "YT", label: "YT (Mayotte)" },
+  { value: "MX", label: "MX (Mexico)" },
+  { value: "MD", label: "MD (Moldova)" },
+  { value: "MC", label: "MC (Monaco)" },
+  { value: "MN", label: "MN (Mongolia)" },
+  { value: "ME", label: "ME (Montenegro)" },
+  { value: "MS", label: "MS (Montserrat)" },
+  { value: "MA", label: "MA (Morocco)" },
+  { value: "MZ", label: "MZ (Mozambique)" },
+  { value: "MM", label: "MM (Myanmar)" },
+  { value: "NA", label: "NA (Namibia)" },
+  { value: "NR", label: "NR (Nauru)" },
+  { value: "NP", label: "NP (Nepal)" },
+  { value: "NL", label: "NL (Netherlands)" },
+  { value: "NC", label: "NC (New Caledonia)" },
+  { value: "NZ", label: "NZ (New Zealand)" },
+  { value: "NI", label: "NI (Nicaragua)" },
+  { value: "NE", label: "NE (Niger)" },
+  { value: "NG", label: "NG (Nigeria)" },
+  { value: "NU", label: "NU (Niue)" },
+  { value: "NF", label: "NF (Norfolk Island)" },
+  { value: "MK", label: "MK (Macedonia)" },
+  { value: "NO", label: "NO (Norway)" },
+  { value: "OM", label: "OM (Oman)" },
+  { value: "PK", label: "PK (Pakistan)" },
+  { value: "PS", label: "PS (Palestine)" },
+  { value: "PA", label: "PA (Panama)" },
+  { value: "PG", label: "PG (Papua New Guinea)" },
+  { value: "PY", label: "PY (Paraguay)" },
+  { value: "PE", label: "PE (Peru)" },
+  { value: "PH", label: "PH (Philippines)" },
+  { value: "PN", label: "PN (Pitcairn)" },
+  { value: "PL", label: "PL (Poland)" },
+  { value: "PT", label: "PT (Portugal)" },
+  { value: "QA", label: "QA (Qatar)" },
+  { value: "RE", label: "RE (Reunion)" },
+  { value: "RO", label: "RO (Romania)" },
+  { value: "RU", label: "RU (Russia)" },
+  { value: "RW", label: "RW (Rwanda)" },
+  { value: "BL", label: "BL (Saint Barthelemy)" },
+  { value: "SH", label: "SH (Saint Helena)" },
+  { value: "KN", label: "KN (Saint Kitts and Nevis)" },
+  { value: "LC", label: "LC (Saint Lucia)" },
+  { value: "MF", label: "MF (Saint Martin)" },
+  { value: "PM", label: "PM (Saint Pierre and Miquelon)" },
+  { value: "VC", label: "VC (Saint Vincent)" },
+  { value: "WS", label: "WS (Samoa)" },
+  { value: "SM", label: "SM (San Marino)" },
+  { value: "ST", label: "ST (Sao Tome and Principe)" },
+  { value: "SA", label: "SA (Saudi Arabia)" },
+  { value: "SN", label: "SN (Senegal)" },
+  { value: "RS", label: "RS (Serbia)" },
+  { value: "SC", label: "SC (Seychelles)" },
+  { value: "SL", label: "SL (Sierra Leone)" },
+  { value: "SG", label: "SG (Singapore)" },
+  { value: "SX", label: "SX (Sint Maarten)" },
+  { value: "SK", label: "SK (Slovakia)" },
+  { value: "SI", label: "SI (Slovenia)" },
+  { value: "SB", label: "SB (Solomon Islands)" },
+  { value: "SO", label: "SO (Somalia)" },
+  { value: "ZA", label: "ZA (South Africa)" },
+  { value: "GS", label: "GS (South Georgia)" },
+  { value: "SS", label: "SS (South Sudan)" },
+  { value: "ES", label: "ES (Spain)" },
+  { value: "LK", label: "LK (Sri Lanka)" },
+  { value: "SR", label: "SR (Suriname)" },
+  { value: "SJ", label: "SJ (Svalbard)" },
+  { value: "SE", label: "SE (Sweden)" },
+  { value: "CH", label: "CH (Switzerland)" },
+  { value: "TW", label: "TW (Taiwan)" },
+  { value: "TJ", label: "TJ (Tajikistan)" },
+  { value: "TZ", label: "TZ (Tanzania)" },
+  { value: "TH", label: "TH (Thailand)" },
+  { value: "TL", label: "TL (Timor-Leste)" },
+  { value: "TG", label: "TG (Togo)" },
+  { value: "TK", label: "TK (Tokelau)" },
+  { value: "TO", label: "TO (Tonga)" },
+  { value: "TT", label: "TT (Trinidad and Tobago)" },
+  { value: "TN", label: "TN (Tunisia)" },
+  { value: "TR", label: "TR (Turkey)" },
+  { value: "TM", label: "TM (Turkmenistan)" },
+  { value: "TC", label: "TC (Turks and Caicos Islands)" },
+  { value: "TV", label: "TV (Tuvalu)" },
+  { value: "UG", label: "UG (Uganda)" },
+  { value: "UA", label: "UA (Ukraine)" },
+  { value: "AE", label: "AE (United Arab Emirates)" },
+  { value: "GB", label: "GB (United Kingdom)" },
+  { value: "US", label: "US (United States)" },
+  { value: "UY", label: "UY (Uruguay)" },
+  { value: "UZ", label: "UZ (Uzbekistan)" },
+  { value: "VU", label: "VU (Vanuatu)" },
+  { value: "VE", label: "VE (Venezuela)" },
+  { value: "VN", label: "VN (Vietnam)" },
+  { value: "VG", label: "VG (Virgin Islands, British)" },
+  { value: "WF", label: "WF (Wallis and Futuna)" },
+  { value: "EH", label: "EH (Western Sahara)" },
+  { value: "YE", label: "YE (Yemen)" },
+  { value: "ZM", label: "ZM (Zambia)" },
+  { value: "ZW", label: "ZW (Zimbabwe)" }
+];
+
+const STATE_CODES = [
+  { value: "", label: "--None--" },
+  { value: "AC", label: "AC" },
+  { value: "AG", label: "AG" },
+  { value: "05", label: "05" },
+  { value: "02", label: "02" },
+  { value: "AL", label: "AL" },
+  { value: "AK", label: "AK" },
+  { value: "AB", label: "AB" },
+  { value: "AP", label: "AP" },
+  { value: "AM", label: "AM" },
+  { value: "AN", label: "AN" },
+  { value: "34", label: "34" },
+  { value: "23", label: "23" },
+  { value: "AO", label: "AO" },
+  { value: "AR", label: "AR" },
+  { value: "AZ", label: "AZ" },
+  { value: "AS", label: "AS" },
+  { value: "AT", label: "AT" },
+  { value: "ACT", label: "ACT" },
+  { value: "AV", label: "AV" },
+  { value: "BA", label: "BA" },
+  { value: "BC", label: "BC" },
+  { value: "BS", label: "BS" },
+  { value: "BT", label: "BT" },
+  { value: "11", label: "11" },
+  { value: "BL", label: "BL" },
+  { value: "BN", label: "BN" },
+  { value: "BG", label: "BG" },
+  { value: "BI", label: "BI" },
+  { value: "BR", label: "BR" },
+  { value: "BO", label: "BO" },
+  { value: "BZ", label: "BZ" },
+  { value: "CA", label: "CA" },
+  { value: "CL", label: "CL" },
+  { value: "CM", label: "CM" },
+  { value: "CB", label: "CB" },
+  { value: "CI", label: "CI" },
+  { value: "CW", label: "CW" },
+  { value: "CE", label: "CE" },
+  { value: "CT", label: "CT" },
+  { value: "CZ", label: "CZ" },
+  { value: "CN", label: "CN" },
+  { value: "CH", label: "CH" },
+  { value: "CS", label: "CS" },
+  { value: "12", label: "12" },
+  { value: "50", label: "50" },
+  { value: "CO", label: "CO" },
+  { value: "CR", label: "CR" },
+  { value: "KR", label: "KR" },
+  { value: "DN", label: "DN" },
+  { value: "DD", label: "DD" },
+  { value: "DE", label: "DE" },
+  { value: "DL", label: "DL" },
+  { value: "DC", label: "DC" },
+  { value: "DF", label: "DF" },
+  { value: "D", label: "D" },
+  { value: "DG", label: "DG" },
+  { value: "38", label: "38" },
+  { value: "EN", label: "EN" },
+  { value: "ES", label: "ES" },
+  { value: "FM", label: "FM" },
+  { value: "FE", label: "FE" },
+  { value: "FI", label: "FI" },
+  { value: "FL", label: "FL" },
+  { value: "FG", label: "FG" },
+  { value: "FC", label: "FC" },
+  { value: "FR", label: "FR" },
+  { value: "35", label: "35" },
+  { value: "18", label: "18" },
+  { value: "40", label: "40" },
+  { value: "07", label: "07" },
+  { value: "G", label: "G" },
+  { value: "62", label: "62" },
+  { value: "GE", label: "GE" },
+  { value: "GA", label: "GA" },
+  { value: "21", label: "21" },
+  { value: "GO", label: "GO" },
+  { value: "GR", label: "GR" },
+  { value: "GT", label: "GT" },
+  { value: "44", label: "44" },
+  { value: "45", label: "45" },
+  { value: "52", label: "52" },
+  { value: "GJ", label: "GJ" },
+  { value: "10", label: "10" },
+  { value: "46", label: "46" },
+  { value: "HR", label: "HR" },
+  { value: "HI", label: "HI" },
+  { value: "13", label: "13" },
+  { value: "23", label: "23" },
+  { value: "41", label: "41" },
+  { value: "HG", label: "HG" },
+  { value: "HP", label: "HP" },
+  { value: "01", label: "01" },
+  { value: "91", label: "91" },
+  { value: "42", label: "42" },
+  { value: "43", label: "43" },
+  { value: "28", label: "28" },
+  { value: "08", label: "08" },
+  { value: "ID", label: "ID" },
+  { value: "IL", label: "IL" },
+  { value: "IM", label: "IM" },
+  { value: "IN", label: "IN" },
+  { value: "IA", label: "IA" },
+  { value: "IS", label: "IS" },
+  { value: "17", label: "17" },
+  { value: "03", label: "03" },
+  { value: "JA", label: "JA" },
+  { value: "JK", label: "JK" },
+  { value: "JH", label: "JH" },
+  { value: "32", label: "32" },
+  { value: "36", label: "36" },
+  { value: "22", label: "22" },
+  { value: "37", label: "37" },
+  { value: "14", label: "14" },
+  { value: "KS", label: "KS" },
+  { value: "KA", label: "KA" },
+  { value: "KY", label: "KY" },
+  { value: "KL", label: "KL" },
+  { value: "KE", label: "KE" },
+  { value: "KK", label: "KK" },
+  { value: "39", label: "39" },
+  { value: "26", label: "26" },
+  { value: "AQ", label: "AQ" },
+  { value: "LD", label: "LD" },
+  { value: "LS", label: "LS" },
+  { value: "SP", label: "SP" },
+  { value: "LT", label: "LT" },
+  { value: "LE", label: "LE" },
+  { value: "LC", label: "LC" },
+  { value: "LM", label: "LM" },
+  { value: "LK", label: "LK" },
+  { value: "LI", label: "LI" },
+  { value: "LO", label: "LO" },
+  { value: "LA", label: "LA" },
+  { value: "LH", label: "LH" },
+  { value: "LU", label: "LU" },
+  { value: "92", label: "92" },
+  { value: "MC", label: "MC" },
+  { value: "MP", label: "MP" },
+  { value: "MH", label: "MH" },
+  { value: "ME", label: "ME" },
+  { value: "MN", label: "MN" },
+  { value: "MB", label: "MB" },
+  { value: "MA", label: "MA" },
+  { value: "MD", label: "MD" },
+  { value: "MS", label: "MS" },
+  { value: "MT", label: "MT" },
+  { value: "MO", label: "MO" },
+  { value: "VS", label: "VS" },
+  { value: "ML", label: "ML" },
+  { value: "MI", label: "MI" },
+  { value: "24", label: "24" },
+  { value: "MG", label: "MG" },
+  { value: "MS", label: "MS" },
+  { value: "04", label: "04" },
+  { value: "MZ", label: "MZ" },
+  { value: "MT", label: "MT" },
+  { value: "NB", label: "NB" },
+  { value: "NH", label: "NH" },
+  { value: "NJ", label: "NJ" },
+  { value: "NM", label: "NM" },
+  { value: "NSW", label: "NSW" },
+  { value: "NY", label: "NY" },
+  { value: "15", label: "15" },
+  { value: "64", label: "64" },
+  { value: "NC", label: "NC" },
+  { value: "ND", label: "ND" },
+  { value: "NT", label: "NT" },
+  { value: "NO", label: "NO" },
+  { value: "NS", label: "NS" },
+  { value: "NL", label: "NL" },
+  { value: "NU", label: "NU" },
+  { value: "OA", label: "OA" },
+  { value: "OR", label: "OR" },
+  { value: "OY", label: "OY" },
+  { value: "OG", label: "OG" },
+  { value: "OH", label: "OH" },
+  { value: "33", label: "33" },
+  { value: "47", label: "47" },
+  { value: "OK", label: "OK" },
+  { value: "OT", label: "OT" },
+  { value: "ON", label: "ON" },
+  { value: "PD", label: "PD" },
+  { value: "PA", label: "PA" },
+  { value: "PB", label: "PB" },
+  { value: "PR", label: "PR" },
+  { value: "PV", label: "PV" },
+  { value: "PE", label: "PE" },
+  { value: "PG", label: "PG" },
+  { value: "PU", label: "PU" },
+  { value: "PC", label: "PC" },
+  { value: "PI", label: "PI" },
+  { value: "PT", label: "PT" },
+  { value: "PN", label: "PN" },
+  { value: "PZ", label: "PZ" },
+  { value: "PO", label: "PO" },
+  { value: "PY", label: "PY" },
+  { value: "63", label: "63" },
+  { value: "QC", label: "QC" },
+  { value: "QLD", label: "QLD" },
+  { value: "QE", label: "QE" },
+  { value: "QR", label: "QR" },
+  { value: "RG", label: "RG" },
+  { value: "RJ", label: "RJ" },
+  { value: "RA", label: "RA" },
+  { value: "RC", label: "RC" },
+  { value: "RE", label: "RE" },
+  { value: "RI", label: "RI" },
+  { value: "RN", label: "RN" },
+  { value: "RO", label: "RO" },
+  { value: "RR", label: "RR" },
+  { value: "SA", label: "SA" },
+  { value: "SC", label: "SC" },
+  { value: "SD", label: "SD" },
+  { value: "SR", label: "SR" },
+  { value: "TB", label: "TB" },
+  { value: "71", label: "71" },
+  { value: "TM", label: "TM" },
+  { value: "TN", label: "TN" },
+  { value: "TA", label: "TA" },
+  { value: "TAS", label: "TAS" },
+  { value: "TG", label: "TG" },
+  { value: "TE", label: "TE" },
+  { value: "TR", label: "TR" },
+  { value: "TX", label: "TX" },
+  { value: "TO", label: "TO" },
+  { value: "09", label: "09" },
+  { value: "UD", label: "UD" },
+  { value: "UT", label: "UT" },
+  { value: "UP", label: "UP" },
+  { value: "VA", label: "VA" },
+  { value: "VE", label: "VE" },
+  { value: "VB", label: "VB" },
+  { value: "VC", label: "VC" },
+  { value: "VT", label: "VT" },
+  { value: "VR", label: "VR" },
+  { value: "VV", label: "VV" },
+  { value: "VI", label: "VI" },
+  { value: "VIC", label: "VIC" },
+  { value: "WA", label: "WA" },
+  { value: "WD", label: "WD" },
+  { value: "WB", label: "WB" },
+  { value: "WH", label: "WH" },
+  { value: "WV", label: "WV" },
+  { value: "WX", label: "WX" },
+  { value: "WW", label: "WW" },
+  { value: "WI", label: "WI" },
+  { value: "WY", label: "WY" },
+  { value: "65", label: "65" },
+  { value: "54", label: "54" },
+  { value: "06", label: "06" },
+  { value: "YU", label: "YU" },
+  { value: "YT", label: "YT" },
+  { value: "53", label: "53" },
+  { value: "ZA", label: "ZA" }
+];
+
 interface WebToLeadFormProps {
   userEmail?: string;
 }
@@ -31,7 +528,7 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   
   // Salesforce Configuration States
   const [oid, setOid] = useState("00DgL00000TX4P7"); // Activated Production organization ID from user
-  const [retURL, setRetURL] = useState(window.location.origin + "/#thank-you");
+  const [retURL, setRetURL] = useState("https://hyroxby.vercel.app/#");
   const [isSandbox, setIsSandbox] = useState(false);
   
   // Custom Field mapping inputs (allows mapping to actual Salesforce Custom Field API names/IDs)
@@ -54,9 +551,11 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
     projectStatus: "New",
     companyEmail: "",
     country: "US",
-    countryCode: "+1",
+    countryCode: "+1 (US/CA)",
     phone: "",
-    projectDeadline: ""
+    projectDeadline: "",
+    city: "",
+    stateCode: ""
   });
 
   // Intel reCAPTCHA verification states
@@ -79,10 +578,16 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     let stateKey = name;
-    if (name === "countrySelect") stateKey = "country";
+    if (name === "countrySelect" || name === "country_code") stateKey = "country";
+    if (name === "state_code") stateKey = "stateCode";
+    if (name === "00NgL00004ERNsr" || name === "countryCode") stateKey = "countryCode";
     if (name === "descriptionInput") stateKey = "description";
     if (name === "projectNameInput") stateKey = "projectName";
-    if (name === "phoneInput") stateKey = "phone";
+    if (name === "phoneInput" || name === "phone") stateKey = "phone";
+    if (name === "first_name" || name === "firstName") stateKey = "firstName";
+    if (name === "last_name" || name === "lastName") stateKey = "lastName";
+    if (name === "city") stateKey = "city";
+    if (name === "email" || name === "companyEmail") stateKey = "companyEmail";
     setFormData(prev => {
       const updated = {
         ...prev,
@@ -93,15 +598,15 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
       }
       if (stateKey === "country") {
         const codeMap: Record<string, string> = {
-          US: "+1",
-          CA: "+1",
-          TW: "+886",
-          DE: "+49",
-          JP: "+81",
-          KR: "+82",
-          GB: "+44",
-          NL: "+31",
-          SG: "+65",
+          US: "+1 (US/CA)",
+          CA: "+1 (US/CA)",
+          TW: "+886 (TW)",
+          DE: "+49 (DE)",
+          JP: "+81 (JP)",
+          KR: "+82 (KR)",
+          GB: "+44 (GB)",
+          NL: "+31 (NL)",
+          SG: "+65 (SG)",
           Other: "Other"
         };
         if (codeMap[value]) {
@@ -139,30 +644,23 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   <label for="email">Email</label>
   <input id="email" maxlength="80" name="email" size="20" type="text" value="${formData.email}" required /><br>
 
-  <label for="phone">Phone</label>
-  <input id="phone" maxlength="40" name="phone" size="20" type="text" value="${formData.countryCode === 'Other' ? formData.phone : (formData.countryCode + ' ' + formData.phone)}" /><br>
-
   <label for="company">Company</label>
   <input id="company" maxlength="40" name="company" size="20" type="text" value="${formData.company}" /><br>
 
-  <label for="${projectNameField}">Project Name</label>
-  <input id="${projectNameField}" name="${projectNameField}" type="text" value="${formData.projectName}" required /><br>
+  <label for="city">City</label>
+  <input id="city" maxlength="40" name="city" size="20" type="text" value="${formData.city}" /><br>
 
-  <label for="${projectDescriptionField}">Project Description</label>
-  <textarea id="${projectDescriptionField}" name="${projectDescriptionField}">${formData.description}</textarea><br>
+  <label for="country_code">Country</label>
+  <input id="country_code" name="country_code" type="text" value="${formData.country}" /><br>
 
-  <!-- Custom Lead Attributes (mapped via Salesforce Custom Field IDs or API Name tokens) -->
-  <label for="${projectTypeField}">Project Type</label>
-  <input id="${projectTypeField}" name="${projectTypeField}" type="text" value="${formData.projectType}" /><br>
+  <label for="state_code">State/Province</label>
+  <input id="state_code" name="state_code" type="text" value="${formData.stateCode}" /><br>
 
-  <label for="${projectStatusField}">Project Status</label>
-  <input id="${projectStatusField}" name="${projectStatusField}" type="text" value="${formData.projectStatus}" /><br>
+  <label for="phone">Phone</label>
+  <input id="phone" maxlength="40" name="phone" size="20" type="text" value="${formData.phone}" /><br>
 
-  <label for="${companyEmailField}">Company Email</label>
-  <input id="${companyEmailField}" name="${companyEmailField}" type="text" value="${formData.companyEmail}" /><br>
-
-  <label for="${projectDeadlineField}">Project Deadline</label>
-  <input id="${projectDeadlineField}" name="${projectDeadlineField}" type="date" value="${formData.projectDeadline}" required /><br>
+  <label for="00NgL00004ERNsr">Country Code</label>
+  <input id="00NgL00004ERNsr" name="00NgL00004ERNsr" type="text" value="${formData.countryCode}" /><br>
 
   <!-- Lead Source Identifier -->
   <input type="hidden" name="lead_source" value="Web">
@@ -410,23 +908,22 @@ San Jose, California`);
                 <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">First Name</label>
                 <input
                   type="text"
-                  name="firstName"
-                  id="sf_first_name_input"
+                  name="first_name"
+                  id="first_name"
                   value={formData.firstName}
                   onChange={handleInputChange}
                   placeholder="e.g. John"
                   maxLength={40}
-                  className="w-full px-3 py-2 border-2 border-zinc-500 rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
+                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
                 />
-                <input type="hidden" name="first_name" value={formData.firstName} />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Last Name *</label>
                 <input
                   type="text"
-                  name="lastName"
-                  id="sf_last_name_input"
+                  name="last_name"
+                  id="last_name"
                   required
                   value={formData.lastName}
                   onChange={handleInputChange}
@@ -434,8 +931,6 @@ San Jose, California`);
                   maxLength={80}
                   className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
                 />
-                {/* Web-to-lead standard field name is last_name */}
-                <input type="hidden" name="last_name" value={formData.lastName} />
               </div>
             </div>
 
@@ -445,7 +940,7 @@ San Jose, California`);
                 <input
                   type="text"
                   name="company"
-                  id="sf_company_input"
+                  id="company"
                   required
                   value={formData.company}
                   onChange={handleInputChange}
@@ -459,8 +954,8 @@ San Jose, California`);
                 <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Company Email *</label>
                 <input
                   type="email"
-                  name="companyEmail"
-                  id="sf_company_email_input"
+                  name="email"
+                  id="email"
                   required
                   value={formData.companyEmail}
                   onChange={handleInputChange}
@@ -468,55 +963,77 @@ San Jose, California`);
                   maxLength={80}
                   className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
                 />
-                <input type="hidden" name="email" value={formData.companyEmail} />
                 <input type="hidden" name={companyEmailField} value={formData.companyEmail} />
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Country / Region *</label>
-              <select
-                name="countrySelect"
-                id="sf_country_input"
-                required
-                value={formData.country}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 font-sans"
-              >
-                <option value="US">United States</option>
-                <option value="TW">Taiwan (Astera HQ Design Node)</option>
-                <option value="DE">Germany (EU Cloud Region)</option>
-                <option value="JP">Japan (APAC Enterprise)</option>
-                <option value="KR">South Korea (APAC Commercial Hub)</option>
-                <option value="CA">Canada</option>
-                <option value="GB">United Kingdom</option>
-                <option value="NL">Netherlands (ASML Ecosystem)</option>
-                <option value="SG">Singapore (ASEAN Tech Hub)</option>
-                <option value="Other">Other / International</option>
-              </select>
-              <input type="hidden" name="country_code" value={formData.country} />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="sm:col-span-1">
+                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Country *</label>
+                <select
+                  name="country_code"
+                  id="country_code"
+                  required
+                  value={formData.country}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 font-sans"
+                >
+                  {COUNTRY_CODES.map((item) => (
+                    <option key={item.value} value={item.value}>{item.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="sm:col-span-1">
+                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">City</label>
+                <input
+                  type="text"
+                  name="city"
+                  id="city"
+                  value={formData.city}
+                  onChange={handleInputChange}
+                  placeholder="e.g. San Jose"
+                  maxLength={40}
+                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
+                />
+              </div>
+
+              <div className="sm:col-span-1">
+                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">State / Province</label>
+                <select
+                  name="state_code"
+                  id="state_code"
+                  value={formData.stateCode}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 font-sans"
+                >
+                  {STATE_CODES.map((item) => (
+                    <option key={item.value} value={item.value}>{item.label}</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Country Code and Phone fields */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="sm:col-span-1">
-                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Country Code *</label>
+                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Country Code</label>
                 <select
-                  name="countryCode"
-                  id="sf_country_code_input"
-                  required
+                  name="00NgL00004ERNsr"
+                  id="00NgL00004ERNsr"
                   value={formData.countryCode}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 font-sans"
                 >
-                  <option value="+1">+1 (US/CA)</option>
-                  <option value="+886">+886 (TW)</option>
-                  <option value="+49">+49 (DE)</option>
-                  <option value="+81">+81 (JP)</option>
-                  <option value="+82">+82 (KR)</option>
-                  <option value="+44">+44 (GB)</option>
-                  <option value="+31">+31 (NL)</option>
-                  <option value="+65">+65 (SG)</option>
+                  <option value="">--None--</option>
+                  <option value="+1 (US/CA)">+1 (US/CA)</option>
+                  <option value="+886 (TW)">+886 (TW)</option>
+                  <option value="+49 (DE)">+49 (DE)</option>
+                  <option value="+81 (JP)">+81 (JP)</option>
+                  <option value="+82 (KR)">+82 (KR)</option>
+                  <option value="+44 (GB)">+44 (GB)</option>
+                  <option value="+31 (NL)">+31 (NL)</option>
+                  <option value="+65 (SG)">+65 (SG)</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
@@ -525,8 +1042,8 @@ San Jose, California`);
                 <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Phone Number *</label>
                 <input
                   type="tel"
-                  name="phoneInput"
-                  id="sf_phone_input"
+                  name="phone"
+                  id="phone"
                   required
                   value={formData.phone}
                   onChange={handleInputChange}
@@ -535,7 +1052,6 @@ San Jose, California`);
                   className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
                 />
               </div>
-              <input type="hidden" name="phone" value={formData.countryCode === "Other" ? formData.phone : (formData.countryCode + " " + formData.phone)} />
             </div>
 
             <div>
@@ -686,6 +1202,7 @@ San Jose, California`);
               />
               <input type="hidden" name={projectDeadlineField} value={formData.projectDeadline} />
               <input type="hidden" name="lead_source" value="Web" />
+              <input type="hidden" name="description" value={formData.projectName ? `Project Name: ${formData.projectName}\nProject Type: ${formData.projectType}\nProject Deadline: ${formData.projectDeadline}\n\nDescription:\n${formData.description}${attachedFile ? `\n\n--- ATTACHED DESIGN SPECIFICATION ---\nFile Name: ${attachedFile.name}\nFile Size: ${(attachedFile.size / 1024 / 1024).toFixed(2)} MB` : ''}` : formData.description} />
             </div>
 
             {/* Intelligent Hand-Drawn reCAPTCHA Challenge Card */}
