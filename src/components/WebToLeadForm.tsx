@@ -647,9 +647,6 @@ export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({
   <label for="company">Company</label>
   <input id="company" maxlength="40" name="company" size="20" type="text" value="${formData.company}" /><br>
 
-  <label for="city">City</label>
-  <input id="city" maxlength="40" name="city" size="20" type="text" value="${formData.city}" /><br>
-
   <label for="country_code">Country</label>
   <input id="country_code" name="country_code" type="text" value="${formData.country}" /><br>
 
@@ -980,51 +977,20 @@ San Jose, California`);
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="sm:col-span-1">
-                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Country *</label>
-                <select
-                  name="country_code"
-                  id="country_code"
-                  required
-                  value={formData.country}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 font-sans"
-                >
-                  {COUNTRY_CODES.map((item) => (
-                    <option key={item.value} value={item.value}>{item.label}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="sm:col-span-1">
-                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">City</label>
-                <input
-                  type="text"
-                  name="city"
-                  id="city"
-                  value={formData.city}
-                  onChange={handleInputChange}
-                  placeholder="e.g. San Jose"
-                  maxLength={40}
-                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 placeholder:text-zinc-400"
-                />
-              </div>
-
-              <div className="sm:col-span-1">
-                <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">State / Province</label>
-                <select
-                  name="state_code"
-                  id="state_code"
-                  value={formData.stateCode}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 font-sans"
-                >
-                  {STATE_CODES.map((item) => (
-                    <option key={item.value} value={item.value}>{item.label}</option>
-                  ))}
-                </select>
-              </div>
+            <div>
+              <label className="block text-xs font-bold text-ink uppercase mb-1 font-mono">Country *</label>
+              <select
+                name="country_code"
+                id="country_code"
+                required
+                value={formData.country}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border-2 border-ink rounded bg-white text-zinc-800 text-sm focus:border-ink focus:ring-0 font-sans"
+              >
+                {COUNTRY_CODES.map((item) => (
+                  <option key={item.value} value={item.value}>{item.label}</option>
+                ))}
+              </select>
             </div>
 
             {/* Country Code and Phone fields */}
