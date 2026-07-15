@@ -509,7 +509,7 @@ export default function App() {
             <div className="flex flex-col items-center justify-center py-4 md:py-6 px-4 text-center max-w-4xl mx-auto space-y-5 animate-fade-in relative z-10 w-full select-none">
               
               {/* Outer delicate frame housing the childlike character - compact padding with Botanical Vines framing it */}
-              <div className="relative p-5 md:p-6 bg-white/15 rounded-2xl border-3 border-emerald-800/40 hover:border-emerald-800/60 transition-all duration-300 transform hover:scale-[1.01] shadow-sm">
+              <div className="relative p-5 md:p-6 bg-[#F2F0EF] rounded-2xl border-3 border-emerald-800/40 hover:border-emerald-800/60 transition-all duration-300 transform hover:scale-[1.01] shadow-sm">
                 
                 {/* Clickable New Article Published Tape Button */}
                 <a 
