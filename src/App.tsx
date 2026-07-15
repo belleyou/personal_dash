@@ -493,9 +493,16 @@ export default function App() {
           PAGE CONTROLLER (Dynamic viewport based on hash)
          ======================================================== */}
       <main className="max-w-7xl mx-auto px-4 pt-4">
-        
-        {/* 1. HOME SCREEN VIEW */}
-        {activePage === "home" && (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activePage}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+          >
+            {/* 1. HOME SCREEN VIEW */}
+            {activePage === "home" && (
           <div className="flex flex-col items-center">
             
             {/* Centered snug storybook landscape with the delicate childlike character centerpiece */}
@@ -520,9 +527,7 @@ export default function App() {
 
                 {/* Visual pencil markings on the frame to emphasize handmade craftsmanship */}
                 <span className="absolute left-3 top-2 text-[10px] font-mono text-emerald-700/60 select-none opacity-55">*</span>
-                <span className="absolute right-4 top-2 text-[10px] font-hand text-emerald-700/60 select-none opacity-45">natural fiber paper</span>
                 <span className="absolute right-3 bottom-2 text-xs font-mono text-emerald-700/60 select-none opacity-50">°</span>
-                <span className="absolute left-5 bottom-2 text-[9px] font-mono text-emerald-700/60 select-none opacity-40">#organic-flow</span>
                 
                 {/* The beautifully styled childlike character scaled down */}
                 <DoodleBoyWithBubble 
@@ -2417,6 +2422,8 @@ export default function App() {
             </div>
           </div>
         )}
+          </motion.div>
+        </AnimatePresence>
 
       </main>
 
