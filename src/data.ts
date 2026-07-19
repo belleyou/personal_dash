@@ -84,6 +84,21 @@ export const ABOUT_ME = {
 // ==========================================
 export const CAREER_EXPERIENCE: Experience[] = [
   {
+    company: "SpaceX",
+    role: "Lead Enterprise & GTM Systems Architect (IPO Readiness Engagement)",
+    location: "Hawthorne, CA (SpaceX Headquarters)",
+    dates: "Special Engagement",
+    tools: ["Salesforce custom products", "Systems Consolidation", "SOX Systems Compliance", "Robust GTM systems", "Federation Workflows", "System Scalability", "Cost Controlling"],
+    bullets: [
+      "IPO Readiness & Systems Consolidation: Led critical enterprise application consolidation and rationalization efforts, steering high-scale GTM infrastructure toward strict IPO readiness standards.",
+      "Cost Controlling & Optimization: Established rigorous system auditing and process-based cost controlling to eliminate duplicate software licenses and optimize overall enterprise application expenditures.",
+      "Systems Compliance & Governance: Architected end-to-end compliance procedures aligning enterprise SaaS platforms, security protocols, and system access logs with public company ITGC audit requirements.",
+      "Robust GTM Systems & Architecture: Engineered resilient, robust GTM system flows to synchronize sales pipeline dynamics, partner incentive models, and enterprise transaction processing under high scale.",
+      "Salesforce Custom Products: Built bespoke, high-performance custom Salesforce products and automation pipelines to streamline multi-tier quote-to-contract workflows.",
+      "Federation Workflows & Identity Governance: Designed scalable cross-division user federation workflows and identity governance models, guaranteeing bulletproof security boundaries and system scalability."
+    ],
+  },
+  {
     company: "X Corp (Twitter / X / xAI / Grok)",
     role: "Global Senior Business Systems Manager — GTM Sales, PRM & Service Cloud",
     location: "San Francisco, CA",

@@ -1408,4 +1408,62 @@ export const SpaceXRocketSketchSvg: React.FC<{ className?: string }> = ({ classN
 };
 
 
+/**
+ * Hand-drawn Rubrik sketch logo / 3D block representation 🟦
+ */
+export const RubrikSketchSvg: React.FC<{ className?: string }> = ({ className = "h-12 w-12" }) => {
+  return (
+    <svg viewBox="0 0 100 100" className={`${className} inline-block select-none`} xmlns="http://www.w3.org/2000/svg" aria-label="Rubrik Logo">
+      {/* 3D isometric cube/block representation of Rubrik - Magenta & Teal */}
+      {/* Top Face */}
+      <path d="M 50 18 L 76 31 L 50 44 L 24 31 Z" fill="#67e8f9" opacity="0.9" stroke="#18181b" strokeWidth="2" strokeLinejoin="round" />
+      {/* Left Face */}
+      <path d="M 24 31 L 50 44 L 50 74 L 24 61 Z" fill="#0891b2" stroke="#18181b" strokeWidth="2" strokeLinejoin="round" />
+      {/* Right Face */}
+      <path d="M 50 44 L 76 31 L 76 61 L 50 74 Z" fill="#ec4899" stroke="#18181b" strokeWidth="2" strokeLinejoin="round" />
+      
+      {/* Stylized hand-drawn "R" in the middle */}
+      <path d="M 44 32 L 56 32 C 60 32 60 40 56 40 L 44 40 L 44 52 M 44 40 L 58 54" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M 44 32 L 44 54" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" fill="none" />
+      
+      {/* Sparkle highlights */}
+      <path d="M 82 20 L 84 22 L 82 24 L 80 22 Z" fill="#db2777" />
+      <path d="M 14 55 L 16 57 L 14 59 L 12 57 Z" fill="#06b6d4" />
+    </svg>
+  );
+};
+
+
+/**
+ * Hand-drawn Quantcast sketch logo / 3D data grid representation 📊
+ */
+export const QuantcastSketchSvg: React.FC<{ className?: string }> = ({ className = "h-12 w-12" }) => {
+  return (
+    <svg viewBox="0 0 100 100" className={`${className} inline-block select-none`} xmlns="http://www.w3.org/2000/svg" aria-label="Quantcast Logo">
+      {/* Custom hand-drawn Q with a multi-layered blue/cyan block grid */}
+      {/* Background soft wash circle */}
+      <circle cx="50" cy="50" r="34" fill="#e0f2fe" opacity="0.7" />
+      
+      {/* Multiple vertical grid columns (representing audience segments) */}
+      {/* Col 1 */}
+      <rect x="30" y="32" width="8" height="30" rx="3" fill="#0284c7" stroke="#18181b" strokeWidth="2" />
+      {/* Col 2 */}
+      <rect x="42" y="24" width="8" height="42" rx="3" fill="#3b82f6" stroke="#18181b" strokeWidth="2" />
+      {/* Col 3 */}
+      <rect x="54" y="36" width="8" height="32" rx="3" fill="#06b6d4" stroke="#18181b" strokeWidth="2" />
+      {/* Col 4 */}
+      <rect x="66" y="44" width="8" height="20" rx="3" fill="#14b8a6" stroke="#18181b" strokeWidth="2" />
+      
+      {/* Dynamic swoop tail forming the letter "Q" shape */}
+      <path d="M 60 62 Q 72 74 84 72" fill="none" stroke="#18181b" strokeWidth="3.5" strokeLinecap="round" />
+      <path d="M 60 62 Q 72 74 84 72" fill="none" stroke="#6366f1" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
+      
+      {/* Sparkles */}
+      <path d="M 22 28 L 24 30 L 22 32 L 20 30 Z" fill="#3b82f6" />
+      <path d="M 78 30 L 80 32 L 78 34 L 76 32 Z" fill="#10b981" />
+    </svg>
+  );
+};
+
+
 

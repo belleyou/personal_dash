@@ -109,6 +109,9 @@ import { MyFavoriteMusic } from "./components/MyFavoriteMusic";
 // Import Salesforce Web-to-Lead configuration form
 import { WebToLeadForm } from "./components/WebToLeadForm";
 
+// Import SF Bay Area Miniature 3D component
+import { SFBayMiniature } from "./components/SFBayMiniature";
+
 // Import TIMES Magazine Component & Presets
 import { TimesMagazine, PRESET_ARTICLES } from "./components/TimesMagazine";
 
@@ -282,6 +285,7 @@ export default function App() {
   const [activeProjectTab, setActiveProjectTab] = useState<"innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("innovations_video");
   const [certFilter, setCertFilter] = useState<"all" | "salesforce" | "other">("all");
   const [isMusicModalOpen, setIsMusicModalOpen] = useState(false);
+  const [isSubmitProjectModalOpen, setIsSubmitProjectModalOpen] = useState(false);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [showResumeToast, setShowResumeToast] = useState(false);
 
@@ -370,13 +374,34 @@ export default function App() {
     }
   }, [activePage]);
 
-  const navigateToPage = (pageName: string) => {
+  const navigateToPage = (pageName: string, targetSection?: string) => {
     window.location.hash = pageName === "home" ? "" : pageName;
     setActivePage(pageName);
     setHoveredNav(pageName);
     if (pageName === "articles") {
       setSelectedArticleId("gtm-vc");
     }
+
+    if (targetSection) {
+      const matchingIndex = CAREER_EXPERIENCE.findIndex(
+        (exp) => exp.company.toLowerCase().includes(targetSection.toLowerCase())
+      );
+      if (matchingIndex !== -1) {
+        setExpandedIndex(matchingIndex);
+        setTimeout(() => {
+          const el = document.getElementById(`experience-${targetSection.toLowerCase()}`);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            el.classList.add("ring-4", "ring-emerald-400", "ring-offset-4", "transition-all", "duration-350");
+            setTimeout(() => {
+              el.classList.remove("ring-4", "ring-emerald-400", "ring-offset-4");
+            }, 3000);
+          }
+        }, 400);
+        return;
+      }
+    }
+
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -452,42 +477,44 @@ export default function App() {
       {/* Background accents removed for a cleaner flat paper look */}
       
       {/* ========================================================
-          CORE HEADER BAR (Consistent across all pages)
+          CORE HEADER BAR (Consistent across all pages except Home, where it is embedded in the 3D map)
          ======================================================== */}
-      <header className="max-w-7xl mx-auto px-4 pt-6 pb-2 flex flex-col items-center">
-        
-        {/* Horizontal Navigation: Whimsical 3D sketchbook buttons */}
-        <nav className="flex flex-wrap items-center justify-center gap-3.5 md:gap-5 my-4 relative z-30">
-          {[
-            { id: "home", label: "HOME", color: "bg-pink-200 hover:bg-pink-300" },
-            { id: "about", label: "ABOUT", color: "bg-white hover:bg-emerald-100" },
-            { id: "certifications", label: "CERTIFICATIONS", color: "bg-white hover:bg-orange-100" },
-            { id: "projects", label: "PROJECTS", color: "bg-white hover:bg-amber-100" },
-            { id: "articles", label: "ARTICLES", color: "bg-white hover:bg-sky-100" },
-            { id: "career", label: "CAREER", color: "bg-white hover:bg-purple-100" },
-            { id: "contact", label: "CONTACT & HOBBIES", color: "bg-white hover:bg-rose-100" },
-            { id: "meet", label: "MEET ME", color: "bg-white hover:bg-lime-150" },
-          ].map((item) => {
-            const isSelected = activePage === item.id;
-            const tilt = item.id === "home" ? "rotate-[-1deg]" : item.id === "about" ? "rotate-[1deg]" : item.id === "certifications" ? "rotate-[-0.8deg]" : item.id === "projects" ? "rotate-[-1.5deg]" : item.id === "articles" ? "rotate-[1.5deg]" : item.id === "career" ? "rotate-[0.5deg]" : item.id === "contact" ? "rotate-[1.2deg]" : item.id === "meet" ? "rotate-[-1.1deg]" : "rotate-[-1.5deg]";
-            return (
-              <button
-                key={item.id}
-                onClick={() => navigateToPage(item.id)}
-                onMouseEnter={() => setHoveredNav(item.id)}
-                onMouseLeave={() => setHoveredNav(activePage)}
-                className={`px-5 py-2.5 font-hand text-sm md:text-base font-extrabold transition-all duration-150 border-3 border-ink rounded-lg shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] flex items-center gap-2 cursor-pointer ${tilt} ${
-                  isSelected 
-                    ? "bg-highlight text-ink" 
-                    : `${item.color} text-ink`
-                }`}
-              >
-                {item.label}
-              </button>
-            );
-          })}
-        </nav>
-      </header>
+      {activePage !== "home" && (
+        <header className="max-w-7xl mx-auto px-4 pt-6 pb-2 flex flex-col items-center">
+          
+          {/* Horizontal Navigation: Whimsical 3D sketchbook buttons */}
+          <nav className="flex flex-wrap items-center justify-center gap-3.5 md:gap-5 my-4 relative z-30">
+            {[
+              { id: "home", label: "HOME", color: "bg-pink-200 hover:bg-pink-300" },
+              { id: "about", label: "ABOUT", color: "bg-white hover:bg-emerald-100" },
+              { id: "certifications", label: "CERTIFICATIONS", color: "bg-white hover:bg-orange-100" },
+              { id: "projects", label: "PROJECTS", color: "bg-white hover:bg-amber-100" },
+              { id: "articles", label: "ARTICLES", color: "bg-white hover:bg-sky-100" },
+              { id: "career", label: "CAREER", color: "bg-white hover:bg-purple-100" },
+              { id: "contact", label: "CONTACT & HOBBIES", color: "bg-white hover:bg-rose-100" },
+              { id: "meet", label: "Let's Chat", color: "bg-white hover:bg-lime-150" },
+            ].map((item) => {
+              const isSelected = activePage === item.id;
+              const tilt = item.id === "home" ? "rotate-[-1deg]" : item.id === "about" ? "rotate-[1deg]" : item.id === "certifications" ? "rotate-[-0.8deg]" : item.id === "projects" ? "rotate-[-1.5deg]" : item.id === "articles" ? "rotate-[1.5deg]" : item.id === "career" ? "rotate-[0.5deg]" : item.id === "contact" ? "rotate-[1.2deg]" : item.id === "meet" ? "rotate-[-1.1deg]" : "rotate-[-1.5deg]";
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => navigateToPage(item.id)}
+                  onMouseEnter={() => setHoveredNav(item.id)}
+                  onMouseLeave={() => setHoveredNav(activePage)}
+                  className={`px-5 py-2.5 font-hand text-sm md:text-base font-extrabold transition-all duration-150 border-3 border-ink rounded-lg shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] flex items-center gap-2 cursor-pointer ${tilt} ${
+                    isSelected 
+                      ? "bg-highlight text-ink" 
+                      : `${item.color} text-ink`
+                  }`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </nav>
+        </header>
+      )}
 
       {/* ========================================================
           PAGE CONTROLLER (Dynamic viewport based on hash)
@@ -503,194 +530,16 @@ export default function App() {
           >
             {/* 1. HOME SCREEN VIEW */}
             {activePage === "home" && (
-          <div className="flex flex-col items-center">
-            
-            {/* Centered snug storybook landscape with the delicate childlike character centerpiece */}
-            <div className="flex flex-col items-center justify-center py-4 md:py-6 px-4 text-center max-w-4xl mx-auto space-y-5 animate-fade-in relative z-10 w-full select-none">
-              
-              {/* Outer delicate frame housing the childlike character - compact padding with Botanical Vines framing it */}
-              <div className="relative p-5 md:p-6 bg-[#F2F0EF] rounded-2xl border-3 border-emerald-800/40 hover:border-emerald-800/60 transition-all duration-300 transform hover:scale-[1.01] shadow-sm">
-                
-                {/* Clickable New Article Published Tape Button */}
-                <a 
-                  href="https://ais-dev-iyjgt37sy4lkbmdlpraexn-784706440739.us-east1.run.app/#articles?id=gtm-vc"
-                  className="absolute -top-4 -left-4 sm:-left-6 bg-amber-200 hover:bg-amber-300 text-ink border-2 border-ink px-4 py-1.5 rounded font-hand text-xs font-black tracking-wider rotate-[-5deg] shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] hover:scale-105 active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(24,24,27,1)] transition-all flex items-center gap-1.5 z-30 cursor-pointer"
-                  title="Read Article: Sellers Are Vibe-Coding Their Own Tools. Why do we still need a GTM System Team?"
-                >
-                  <Sparkles className="h-3.5 w-3.5 text-amber-600 animate-pulse shrink-0" />
-                  <span>NEW ARTICLE PUBLISHED! 📣</span>
-                </a>
-
-                {/* Botanical Vine flourishes in opposite corners */}
-                <BotanicalVine className="absolute -left-6 -top-6 h-14 w-14 animate-pulse" rotate="-15deg" />
-                <BotanicalVine className="absolute -right-6 -bottom-6 h-14 w-14 animate-pulse" flip={true} rotate="-15deg" />
-
-                {/* Visual pencil markings on the frame to emphasize handmade craftsmanship */}
-                <span className="absolute left-3 top-2 text-[10px] font-mono text-emerald-700/60 select-none opacity-55">*</span>
-                <span className="absolute right-3 bottom-2 text-xs font-mono text-emerald-700/60 select-none opacity-50">°</span>
-                
-                {/* The beautifully styled childlike character scaled down */}
-                <DoodleBoyWithBubble 
-                  currentHoverSection="home" 
-                  className="w-[187px] h-[228px] md:w-[228px] md:h-[270.4px] transform hover:rotate-1 transition-transform duration-500 ease-out animate-fade-in" 
+              <div className="flex flex-col items-center w-full">
+                {/* Immersive 3D SF Bay Area Miniature Sandbox & Weather Simulator */}
+                <SFBayMiniature 
+                  activePage={activePage}
+                  onNavigate={navigateToPage}
+                  onSubmitProjectClick={() => setIsSubmitProjectModalOpen(true)}
+                  onMusicClick={() => setIsMusicModalOpen(true)}
                 />
               </div>
-              
-              {/* Storybook soft Typography & quiet narrative speech */}
-              <div className="space-y-2 max-w-2xl">
-                <h2 className="font-hand text-xl md:text-2xl lg:text-3xl text-emerald-950 font-extrabold leading-tight tracking-tight">
-                  "Navigating GTM blueprints with organic balance, natural curiosity, and technical precision."
-                </h2>
-                <p className="font-sans text-xs text-zinc-650 leading-relaxed max-w-lg mx-auto italic">
-                  Welcome to my sketchbook. A calm, human-centric composition of certified enterprise integrations, sustainable GTM architectures, and carefully cultivated revenue operations.
-                </p>
-                
-                <div className="pt-1 flex justify-center gap-1.5 opacity-65">
-                  <span className="h-1 w-1 rounded-full bg-emerald-600"></span>
-                  <span className="h-1 w-1 rounded-full bg-emerald-500"></span>
-                  <span className="h-1 w-1 rounded-full bg-emerald-400"></span>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Small Natural Emerald Music Note Section as a 3D Polished Pill Button */}
-            <div className="w-full max-w-5xl mx-auto flex justify-end px-4 mb-2 z-20">
-              <button
-                id="music-note-home-btn"
-                onClick={() => setIsMusicModalOpen(true)}
-                className="relative px-3.5 py-1.5 bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-800 text-white font-hand text-[10px] sm:text-xs font-black rounded-full border-2 border-ink shadow-[0_4px_0_0_#064e3b,3px_7px_0px_0px_rgba(24,24,27,0.3)] hover:-translate-y-1 hover:shadow-[0_5px_0_0_#064e3b,3px_8px_0px_0px_rgba(24,24,27,0.3)] active:translate-y-0.5 active:shadow-[0_1px_0_0_#064e3b,1.5px_3px_0px_0px_rgba(24,24,27,0.3)] transition-all duration-150 cursor-pointer flex items-center gap-1.5 group overflow-hidden select-none"
-                title="Pop Up My Favorite Music Player"
-              >
-                {/* Glossy radial glass shine overlays */}
-                <span className="absolute inset-x-0 top-0 h-[45%] bg-white/35 rounded-t-full filter blur-[1px]"></span>
-                <span className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none"></span>
-                <Music className="h-3.5 w-3.5 stroke-[3] drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)] transform group-hover:scale-110 transition-transform duration-200" />
-                <span className="relative drop-shadow-[0_1.5px_1px_rgba(0,0,0,0.35)] shrink-0">
-                  Listen to My Favorite Music!
-                </span>
-              </button>
-            </div>
-
-            {/* Separator banner with custom botanical theme */}
-            <div className="w-full my-4 flex items-center justify-center gap-4 opacity-80 select-none font-medium">
-              <div className="h-[2.5px] border-t-2 border-dashed border-emerald-800/30 flex-1 max-w-md hidden sm:block"></div>
-              <div className="flex items-center gap-2 text-emerald-950">
-                <Leaf className="h-4.5 w-4.5 text-emerald-700 animate-pulse" />
-                <span className="font-hand text-xs font-black tracking-wider">ORGANIC GTM PORTALS</span>
-                <Flower className="h-4.5 w-4.5 text-emerald-700 animate-pulse" style={{ animationDuration: '6s' }} />
-              </div>
-              <div className="h-[2.5px] border-t-2 border-dashed border-emerald-800/30 flex-1 max-w-md hidden sm:block"></div>
-            </div>
-
-            {/* Real-time Handdrawn Navigation Infographic Panel */}
-            <div className="w-full max-w-5xl mx-auto mb-6 mt-3 border-3 border-ink rounded-xl bg-white/45 backdrop-blur-xs p-4 md:p-5 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] relative select-none">
-              <div className="flex flex-col md:flex-row items-stretch justify-between gap-4 md:gap-2">
-                
-                {/* Column 1: Who Am I? */}
-                <div 
-                  onClick={() => navigateToPage("about")}
-                  className="group flex-1 cursor-pointer p-2.5 rounded-xl hover:bg-sky-100/40 transition-all duration-300 w-full text-center flex flex-col items-center justify-center"
-                >
-                  <div className="transform group-hover:scale-105 group-hover:rotate-[-1.5deg] transition-all duration-300 flex flex-col items-center">
-                    <HandshakeSvg className="h-16 w-16 md:h-20 md:w-20 mb-2 filter drop-shadow-sm" />
-                    <h3 className="font-hand text-2xl font-black text-ink tracking-tight mt-0.5 select-none">
-                      Who Am I?
-                    </h3>
-                    <p className="font-sans text-[11px] text-zinc-500 max-w-xs mt-1 italic">
-                      (Learn about my background, passions, & core GTM skills)
-                    </p>
-                  </div>
-                </div>
-
-                {/* Handdrawn Vertical Divider 1 */}
-                <svg className="h-24 w-4 text-ink opacity-30 self-center hidden md:block" viewBox="0 0 24 200" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                  <path d="M 8 10 Q 14 60 7 110 T 9 190" />
-                  <path d="M 16 12 Q 11 58 17 112 T 15 188" />
-                </svg>
-                <div className="w-full border-t-2 border-dashed border-ink/20 opacity-40 my-1 md:hidden"></div>
-
-                {/* Column 2: Organic GTM Blueprints */}
-                <div 
-                  onClick={() => navigateToPage("projects")}
-                  className="group flex-1 cursor-pointer p-2.5 rounded-xl hover:bg-emerald-100/40 transition-all duration-300 w-full text-center flex flex-col items-center justify-center"
-                >
-                  <div className="transform group-hover:scale-105 group-hover:rotate-[1deg] transition-all duration-300 flex flex-col items-center">
-                    <ArchitectureFlowSvg className="h-16 w-16 md:h-20 md:w-20 mb-2 filter drop-shadow-sm" />
-                    <h3 className="font-hand text-2xl font-black text-ink tracking-tight mt-0.5 select-none">
-                      Organic GTM Blueprints
-                    </h3>
-                    <p className="font-sans text-[11px] text-zinc-500 max-w-xs mt-1 italic">
-                      (Explore functional CRM designs & technical integrations)
-                    </p>
-                  </div>
-                </div>
-
-                {/* Handdrawn Vertical Divider 2 */}
-                <svg className="h-24 w-4 text-ink opacity-30 self-center hidden md:block" viewBox="0 0 24 200" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                  <path d="M 8 10 Q 14 60 7 110 T 9 190" />
-                  <path d="M 16 12 Q 11 58 17 112 T 15 188" />
-                </svg>
-                <div className="w-full border-t-2 border-dashed border-ink/20 opacity-40 my-1 md:hidden"></div>
-
-                {/* Column 3: Professional Path */}
-                <div 
-                  onClick={() => navigateToPage("career")}
-                  className="group flex-1 cursor-pointer p-2.5 rounded-xl hover:bg-orange-100/40 transition-all duration-300 w-full text-center flex flex-col items-center justify-center"
-                >
-                  <div className="transform group-hover:scale-105 group-hover:rotate-[-0.8deg] transition-all duration-300 flex flex-col items-center">
-                    <ProfessionalPathSvg className="h-16 w-16 md:h-20 md:w-20 mb-2 filter drop-shadow-sm" />
-                    <h3 className="font-hand text-2xl font-black text-ink tracking-tight mt-0.5 select-none">
-                      Professional Path
-                    </h3>
-                    <p className="font-sans text-[11px] text-zinc-500 max-w-xs mt-1 italic">
-                      (Trace my career milestones & achievements)
-                    </p>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            {/* Special SpaceX IPO Business Systems Mission Highlight */}
-            <div className="w-full max-w-5xl mx-auto mb-6 p-4 md:p-6 border-3 border-ink rounded-xl bg-white/75 backdrop-blur-sm shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:scale-[1.005] transition-transform duration-200 relative overflow-hidden select-none">
-              {/* Highlight label taped on */}
-              <div className="absolute top-2.5 right-2.5 px-3 py-1 font-hand text-[10px] sm:text-xs bg-red-100 text-red-800 border-2 border-ink rotate-[1.5deg] rounded-sm select-none font-bold shadow-xs">
-                Business Systems Feature 🚀
-              </div>
-              
-              <div className="flex flex-col md:flex-row items-center gap-5 mt-2 md:mt-0">
-                <div className="shrink-0">
-                  <SpaceXRocketSketchSvg className="h-16 w-16 md:h-20 md:w-20 filter drop-shadow-sm animate-bounce" />
-                </div>
-                <div className="space-y-1 text-center md:text-left flex-1">
-                  <h4 className="font-hand text-2xl font-black text-ink flex items-center justify-center md:justify-start gap-2">
-                    <span>Enterprise Systems SpaceX IPO Enablement Readiness</span>
-                  </h4>
-                  <p className="font-sans text-xs md:text-sm text-zinc-700 leading-relaxed max-w-3xl">
-                    Spearheaded robust GTM systems, Salesforce custom products, and federation workflows—partnering across Engineering and SOX compliance pipelines to secure financial system auditability and system scalability, helping **SpaceX prepare for its historic IPO launch**.
-                  </p>
-                  <p className="font-sans text-[11px] text-emerald-800 font-bold italic mt-1.5 flex items-center justify-center md:justify-start gap-1">
-                    <span>✨ Deliverables: Billing pipelines, single-sign-on (SSO) systems integration, and high-efficiency Salesforce operations.</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Hand-drawn partner/portfolio company logos in order: iHerb, Google, Salesforce, Twitter, XAI */}
-            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mb-6 select-none bg-white/20 p-2.5 rounded-lg border-2 border-dashed border-zinc-300 w-full max-w-5xl mx-auto shadow-xs">
-              <span className="font-hand text-xs font-black text-zinc-600 tracking-wider">PROUD PORTFOLIO & WORK ROLES:</span>
-              <IHerbLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-              <GoogleLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-              <SalesforceLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-              <TwitterLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-              <XaiLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-            </div>
-
-            {/* Salesforce Web-to-Lead Dynamic Integration Form Panel */}
-            <WebToLeadForm userEmail={CONTACT_INFO.email} />
-          </div>
-        )}
+            )}
 
         {/* 2. ABOUT, EDUCATION & SKILLS VIEW */}
         {activePage === "about" && (
@@ -1751,7 +1600,18 @@ export default function App() {
                         <Briefcase className="h-3 w-3 text-ink" />
                       </button>
 
-                      <div className="bg-white border-3 border-ink rounded-xl p-5 md:p-6 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)]">
+                      <div 
+                        id={`experience-${
+                          item.company === "SpaceX" ? "spacex" : 
+                          item.company.toLowerCase().includes("rubrik") ? "rubrik" : 
+                          item.company.toLowerCase().includes("quantcast") ? "quantcast" : 
+                          item.company.toLowerCase().includes("google") ? "google" : 
+                          item.company.toLowerCase().includes("salesforce") ? "salesforce" : 
+                          item.company.toLowerCase().includes("iherb") ? "iherb" : 
+                          item.company.toLowerCase().includes("x corp") ? "x" : "other"
+                        }`}
+                        className="bg-white border-3 border-ink rounded-xl p-5 md:p-6 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)]"
+                      >
                         <div 
                           className="cursor-pointer flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 select-none"
                           onClick={() => setExpandedIndex(isOpen ? null : idx)}
@@ -2398,7 +2258,7 @@ export default function App() {
                   <span className="flex-shrink-0 flex items-center justify-center bg-emerald-100 border border-ink font-bold font-mono text-[10px] h-6 w-6 rounded-full mt-0.5">3</span>
                   <div>
                     <strong className="text-zinc-950 block text-sm font-bold">Proposal Consultation Scheduled</strong>
-                    <span className="text-xs">Check out the <strong>MEET ME</strong> section in the top navigation to directly lock in an interactive, live calendar consultation slot on my schedule if you want to speed up implementation review!</span>
+                    <span className="text-xs">Check out the <strong>Let's Chat</strong> section in the top navigation to directly lock in an interactive, live calendar consultation slot on my schedule if you want to speed up implementation review!</span>
                   </div>
                 </div>
               </div>
@@ -2432,10 +2292,10 @@ export default function App() {
          ======================================================== */}
       <footer className="text-center pt-10 mt-12 border-t-2 border-dashed border-zinc-305 max-w-6xl mx-auto px-4 select-none">
         <p className="font-hand text-sm text-zinc-500">
-          {CONTACT_INFO.name} — GTM Systems Architect Pro. Developed in React & Tailwind CSS.
+          {CONTACT_INFO.name} - GTM Systems Architect Pro.
         </p>
         <p className="font-mono text-[9px] text-zinc-400 mt-1 uppercase tracking-widest">
-          Copyright © 2026. Hand-Drawn Design Style.
+          Copyright © 2026 Hyroxby Tech LLC
         </p>
       </footer>
 
@@ -2618,6 +2478,71 @@ export default function App() {
               ✕
             </button>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 🚀 SUBMIT A PROJECT POPUP WINDOW MODAL 🚀 */}
+      <AnimatePresence>
+        {isSubmitProjectModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSubmitProjectModalOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-xs cursor-pointer"
+            />
+            
+            {/* Window Dialog */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ type: "spring", damping: 28, stiffness: 380 }}
+              className="relative bg-[#fbfbfa] border-4 border-ink rounded-2xl w-full max-w-4xl shadow-[8px_8px_0px_0px_rgba(16,185,129,1)] z-10 flex flex-col max-h-[90vh] select-none"
+            >
+              {/* Custom Windows-style Header bar with emerald color */}
+              <div className="bg-emerald-600 text-white border-b-4 border-ink p-3 flex items-center justify-between select-none relative z-20 shrink-0">
+                <div className="flex items-center gap-2 mr-3 min-w-0">
+                  <span className="w-3.5 h-3.5 rounded-full bg-white border-2 border-ink flex items-center justify-center text-[8px] font-black font-sans text-emerald-600 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] shrink-0">
+                    ★
+                  </span>
+                  <span className="font-hand text-lg md:text-xl font-black text-white drop-shadow-sm tracking-wide truncate">
+                    🚀 Submit a Project Proposal to Salesforce CRM
+                  </span>
+                </div>
+                
+                {/* Control Action Buttons */}
+                <div className="flex items-center gap-2 shrink-0 select-none relative z-30">
+                  <button 
+                    onClick={() => setIsSubmitProjectModalOpen(false)}
+                    className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-950 border-2 border-ink font-black hover:bg-emerald-200 active:translate-y-0.5 flex items-center justify-center transition-all cursor-pointer shrink-0"
+                    aria-label="Close Pop Up"
+                    title="Close Window"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              {/* Scrollable container for the WebToLeadForm */}
+              <div className="p-2 sm:p-4 overflow-y-auto flex-1">
+                <WebToLeadForm 
+                  userEmail={CONTACT_INFO.email} 
+                  isModalMode={true} 
+                  initialActiveSection="submit"
+                  onClose={() => setIsSubmitProjectModalOpen(false)}
+                />
+              </div>
+
+              {/* Footer status bar */}
+              <div className="bg-zinc-100 border-t-2 border-ink p-2.5 rounded-b-xl flex items-center justify-between text-ink select-none font-mono text-[9px] sm:text-[10px] uppercase font-bold text-zinc-500 shrink-0">
+                <span>SYSTEM: SECURE SALESFORCE WEB-TO-LEAD GATEWAY</span>
+                <span className="text-emerald-600 font-extrabold animate-pulse">● PORTAL READY</span>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 

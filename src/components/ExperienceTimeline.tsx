@@ -6,6 +6,7 @@
 import React, { useState } from "react";
 import { Experience } from "../types";
 import { Briefcase, Calendar, MapPin, ChevronDown, ChevronUp, Star } from "lucide-react";
+import { motion } from "motion/react";
 
 interface ExperienceTimelineProps {
   experience: Experience[];
@@ -32,7 +33,14 @@ export const ExperienceTimeline: React.FC<ExperienceTimelineProps> = ({ experien
         const isCoreGtmLeader = idx < 3;
 
         return (
-          <div key={idx} className="relative group">
+          <motion.div 
+            key={idx} 
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: Math.min(idx * 0.1, 0.4), ease: "easeOut" }}
+            className="relative group"
+          >
             
             {/* Timeline Circle Node */}
             <button
@@ -140,7 +148,7 @@ export const ExperienceTimeline: React.FC<ExperienceTimelineProps> = ({ experien
               </div>
 
             </div>
-          </div>
+          </motion.div>
         );
       })}
     </div>

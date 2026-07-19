@@ -6,6 +6,7 @@
 import React, { useState } from "react";
 import { Project } from "../types";
 import { ArrowUpRight, Code, AlertTriangle, Lightbulb, TrendingUp, Sparkles, FolderDot } from "lucide-react";
+import { motion } from "motion/react";
 
 interface ProjectsShowcaseProps {
   traditional: Project[];
@@ -47,8 +48,12 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ traditional,
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {(activeTab === "ai" ? aiGtm : traditional).map((project, idx) => {
           return (
-            <div
+            <motion.div
               key={idx}
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, delay: (idx % 2) * 0.15, ease: "easeOut" }}
               className="bg-white border-3 border-ink rounded-2xl p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] hover:shadow-[10px_10px_0px_0px_rgba(24,24,27,1)] hover:translate-y-[-2px] transition-all flex flex-col justify-between"
             >
               <div>
@@ -131,7 +136,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ traditional,
                   <ArrowUpRight className="h-3 w-3" />
                 </a>
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
