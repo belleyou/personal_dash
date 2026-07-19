@@ -214,11 +214,11 @@ export const SFBayMiniature: React.FC<SFBayMiniatureProps> = ({
           </AnimatePresence>
         </div>
 
-        {/* Header Controls: Navigation buttons on the left, Star Shining Toggle and Music on the right */}
-        <div className="w-full flex flex-col xl:flex-row items-center justify-between gap-4 z-20 pb-4 border-b border-emerald-800/10">
+        {/* Header Controls: Navigation and GTM actions, centered vertically and horizontally at the top */}
+        <div className="w-full flex flex-col items-center justify-center gap-4 z-20 pb-4 border-b border-emerald-800/10">
           
           {/* Embedded Navigation Buttons Row */}
-          <div className="flex flex-wrap items-center justify-center xl:justify-start gap-2.5 w-full xl:w-auto">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 w-full">
             {[
               { id: "home", label: "HOME", color: "bg-pink-200 hover:bg-pink-300" },
               { id: "about", label: "ABOUT", color: "bg-white hover:bg-emerald-100" },
