@@ -60,6 +60,7 @@ import padCover from "./PAD.jpeg";
 import amCover from "./AM.jpeg";
 import allstarCover from "./AllStar.jpeg";
 import docCover from "./Doc.jpeg";
+import { RevenueStreamlineCaseStudy } from "./components/RevenueStreamlineCaseStudy";
 
 // Import types & static data
 import { 
@@ -282,7 +283,7 @@ export default function App() {
   const [hoveredNav, setHoveredNav] = useState<string>("home");
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // Career experience expansion
-  const [activeProjectTab, setActiveProjectTab] = useState<"innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("innovations_video");
+  const [activeProjectTab, setActiveProjectTab] = useState<"revops_streamline" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("revops_streamline");
   const [certFilter, setCertFilter] = useState<"all" | "salesforce" | "other">("all");
   const [isMusicModalOpen, setIsMusicModalOpen] = useState(false);
   const [isSubmitProjectModalOpen, setIsSubmitProjectModalOpen] = useState(false);
@@ -333,7 +334,7 @@ export default function App() {
            }
          } else {
            // Default tab if none specified
-           setActiveProjectTab("innovations_video");
+           setActiveProjectTab("revops_streamline");
          }
        } else if (targetPage === "articles") {
          // If they requested a specific article, open it!
@@ -828,6 +829,17 @@ export default function App() {
             {/* Folder Tabs - Compact single row, horizontal scrollable without wrapping */}
             <div className="flex flex-nowrap overflow-x-auto border-b-3 border-ink w-full gap-x-1.5 select-none pb-[3px] scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-track-transparent">
               <a
+                href="#projects?tab=revops_streamline"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
+                  activeProjectTab === "revops_streamline"
+                    ? "bg-emerald-200 text-ink border-b-3 border-b-emerald-200 z-10 scale-105"
+                    : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
+                }`}
+              >
+                <FileText className="h-4 w-4 text-emerald-800 animate-pulse" />
+                Revenue Streamline Initiative 📄 ⭐
+              </a>
+              <a
                 href="#projects?tab=innovations_video"
                 className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
                   activeProjectTab === "innovations_video"
@@ -929,7 +941,9 @@ export default function App() {
             </div>
 
             {/* Project Cards Grid / Walkthrough */}
-            {activeProjectTab === "innovations_video" ? (
+            {activeProjectTab === "revops_streamline" ? (
+              <RevenueStreamlineCaseStudy onCopyLink={copyToClipboard} copiedLabel={copiedText} />
+            ) : activeProjectTab === "innovations_video" ? (
               <div className="bg-white border-3 border-ink rounded-xl p-6 md:p-8 shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] space-y-6 animate-fade-in">
                 <div className="flex flex-col md:flex-row md:items-center justify-between border-b-2 border-dashed border-zinc-200 pb-4 gap-4">
                   <div>

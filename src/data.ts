@@ -367,6 +367,15 @@ export const TRADITIONAL_PROJECTS: Project[] = [
 
 export const AI_GTM_PROJECTS: Project[] = [
   {
+    title: "Revenue Systems Streamline Initiative (HubSpot → Salesforce Migration)",
+    aiUse: "n8n AI Orchestration & Claude 3.5 Sonnet Hierarchy Resolution",
+    problem: "11 fragmented tools (Definitive, Clay, LISN, Modigie, Apollo, Nooks, Commonroom, Outreach, Dripify, Salesforce, HubSpot) caused data clashing and 60+ min upload delays (>1 hr per 50k SFDC / 10k HubSpot rows) scaling from 20 to 50 AEs.",
+    solution: "Evaluated 4 architecture paths and implemented Solution #3: Middleware AI Orchestration via n8n, Claude 3.5 Sonnet LLM hierarchy parsing (PE → MSO Parent → MSO Child), and Salesforce Bulk API v2.",
+    impact: "Cut campaign list ingestion processing from 60+ mins to <5 mins (12x speedup), achieved >90% healthcare hierarchy accuracy, >15% call connects, and 100% Salesforce adoption.",
+    tools: ["n8n Orchestration", "Claude 3.5 Sonnet", "Salesforce Bulk API v2", "Clay Waterfall", "HubSpot Decommission", "Agentforce / Data Cloud"],
+    demoUrl: "#projects?tab=revops_streamline",
+  },
+  {
     title: "Intelligent CRM Data Quality Pipeline",
     aiUse: "Structured data parsing & quality checks",
     problem: "Hiring managers and RevOps staff lost hours correcting typos, unformatted names, and missing details on incoming partner sign-ups.",
@@ -405,6 +414,14 @@ export const AI_GTM_PROJECTS: Project[] = [
 ];
 
 export const EVALUATION_PROJECTS: Project[] = [
+  {
+    title: "Revenue Systems Streamline Initiative (HubSpot → Salesforce Architecture)",
+    problem: "Severe tool & data overlap across 11 fragmented tools created >1 hour upload delays and data clashing while scaling AE team from 20 to 50 reps.",
+    solution: "Evaluated 4 architecture paths (Native Apex, Agentforce/Data Cloud, Middleware n8n AI Orchestration, Custom MCP Microservices) and delivered an n8n + Claude 3.5 Sonnet + SF Bulk API v2 blueprint.",
+    impact: "Cut campaign list processing from 60+ mins to <5 mins (12x speedup), achieved >90% healthcare hierarchy accuracy, >15% call connects, and 100% SFDC adoption.",
+    tools: ["n8n", "Claude 3.5 Sonnet", "Salesforce Bulk API v2", "Clay Waterfall", "HubSpot Decommission"],
+    demoUrl: "#projects?tab=revops_streamline",
+  },
   {
     title: "Multi-Vendor CPQ & Billing Suite Audit",
     problem: "Legacy multi-ERP billing and complex discounting structures resulted in a 4-day quoting lead time and severe revenue leakage.",
