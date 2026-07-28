@@ -394,21 +394,27 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
                 <h2 className="font-sans font-extrabold text-2xl text-white">Core Business Bottlenecks &amp; System Goals</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-slate-900/90 border border-slate-700 p-5 rounded-xl space-y-2">
-                    <div className="font-mono text-xs font-bold text-sky-400">1. Tool &amp; Data Overlap</div>
+                    <div className="font-mono text-xs font-bold text-sky-400 flex items-center gap-2">
+                      <span className="bg-sky-950 text-sky-300 px-2 py-0.5 rounded border border-sky-800">1</span>
+                      Tool &amp; Data Overlap
+                    </div>
                     <p className="font-sans text-xs md:text-sm text-slate-300 leading-relaxed">
                       Severe fragmentation across 11 tools (Definitive, Clay, LISN, Modigie, Apollo, Nooks, Commonroom, Outreach, Dripify, Salesforce, HubSpot). Creates data clashing, duplicate spend, and lack of single source of truth.
                     </p>
                   </div>
 
                   <div className="bg-slate-900/90 border border-slate-700 p-5 rounded-xl space-y-2">
-                    <div className="font-mono text-xs font-bold text-sky-400">2. 60+ Min Upload Delays</div>
+                    <div className="font-mono text-xs font-bold text-sky-400 flex items-center gap-2">
+                      <span className="bg-sky-950 text-sky-300 px-2 py-0.5 rounded border border-sky-800">2</span>
+                      60+ Min Upload Delays
+                    </div>
                     <p className="font-sans text-xs md:text-sm text-slate-300 leading-relaxed">
                       Synchronous list processing in Salesforce and heavy list segmentation in HubSpot create &gt;1 hour bottlenecks per 50k in Salesforce and 10k rows in HubSpot.
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-sky-950 to-teal-950 border border-sky-500/40 p-6 rounded-xl space-y-3">
+                <div className="bg-gradient-to-r from-sky-950 via-teal-950 to-slate-900 border border-sky-500/40 p-6 rounded-xl space-y-3">
                   <h3 className="font-sans font-bold text-lg text-sky-300 flex items-center gap-2">
                     <Target className="h-5 w-5 text-sky-400" />
                     Goal: Salesforce as One-Stop Shop
@@ -429,15 +435,17 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
                   {[
                     { label: "Investment Flexibility & Vendor Strategy", text: "The company is comfortable with extra costs involved in adding or replacing third-party tools/vendors to achieve best-in-class data hygiene and pipeline velocity." },
                     { label: "AI Openness & Automation Readiness", text: "The organization is fully open to leveraging AI capabilities (Agentforce, n8n AI agent workflows, Claude/GPT-4o LLM nodes) for enrichment, intent parsing, and hierarchy resolution." },
-                    { label: "HubSpot to Salesforce Migration", text: "Contacts in HubSpot will be migrated directly to the Salesforce Contact object (skipping Lead object migration), ensuring clean Account-Contact mapping." },
+                    { label: "HubSpot to Salesforce Contact Object Migration", text: "Contacts in HubSpot will be migrated directly to the Salesforce Contact object (skipping Lead object migration), ensuring clean Account-Contact mapping." },
                     { label: "Salesforce as Single Source of Truth", text: "Salesforce Sales Cloud holds ~95% of TAM and serves as the primary CRM, with HubSpot CRM being fully decommissioned post-migration." },
                     { label: "Growth Target & Scale", text: "Revenue systems architecture must seamlessly support scaling the AE team from 20 to 50 AEs over the next 12 months without operational friction." },
                     { label: "Healthcare Hierarchy Governance", text: "Parent-child structures (PE → MSO Parent → MSO Child) will be auto-maintained via commercial databases while enabling AE manual overrides in Salesforce." }
                   ].map((item, idx) => (
-                    <div key={idx} className="bg-slate-900/80 border border-slate-700/80 p-3.5 rounded-xl flex items-start gap-3">
-                      <Check className="h-5 w-5 text-teal-400 shrink-0 mt-0.5" />
+                    <div key={idx} className="bg-slate-900/80 border border-slate-700/80 p-3.5 rounded-xl flex items-start gap-3 hover:border-sky-500/50 transition-colors">
+                      <div className="p-1 rounded bg-teal-950 border border-teal-700 shrink-0 mt-0.5">
+                        <Check className="h-4 w-4 text-teal-400" />
+                      </div>
                       <div>
-                        <strong className="text-sky-300 block mb-0.5 font-sans font-bold">{item.label}</strong>
+                        <strong className="text-sky-300 block mb-0.5 font-sans font-bold">{item.label}:</strong>
                         <span className="text-slate-300 font-sans text-xs leading-relaxed">{item.text}</span>
                       </div>
                     </div>
@@ -450,28 +458,36 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
               <div className="space-y-6">
                 <h2 className="font-sans font-extrabold text-2xl text-white">Key Business Metrics &amp; KPIs to Track</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="bg-slate-900 border border-sky-500/30 p-5 rounded-xl space-y-2">
-                    <div className="text-sky-400 font-mono text-xs font-bold">Ingestion Velocity</div>
-                    <div className="text-2xl font-black text-white font-hand">Target: &lt;5 mins / 10k rows</div>
-                    <p className="text-xs text-slate-300 font-sans">Human prep time reduced to &lt;10 mins per campaign list, eliminating the 1-hour SFDC &amp; HubSpot upload stall.</p>
+                  <div className="bg-slate-900 border border-sky-500/40 p-5 rounded-xl space-y-2 relative overflow-hidden">
+                    <div className="flex items-center gap-2 text-sky-400 font-mono text-xs font-bold">
+                      <Zap className="h-4 w-4" /> Ingestion Velocity
+                    </div>
+                    <div className="text-xl font-black text-white font-hand">Target: &lt;5 mins / 10k rows</div>
+                    <p className="text-xs text-slate-300 font-sans leading-relaxed">Human prep time reduced to &lt;10 mins per campaign list, eliminating the 1-hour SFDC &amp; HubSpot upload stall.</p>
                   </div>
 
-                  <div className="bg-slate-900 border border-teal-500/30 p-5 rounded-xl space-y-2">
-                    <div className="text-teal-400 font-mono text-xs font-bold">Hierarchy Accuracy</div>
-                    <div className="text-2xl font-black text-white font-hand">Target: &gt;90% Account Coverage</div>
-                    <p className="text-xs text-slate-300 font-sans">Automated parent-child mapping (PE → MSO Parent → MSO Child) reconciled across all target accounts in SFDC.</p>
+                  <div className="bg-slate-900 border border-teal-500/40 p-5 rounded-xl space-y-2 relative overflow-hidden">
+                    <div className="flex items-center gap-2 text-teal-400 font-mono text-xs font-bold">
+                      <Workflow className="h-4 w-4" /> Hierarchy Accuracy
+                    </div>
+                    <div className="text-xl font-black text-white font-hand">Target: &gt;90% Account Coverage</div>
+                    <p className="text-xs text-slate-300 font-sans leading-relaxed">Automated parent-child mapping (PE → MSO Parent → MSO Child) reconciled across all target accounts in SFDC.</p>
                   </div>
 
-                  <div className="bg-slate-900 border border-indigo-500/30 p-5 rounded-xl space-y-2">
-                    <div className="text-indigo-400 font-mono text-xs font-bold">Deliverability &amp; Pickup</div>
-                    <div className="text-2xl font-black text-white font-hand">Target: &gt;15% Call Connects</div>
-                    <p className="text-xs text-slate-300 font-sans">Mobile pickup rate tripled via Clay multi-vendor waterfall; cold email bounce rates kept strictly below 2%.</p>
+                  <div className="bg-slate-900 border border-indigo-500/40 p-5 rounded-xl space-y-2 relative overflow-hidden">
+                    <div className="flex items-center gap-2 text-indigo-400 font-mono text-xs font-bold">
+                      <TrendingUp className="h-4 w-4" /> Deliverability &amp; Pickup
+                    </div>
+                    <div className="text-xl font-black text-white font-hand">Target: &gt;15% Call Connects</div>
+                    <p className="text-xs text-slate-300 font-sans leading-relaxed">Mobile pickup rate tripled via Clay multi-vendor waterfall; cold email bounce rates kept strictly below 2%.</p>
                   </div>
 
-                  <div className="bg-slate-900 border border-amber-500/30 p-5 rounded-xl space-y-2">
-                    <div className="text-amber-400 font-mono text-xs font-bold">AE Productivity &amp; Usage</div>
-                    <div className="text-2xl font-black text-white font-hand">Target: 100% SFDC Adoption</div>
-                    <p className="text-xs text-slate-300 font-sans">Zero platform switching. 100% of AE prospect research and sequencing triggered directly inside Salesforce.</p>
+                  <div className="bg-slate-900 border border-amber-500/40 p-5 rounded-xl space-y-2 relative overflow-hidden">
+                    <div className="flex items-center gap-2 text-amber-400 font-mono text-xs font-bold">
+                      <Target className="h-4 w-4" /> AE Productivity &amp; Usage
+                    </div>
+                    <div className="text-xl font-black text-white font-hand">Target: 100% SFDC Adoption</div>
+                    <p className="text-xs text-slate-300 font-sans leading-relaxed">Zero platform switching. 100% of AE prospect research and sequencing triggered directly inside Salesforce.</p>
                   </div>
                 </div>
               </div>
@@ -479,48 +495,57 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
 
             {currentSlide === 5 && (
               <div className="space-y-4">
-                <h2 className="font-sans font-extrabold text-2xl text-white">Evaluation of 4 Architecture Solutions</h2>
-                <div className="overflow-x-auto">
+                <div className="space-y-1">
+                  <h2 className="font-sans font-extrabold text-2xl text-white">Evaluation of 4 Architecture Solutions</h2>
+                  <p className="font-sans text-xs text-slate-300">
+                    Evaluating trade-offs across engineering complexity, maintainability, platform alignment, and governor limits.
+                  </p>
+                  <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-700 font-mono text-[11px] text-sky-300">
+                    <span className="font-bold text-amber-400">[MULTI-CHANNEL LEAD INGESTION]</span> (Webforms, Emails, Live Messages, Events/Summits, Detected Intent, Community, Social)
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto rounded-xl border border-slate-700">
                   <table className="w-full text-left text-xs font-sans border-collapse">
                     <thead>
-                      <tr className="bg-slate-800 text-sky-300 font-mono text-[11px] uppercase">
-                        <th className="p-3 border border-slate-700">Solution</th>
-                        <th className="p-3 border border-slate-700">Architecture Name</th>
-                        <th className="p-3 border border-slate-700">Primary Stack</th>
-                        <th className="p-3 border border-slate-700">Est. Time-to-Value</th>
-                        <th className="p-3 border border-slate-700">Engineering Effort</th>
+                      <tr className="bg-emerald-900/60 text-emerald-200 font-mono text-[11px] uppercase border-b border-slate-700">
+                        <th className="p-3 border-r border-slate-700">Solution</th>
+                        <th className="p-3 border-r border-slate-700">Architecture Name</th>
+                        <th className="p-3 border-r border-slate-700">Primary Stack</th>
+                        <th className="p-3 border-r border-slate-700">Est. Time-to-Value</th>
+                        <th className="p-3">Engineering Effort</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800 text-slate-200">
-                      <tr>
-                        <td className="p-3 border border-slate-800 font-bold">Solution #1</td>
-                        <td className="p-3 border border-slate-800">Custom Apex &amp; AppExchange/3PA/REST API</td>
-                        <td className="p-3 border border-slate-800 text-slate-400">Salesforce Apex, LWC, Point-to-Point REST APIs</td>
-                        <td className="p-3 border border-slate-800 font-mono">16 - 20 Weeks</td>
-                        <td className="p-3 border border-slate-800 text-red-400 font-bold">High</td>
+                      <tr className="hover:bg-slate-900/50">
+                        <td className="p-3 border-r border-slate-800 font-bold text-slate-300">Solution #1</td>
+                        <td className="p-3 border-r border-slate-800">Custom Apex &amp; AppExchange/3PA/REST API</td>
+                        <td className="p-3 border-r border-slate-800 text-slate-400">Salesforce Apex, LWC, Point-to-Point REST APIs</td>
+                        <td className="p-3 border-r border-slate-800 font-mono">16 - 20 Weeks</td>
+                        <td className="p-3 text-red-400 font-bold">High</td>
                       </tr>
-                      <tr>
-                        <td className="p-3 border border-slate-800 font-bold">Solution #2</td>
-                        <td className="p-3 border border-slate-800">Salesforce Agentforce &amp; AppExchange/3PA/REST API</td>
-                        <td className="p-3 border border-slate-800 text-slate-400">Agentforce AI, Data Cloud, Prompt Builder</td>
-                        <td className="p-3 border border-slate-800 font-mono">12 - 16 Weeks</td>
-                        <td className="p-3 border border-slate-800 text-amber-400 font-bold">Medium-High</td>
+                      <tr className="hover:bg-slate-900/50">
+                        <td className="p-3 border-r border-slate-800 font-bold text-slate-300">Solution #2</td>
+                        <td className="p-3 border-r border-slate-800">Salesforce Agentforce &amp; AppExchange/3PA/REST API</td>
+                        <td className="p-3 border-r border-slate-800 text-slate-400">Agentforce AI, Data Cloud, Prompt Builder</td>
+                        <td className="p-3 border-r border-slate-800 font-mono">12 - 16 Weeks</td>
+                        <td className="p-3 text-amber-400 font-bold">Medium-High</td>
                       </tr>
-                      <tr className="bg-sky-950/60 font-bold border-2 border-teal-500">
-                        <td className="p-3 border border-slate-700 text-teal-300 flex items-center gap-1">
+                      <tr className="bg-sky-950/80 font-bold border-2 border-teal-400">
+                        <td className="p-3 border-r border-slate-700 text-teal-300 flex items-center gap-1">
                           Solution #3 <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400 inline" />
                         </td>
-                        <td className="p-3 border border-slate-700 text-white">Middleware AI Orchestration (Recommended)</td>
-                        <td className="p-3 border border-slate-700 text-teal-200">n8n, Claude 3.5 Sonnet, Salesforce Bulk API v2</td>
-                        <td className="p-3 border border-slate-700 font-mono text-teal-300">8 - 12 Weeks</td>
-                        <td className="p-3 border border-slate-700 text-emerald-300">Medium-Low</td>
+                        <td className="p-3 border-r border-slate-700 text-white">Middleware AI Orchestration (Recommended)</td>
+                        <td className="p-3 border-r border-slate-700 text-teal-200">n8n, Claude 3.5 Sonnet, Salesforce Bulk API v2</td>
+                        <td className="p-3 border-r border-slate-700 font-mono text-teal-300">8 - 12 Weeks</td>
+                        <td className="p-3 text-emerald-300 font-black">Medium-Low</td>
                       </tr>
-                      <tr>
-                        <td className="p-3 border border-slate-800 font-bold">Solution #4</td>
-                        <td className="p-3 border border-slate-800">Custom MCP Microservices</td>
-                        <td className="p-3 border border-slate-800 text-slate-400">Custom Python/Node, AWS, Vector DB, MCP</td>
-                        <td className="p-3 border border-slate-800 font-mono">18 - 20 Weeks</td>
-                        <td className="p-3 border border-slate-800 text-red-400 font-bold">Very High</td>
+                      <tr className="hover:bg-slate-900/50">
+                        <td className="p-3 border-r border-slate-800 font-bold text-slate-300">Solution #4</td>
+                        <td className="p-3 border-r border-slate-800">Custom MCP Microservice</td>
+                        <td className="p-3 border-r border-slate-800 text-slate-400">Custom Python/Node, AWS, Vector DB, MCP</td>
+                        <td className="p-3 border-r border-slate-800 font-mono">18 - 20 Weeks</td>
+                        <td className="p-3 text-red-400 font-bold">Very High</td>
                       </tr>
                     </tbody>
                   </table>
@@ -533,61 +558,178 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
                 <h2 className="font-sans font-extrabold text-2xl text-white">Solution 1: Native Apex &amp; Point-to-Point</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
-                    <h3 className="font-mono text-xs font-bold text-sky-400">Architecture Approach</h3>
+                    <h3 className="font-mono text-xs font-bold text-sky-400 uppercase tracking-wider">Architecture Approach</h3>
                     <p className="text-xs text-slate-300 leading-relaxed font-sans">
                       Custom Apex code, Batch Apex, and LWC flow triggers within SFDC. Point-to-point REST API integrations directly connecting SFDC AppExchange to third-party vendors without external orchestrators.
                     </p>
                   </div>
                   <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
-                    <h3 className="font-mono text-xs font-bold text-amber-400">Pros &amp; Trade-offs</h3>
+                    <h3 className="font-mono text-xs font-bold text-amber-400 uppercase tracking-wider">Pros &amp; Trade-offs</h3>
                     <p className="text-xs text-slate-300 leading-relaxed font-sans">
                       <strong className="text-emerald-400">Pros:</strong> Fully native to SFDC UI; no external middleware fees.<br />
                       <strong className="text-red-400">Cons:</strong> Heavy technical debt, tight coupling, and high exposure to Salesforce governor limits and API callout ceilings.
                     </p>
                   </div>
                 </div>
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-400 flex justify-center">
-                  [Flow Architecture: Sales Rep → LWC Staging Component → Custom Async Staging → Apex Batch Engine → Point-to-Point APIs → SFDC Accounts]
+
+                {/* Workflow Diagram Representation */}
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                  <div className="text-[11px] font-mono font-bold text-slate-400 border-b border-slate-800 pb-2">
+                    SOLUTION 1 ARCHITECTURE FLOW (Siloed Bottlenecks &amp; Rate Limits)
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 text-[10px] font-mono text-center">
+                    <div className="bg-sky-950 p-2 rounded border border-sky-800">
+                      <span className="text-sky-300 font-bold block mb-1">STEP 1</span>
+                      <span className="text-slate-300">HubSpot Forms &amp; Event Ingestion</span>
+                    </div>
+                    <div className="bg-amber-950 p-2 rounded border border-amber-800">
+                      <span className="text-amber-300 font-bold block mb-1">STEP 2</span>
+                      <span className="text-slate-300">HubSpot Breeze AI (70-min Lag)</span>
+                    </div>
+                    <div className="bg-red-950 p-2 rounded border border-red-800">
+                      <span className="text-red-300 font-bold block mb-1">STEP 3</span>
+                      <span className="text-slate-300">SFDC Sync Queue Bottleneck</span>
+                    </div>
+                    <div className="bg-slate-900 p-2 rounded border border-slate-700">
+                      <span className="text-sky-300 font-bold block mb-1">STEP 4</span>
+                      <span className="text-slate-300">Clay Cloud Batch Enrichment</span>
+                    </div>
+                    <div className="bg-slate-900 p-2 rounded border border-slate-700">
+                      <span className="text-sky-300 font-bold block mb-1">STEP 5</span>
+                      <span className="text-slate-300">Definitive Healthcare API</span>
+                    </div>
+                    <div className="bg-red-950 p-2 rounded border border-red-800">
+                      <span className="text-red-300 font-bold block mb-1">STEP 6</span>
+                      <span className="text-slate-300">Batch #30 Rate Limit Failure</span>
+                    </div>
+                    <div className="bg-slate-900 p-2 rounded border border-slate-700">
+                      <span className="text-sky-300 font-bold block mb-1">STEP 7</span>
+                      <span className="text-slate-300">LeanData Lead Routing</span>
+                    </div>
+                    <div className="bg-slate-900 p-2 rounded border border-slate-700">
+                      <span className="text-sky-300 font-bold block mb-1">STEP 8</span>
+                      <span className="text-slate-300">Outreach.io Execution</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
 
             {currentSlide === 7 && (
               <div className="space-y-4">
-                <h2 className="font-sans font-extrabold text-2xl text-white">Solution 2: Salesforce Agentforce &amp; Data Cloud</h2>
-                <div className="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-3">
-                  <h3 className="font-mono text-xs font-bold text-sky-400">Salesforce AI Native Stack Details</h3>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                  <div>
+                    <span className="text-sky-400 font-mono text-xs font-bold uppercase tracking-wider block">Salesforce AI Native Stack</span>
+                    <h2 className="font-sans font-extrabold text-2xl text-white">Solution 2: Salesforce Agentforce &amp; Data Cloud</h2>
+                  </div>
+                  <div className="bg-red-950/80 border border-red-700 p-2.5 rounded-lg max-w-md">
+                    <span className="text-red-300 font-mono text-[11px] font-bold block">
+                      ⚠️ FRICTION: High-volume lead streaming into Data Cloud &amp; frequent Agentforce autonomous actions consume significant flex credits.
+                    </span>
+                  </div>
+                </div>
+
+                <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3">
                   <ul className="space-y-2 text-xs text-slate-300 font-sans list-disc list-inside">
                     <li>Uses Agentforce AI Agents, Data Cloud Data Model Objects (DMOs), and Prompt Builder.</li>
                     <li>Autonomously detects intent signals and maps healthcare account relationships natively.</li>
                     <li><strong className="text-emerald-400">Pros:</strong> Cutting-edge native AI rep experience directly inside the CRM.</li>
-                    <li><strong className="text-red-400">Cons:</strong> Very high consumption cost (Data Cloud / Flex Credits) and severe vendor lock-in.</li>
+                    <li><strong className="text-red-400">Cons:</strong> Very high consumption cost (Data Cloud / Flex Credits) and vendor lock-in.</li>
                   </ul>
+                </div>
+
+                {/* Agentforce Orchestration Diagram */}
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                  <div className="font-mono text-[11px] font-bold text-sky-400">
+                    REAL-TIME AGENTFORCE &amp; DATA CLOUD ORCHESTRATION FLOW
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px] font-mono">
+                    <div className="bg-slate-900 p-3 rounded border border-slate-800 space-y-1">
+                      <strong className="text-sky-300 block">1. Ingestion &amp; Initial Scoring</strong>
+                      <p className="text-slate-400 text-[10px]">Lead Entry → Breeze AI Lead Scoring → SFDC Data Cloud Streaming Endpoint</p>
+                    </div>
+                    <div className="bg-slate-900 p-3 rounded border border-slate-800 space-y-1">
+                      <strong className="text-sky-300 block">2. Data Unification</strong>
+                      <p className="text-slate-400 text-[10px]">Identity Resolution Rules + Commonroom Intent DMO → Unified Profile DMOs</p>
+                    </div>
+                    <div className="bg-sky-950 p-3 rounded border border-sky-800 space-y-1">
+                      <strong className="text-teal-300 block">3. Agentforce Brain</strong>
+                      <p className="text-slate-400 text-[10px]">Definitive Verification → Clay Waterfall → Outreach REST → LeanData Routing → Slack Alert</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
 
             {currentSlide === 8 && (
               <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <h2 className="font-sans font-extrabold text-2xl text-white">Solution 3: n8n AI Orchestration</h2>
-                  <span className="px-2.5 py-0.5 rounded-full bg-amber-400 text-zinc-950 font-mono text-[10px] font-black uppercase">
-                    ⭐ RECOMMENDED ARCHITECTURE
-                  </span>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                  <div className="flex items-center gap-2">
+                    <h2 className="font-sans font-extrabold text-2xl text-white">Solution 3: n8n AI Orchestration</h2>
+                    <span className="px-2.5 py-0.5 rounded-full bg-amber-400 text-zinc-950 font-mono text-[10px] font-black uppercase">
+                      ⭐ RECOMMENDED
+                    </span>
+                  </div>
+
+                  <div className="bg-emerald-950/90 border border-emerald-500/50 p-2.5 rounded-lg text-xs font-sans text-emerald-200">
+                    <strong>WHY IT WINS:</strong> RevOps has complete control over when and how each vendor's native AI is triggered, eliminating system bottlenecks on both HubSpot and Salesforce simultaneously.
+                  </div>
                 </div>
 
-                <div className="bg-slate-900 p-5 rounded-xl border border-teal-500/50 space-y-3">
-                  <p className="text-xs md:text-sm text-slate-200 font-sans leading-relaxed">
-                    Node-based n8n automation engine orchestrating AI LLMs (Claude 3.5 Sonnet), Definitive Healthcare, and Clay enrichment before pushing clean records via Salesforce Bulk API v2.
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                    <div className="bg-teal-950/60 p-3 rounded-lg border border-teal-700/50">
-                      <strong className="text-teal-300 block mb-1 font-mono">Impact &amp; Benefits</strong>
-                      <span>Decouples heavy processing from SFDC, reduces list upload times from 60 mins to &lt;5 mins, and cuts overall tool spend significantly.</span>
+                {/* Personas Callout */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-sans">
+                  <div className="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                    <strong className="text-sky-300 font-mono block">REV OPS STRATEGIST</strong>
+                    <span className="text-slate-400 text-[11px]">Overall process ownership &amp; optimization</span>
+                  </div>
+                  <div className="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                    <strong className="text-teal-300 font-mono block">n8n ARCHITECT</strong>
+                    <span className="text-slate-400 text-[11px]">Workflow design, tools integration, logic flow</span>
+                  </div>
+                  <div className="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                    <strong className="text-amber-300 font-mono block">ACCOUNT EXECUTIVE (AE)</strong>
+                    <span className="text-slate-400 text-[11px]">Receives SQL leads, advances opportunities, closes deals</span>
+                  </div>
+                </div>
+
+                {/* Workflow Diagram Steps */}
+                <div className="bg-slate-950 p-4 rounded-xl border border-teal-500/40 space-y-3">
+                  <div className="font-mono text-[11px] font-bold text-teal-300 flex items-center justify-between">
+                    <span>N8N STREAMLINED LEAD ENRICHMENT &amp; ROUTING WORKFLOW</span>
+                    <span className="text-emerald-400 font-bold">&lt; 2 mins Total System Time</span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-mono text-center">
+                    <div className="bg-slate-900 p-2.5 rounded border border-teal-800/80">
+                      <span className="text-teal-400 font-bold block">STEP 1: INGESTION</span>
+                      <span className="text-slate-300">n8n Webhooks (Summit CSV, Commonroom, Webforms)</span>
                     </div>
-                    <div className="bg-sky-950/60 p-3 rounded-lg border border-sky-700/50">
-                      <strong className="text-sky-300 block mb-1 font-mono">Execution Stack</strong>
-                      <span>n8n Webhook → Sub-Workflow 1 (Claude LLM Intent) → Sub-Workflow 2 (Hierarchy Resolution) → Bulk API v2 Ingest → Outreach API.</span>
+                    <div className="bg-slate-900 p-2.5 rounded border border-teal-800/80">
+                      <span className="text-teal-400 font-bold block">STEP 2: BUFFER</span>
+                      <span className="text-slate-300">n8n Concurrency Controls (Zero sync lag)</span>
+                    </div>
+                    <div className="bg-slate-900 p-2.5 rounded border border-teal-800/80">
+                      <span className="text-teal-400 font-bold block">STEP 3: ENRICH</span>
+                      <span className="text-slate-300">Parallel Clay + Definitive + LeanData AI</span>
+                    </div>
+                    <div className="bg-slate-900 p-2.5 rounded border border-teal-800/80">
+                      <span className="text-teal-400 font-bold block">STEP 4: AI PARSER</span>
+                      <span className="text-slate-300">Claude 3.5 Sonnet PE-MSO Tree Node</span>
+                    </div>
+                    <div className="bg-slate-900 p-2.5 rounded border border-teal-800/80">
+                      <span className="text-teal-400 font-bold block">STEP 5: BULK WRITE</span>
+                      <span className="text-slate-300">Salesforce Bulk API v2 (&lt; 3 min)</span>
+                    </div>
+                    <div className="bg-slate-900 p-2.5 rounded border border-teal-800/80">
+                      <span className="text-teal-400 font-bold block">STEP 6: SUCCESS</span>
+                      <span className="text-slate-300">99.9% Success Rate + Auto Recovery</span>
+                    </div>
+                    <div className="bg-slate-900 p-2.5 rounded border border-teal-800/80">
+                      <span className="text-teal-400 font-bold block">STEP 7: SALES HANDOFF</span>
+                      <span className="text-slate-300">AE Assigned in SFDC + Opportunity</span>
+                    </div>
+                    <div className="bg-slate-900 p-2.5 rounded border border-teal-800/80">
+                      <span className="text-teal-400 font-bold block">STEP 8: REVOPS WIN</span>
+                      <span className="text-slate-300">Siloes Eliminated, Instant AE Access</span>
                     </div>
                   </div>
                 </div>
@@ -599,18 +741,25 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
                 <h2 className="font-sans font-extrabold text-2xl text-white">Solution 4: Custom MCP Microservices</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
-                    <h3 className="font-mono text-xs font-bold text-sky-400">Developer-Centric MCP Server</h3>
+                    <h3 className="font-mono text-xs font-bold text-sky-400 uppercase tracking-wider">Developer-Centric MCP Server</h3>
                     <p className="text-xs text-slate-300 leading-relaxed font-sans">
                       Custom Model Context Protocol (MCP) server built on Python/Node.js microservices connecting LLM models to databases and SFDC APIs via open-source protocols.
                     </p>
                   </div>
                   <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
-                    <h3 className="font-mono text-xs font-bold text-amber-400">Pros &amp; Trade-offs</h3>
+                    <h3 className="font-mono text-xs font-bold text-amber-400 uppercase tracking-wider">Pros &amp; Trade-offs</h3>
                     <p className="text-xs text-slate-300 leading-relaxed font-sans">
                       <strong className="text-emerald-400">Pros:</strong> Zero vendor lock-in; complete control over AI logic &amp; data models.<br />
                       <strong className="text-red-400">Cons:</strong> Extremely high DevOps engineering overhead, custom container hosting, and ongoing code maintenance.
                     </p>
                   </div>
+                </div>
+
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs font-mono">
+                  <div className="text-slate-400 font-bold border-b border-slate-800 pb-1">MCP ARCHITECTURE COMPONENTS:</div>
+                  <p className="text-slate-300 text-[11px]">
+                    Sales Rep Chat Interface → Natural Language Query → MCP Execution Engine (`query_definitive_hierarchy`, `check_clay_waterfall`, `sf_bulk_upsert`) → AWS SQS Queue → ECS Cluster → Pgvector Memory → Salesforce Bulk API v2
+                  </p>
                 </div>
               </div>
             )}
@@ -622,19 +771,19 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
                   <div className="bg-slate-900 p-4 rounded-xl border border-sky-500/30 space-y-2">
                     <Zap className="h-6 w-6 text-sky-400" />
                     <h3 className="font-sans font-bold text-white text-sm">Bulk API v2 Speed</h3>
-                    <p className="text-xs text-slate-300">Bypasses synchronous SFDC trigger limits by staging and bulk-upserting records asynchronously in parallel batches.</p>
+                    <p className="text-xs text-slate-300 leading-relaxed">Bypasses synchronous SFDC trigger limits by staging and bulk-upserting records asynchronously in parallel batches.</p>
                   </div>
 
                   <div className="bg-slate-900 p-4 rounded-xl border border-teal-500/30 space-y-2">
                     <Workflow className="h-6 w-6 text-teal-400" />
                     <h3 className="font-sans font-bold text-white text-sm">Hierarchy AI Parsing</h3>
-                    <p className="text-xs text-slate-300">Uses Claude 3.5 LLM nodes to clean PE → MSO Parent → MSO Child trees before writing to Salesforce.</p>
+                    <p className="text-xs text-slate-300 leading-relaxed">Uses Claude 3.5 LLM nodes to clean PE → MSO Parent → MSO Child trees before writing to Salesforce.</p>
                   </div>
 
                   <div className="bg-slate-900 p-4 rounded-xl border border-indigo-500/30 space-y-2">
                     <Sliders className="h-6 w-6 text-indigo-400" />
                     <h3 className="font-sans font-bold text-white text-sm">GTM Agility</h3>
-                    <p className="text-xs text-slate-300">Allows RevOps to modify enrichment logic and intent triggers visually without Apex code deployment cycles.</p>
+                    <p className="text-xs text-slate-300 leading-relaxed">Allows RevOps to modify enrichment logic and intent triggers visually without Apex code deployment cycles.</p>
                   </div>
                 </div>
 
@@ -692,6 +841,7 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
                     </div>
                     <ul className="space-y-1 text-slate-200 font-sans">
                       <li><strong>Salesforce</strong> (Core CRM)</li>
+                      <li><strong>CRM</strong> (Marketing Campaign PL)</li>
                       <li><strong>Definitive</strong> (Health Data)</li>
                       <li><strong>Clay</strong> (AI Waterfall)</li>
                       <li><strong>Outreach / Nooks</strong> (Engagement)</li>
@@ -704,8 +854,7 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
                       <Trash2 className="h-4 w-4" /> CUT
                     </div>
                     <ul className="space-y-1 text-slate-200 font-sans">
-                      <li><strong>HubSpot CRM</strong> (Dual CRM drag)</li>
-                      <li><strong>LISN &amp; Modigie</strong> (Bad phone data)</li>
+                      <li><strong>ISN &amp; Modigie</strong> (Bad phone data)</li>
                       <li><strong>Dripify</strong> (LinkedIn risk)</li>
                     </ul>
                   </div>
@@ -727,7 +876,7 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
                       <li><strong>Einstein Copilot / Agentforce</strong> (Rep AI)</li>
                       <li><strong>n8n</strong> (AI Orchestration Engine)</li>
                       <li><strong>LeanData</strong> (Matching/Routing)</li>
-                      <li><strong>D&amp;B Optimizer / ZoomInfo</strong></li>
+                      <li><strong>D&amp;B Optimizer / ZoomInfo</strong> (Legal Trees)</li>
                       <li><strong>AI Models</strong> (Claude 3.5 / GPT-4o)</li>
                     </ul>
                   </div>
@@ -737,18 +886,21 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
 
             {currentSlide === 13 && (
               <div className="space-y-4">
-                <h2 className="font-sans font-extrabold text-2xl text-white">Addl. Questions &amp; Answers (Executive Q&amp;A)</h2>
-                <div className="space-y-2 text-xs md:text-sm">
+                <div className="border-b border-slate-800 pb-2">
+                  <h2 className="font-sans font-extrabold text-2xl text-white">Addl. Questions &amp; Answers</h2>
+                  <span className="font-mono text-xs text-sky-400">Architectural Review &amp; Executive Q&amp;A</span>
+                </div>
+                <div className="space-y-3 text-xs md:text-sm">
                   {[
-                    { q: "1. How to evaluate and determine tech stack investment and database to be trusted in page #12?", a: "A: Primary Source Data Authority, API Speed & Asynchronous Throughput, ROI/Overall Cost & Redundancy Removal." },
+                    { q: "1. How to evaluate and determine tech stack investment and database to be trusted in page #12?", a: "A: Primary Source Data Authority, API Speed & Asynchronous Throughput, ROI/Overall Cost & Redundancy Removal" },
                     { q: "2. What’s the enablement & adoption process?", a: "A: Role-Based or Territory Sandbox Training, Automated Actionable Alerts, Adoption Monitoring & Feedback via Office Hours, Survey, Stakeholders interviews." },
-                    { q: "3. What processes need human intervention and approval?", a: "A: Account tier, buying threshold, Low-Confidence Deduplication Exceptions." },
-                    { q: "4. How to build intent signals of identify new hires and departures from companies?", a: "A: Multi-Source Signal Monitoring, AI Candidate & Title Parsing, Former Champion Tracking." },
-                    { q: "5. How to qualify leads and opportunities?", a: "A: Firmographic & Healthcare Fit, Behavioral Intent, Automated AI Qualification Score, Opportunity Stage Gate." }
+                    { q: "3. What processes need human intervention and approval?", a: "A: Account tier, buying threshold, Low-Confidence Deduplication Exceptions" },
+                    { q: "4. How to build intent signals of identify new hires and departures from companies?", a: "A: Multi-Source Signal Monitoring, AI Candidate & Title Parsing, Former Champion Tracking" },
+                    { q: "5. How to qualify leads and opportunities?", a: "A: Firmographic & Healthcare Fit, Behavioral Intent, Automated AI Qualification Score, Opportunity Stage Gate" }
                   ].map((qa, idx) => (
-                    <div key={idx} className="bg-slate-900 p-3.5 rounded-xl border border-slate-800 space-y-1">
-                      <strong className="text-sky-300 font-sans block">{qa.q}</strong>
-                      <span className="text-slate-300 font-sans block text-xs">{qa.a}</span>
+                    <div key={idx} className="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-1.5">
+                      <strong className="text-sky-300 font-sans block text-sm">{qa.q}</strong>
+                      <span className="text-slate-200 font-sans block text-xs leading-relaxed">{qa.a}</span>
                     </div>
                   ))}
                 </div>
@@ -757,52 +909,67 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
 
             {currentSlide === 14 && (
               <div className="space-y-4">
-                <h2 className="font-sans font-extrabold text-2xl text-white">Appendix: Implementation Phase Plan Comparison</h2>
+                <div className="border-b border-slate-800 pb-2">
+                  <h2 className="font-sans font-extrabold text-2xl text-white">Appendix</h2>
+                  <span className="font-mono text-xs font-bold text-amber-400 uppercase">IMPLEMENTATION PHASE PLAN COMPARISON: 4 SOLUTION DIRECTIONS</span>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
                   <div className="bg-slate-900 border border-slate-700 p-3.5 rounded-xl space-y-2">
-                    <strong className="text-sky-400 block font-mono text-xs">SOLUTION #1: APEX / LWC</strong>
-                    <ul className="text-slate-300 space-y-1">
-                      <li>W1-3: Planning &amp; Schema</li>
-                      <li>W4-7: Apex Bulk &amp; Staging</li>
-                      <li>W8-12: REST API Connectors</li>
-                      <li>W13-16: LWC UX &amp; UAT</li>
+                    <strong className="text-sky-400 block font-mono text-xs">SOLUTION #1: APEX / LWC POINT-TO-POINT</strong>
+                    <ul className="text-slate-300 space-y-1 text-[11px] font-mono">
+                      <li><span className="text-sky-400 font-bold">W1-3 Phase 1:</span> Planning &amp; Schema</li>
+                      <li><span className="text-sky-400 font-bold">W4-7 Phase 2:</span> Apex Bulk Apex Staging</li>
+                      <li><span className="text-sky-400 font-bold">W8-12 Phase 3:</span> REST API Connectors</li>
+                      <li><span className="text-sky-400 font-bold">W13-16 Phase 4:</span> LWC UX &amp; UAT</li>
                     </ul>
-                    <span className="inline-block text-[10px] text-red-400 font-mono font-bold bg-red-950 px-2 py-0.5 rounded">High Complexity</span>
+                    <div className="pt-2 border-t border-slate-800 text-[10px] text-slate-400 space-y-1">
+                      <p>• High complexity, tight coupling, lengthy release cycles, high maintainability</p>
+                      <span className="inline-block text-[10px] text-red-400 font-mono font-bold bg-red-950 px-2 py-0.5 rounded">High Complexity</span>
+                    </div>
                   </div>
 
                   <div className="bg-slate-900 border border-slate-700 p-3.5 rounded-xl space-y-2">
-                    <strong className="text-amber-400 block font-mono text-xs">SOLUTION #2: AGENTFORCE</strong>
-                    <ul className="text-slate-300 space-y-1">
-                      <li>W1-3: Data Cloud DMO</li>
-                      <li>W4-6: Topic Definition</li>
-                      <li>W7-9: Service Setup</li>
-                      <li>W10-12: Guardrails &amp; Deploy</li>
+                    <strong className="text-amber-400 block font-mono text-xs">SOLUTION #2: AGENTFORCE &amp; DATA CLOUD</strong>
+                    <ul className="text-slate-300 space-y-1 text-[11px] font-mono">
+                      <li><span className="text-amber-400 font-bold">W1-3 Phase 1:</span> Data Cloud DMO Mapping</li>
+                      <li><span className="text-amber-400 font-bold">W4-6 Phase 2:</span> Agentforce Topic Definition</li>
+                      <li><span className="text-amber-400 font-bold">W7-9 Phase 3:</span> Action &amp; External Service setup</li>
+                      <li><span className="text-amber-400 font-bold">W10-12 Phase 4:</span> Prompt Guardrails &amp; Deployment</li>
                     </ul>
-                    <span className="inline-block text-[10px] text-amber-400 font-mono font-bold bg-amber-950 px-2 py-0.5 rounded">Moderate Complexity</span>
+                    <div className="pt-2 border-t border-slate-800 text-[10px] text-slate-400 space-y-1">
+                      <p>• SFDC specific skillset, complex Data Cloud, consumption-based costs</p>
+                      <span className="inline-block text-[10px] text-amber-400 font-mono font-bold bg-amber-950 px-2 py-0.5 rounded">Moderate Complexity</span>
+                    </div>
                   </div>
 
                   <div className="bg-teal-950/80 border-2 border-teal-500 p-3.5 rounded-xl space-y-2">
                     <strong className="text-teal-300 block font-mono text-xs flex items-center gap-1">
-                      SOLUTION #3: n8n AI ⭐
+                      SOLUTION #3: MIDDLEWARE n8n AI ⭐
                     </strong>
-                    <ul className="text-slate-200 space-y-1">
-                      <li>W1-2: n8n Infra Setup</li>
-                      <li>W3-4: Bulk API v2 Pipeline</li>
-                      <li>W5-6: AI Hierarchy &amp; Enrich</li>
-                      <li>W7-8: Alert &amp; Enablement</li>
+                    <ul className="text-slate-200 space-y-1 text-[11px] font-mono">
+                      <li><span className="text-teal-300 font-bold">W1-2 Phase 1:</span> n8n Infrastructure Setup</li>
+                      <li><span className="text-teal-300 font-bold">W3-4 Phase 2:</span> Bulk API v2 Pipeline</li>
+                      <li><span className="text-teal-300 font-bold">W5-6 Phase 3:</span> AI Hierarchy &amp; Enrichment</li>
+                      <li><span className="text-teal-300 font-bold">W7-8 Phase 4:</span> Alert Routing &amp; Enablement</li>
                     </ul>
-                    <span className="inline-block text-[10px] text-emerald-300 font-mono font-bold bg-emerald-950 px-2 py-0.5 rounded">Low-Moderate Complexity</span>
+                    <div className="pt-2 border-t border-teal-800 text-[10px] text-teal-200 space-y-1">
+                      <p>• Rapid deployment, decoupling logic, scalable &amp; flexible</p>
+                      <span className="inline-block text-[10px] text-emerald-300 font-mono font-bold bg-emerald-950 px-2 py-0.5 rounded">Low-Moderate Complexity</span>
+                    </div>
                   </div>
 
                   <div className="bg-slate-900 border border-slate-700 p-3.5 rounded-xl space-y-2">
-                    <strong className="text-purple-400 block font-mono text-xs">SOLUTION #4: CUSTOM MCP</strong>
-                    <ul className="text-slate-300 space-y-1">
-                      <li>W1-4: AWS/DevOps Provision</li>
-                      <li>W5-9: MCP Tool Development</li>
-                      <li>W10-14: Hierarchy Logic</li>
-                      <li>W15-18: System Integration</li>
+                    <strong className="text-purple-400 block font-mono text-xs">SOLUTION #4: CUSTOM MCP MICROSERVICES</strong>
+                    <ul className="text-slate-300 space-y-1 text-[11px] font-mono">
+                      <li><span className="text-purple-400 font-bold">W1-4 Phase 1:</span> AWS/DevOps Provisioning</li>
+                      <li><span className="text-purple-400 font-bold">W5-9 Phase 2:</span> MCP Tool Development</li>
+                      <li><span className="text-purple-400 font-bold">W10-14 Phase 3:</span> Hierarchy Logic</li>
+                      <li><span className="text-purple-400 font-bold">W15-18 Phase 4:</span> System Integration</li>
                     </ul>
-                    <span className="inline-block text-[10px] text-red-400 font-mono font-bold bg-red-950 px-2 py-0.5 rounded">Very High Complexity</span>
+                    <div className="pt-2 border-t border-slate-800 text-[10px] text-slate-400 space-y-1">
+                      <p>• Zero platform lock-in, high engineering effort, full control, ongoing DevOps</p>
+                      <span className="inline-block text-[10px] text-red-400 font-mono font-bold bg-red-950 px-2 py-0.5 rounded">Very High Complexity</span>
+                    </div>
                   </div>
                 </div>
               </div>
