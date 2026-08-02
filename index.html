@@ -3,10 +3,81 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/soccer.png" />
+    
+    <!-- SEO Description: Crucial for a portfolio -->
+    <meta name="description" content="Portfolio of Bao You, specializing in Go-To-Market (GTM) Systems and Revenue Operations." />
+    
+    <!-- Motion Favicon powered by gif.mp4 with animated GIF fallback -->
+    <link id="dynamic-favicon" rel="icon" type="image/gif" href="/motion-favicon.gif" />
+
+    <script>
+      (function() {
+        try {
+          const link = document.getElementById('dynamic-favicon');
+          if (!link) return;
+
+          const video = document.createElement('video');
+          video.src = '/gif.mp4';
+          video.autoplay = true;
+          video.loop = true;
+          video.muted = true;
+          video.playsInline = true;
+          video.style.display = 'none';
+
+          const canvas = document.createElement('canvas');
+          canvas.width = 64;
+          canvas.height = 64;
+          const ctx = canvas.getContext('2d');
+
+          let animId;
+          let lastTime = 0;
+          const fpsLimit = 15;
+
+          function renderFrame(time) {
+            if (time - lastTime > 1000 / fpsLimit) {
+              if (video.readyState >= 2 && !video.paused) {
+                ctx.drawImage(video, 0, 0, 64, 64);
+                link.href = canvas.toDataURL('image/png');
+              }
+              lastTime = time;
+            }
+            animId = requestAnimationFrame(renderFrame);
+          }
+
+          video.addEventListener('play', function() {
+            renderFrame(performance.now());
+          });
+
+          document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+              if (animId) cancelAnimationFrame(animId);
+              video.pause();
+            } else {
+              video.play().catch(function() {});
+            }
+          });
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+              document.body.appendChild(video);
+            });
+          } else {
+            document.body.appendChild(video);
+          }
+          video.play().catch(function() {});
+        } catch (e) {
+          console.warn('Motion favicon video engine fallback active');
+        }
+      })();
+    </script>
+    
+    <!-- Title is great, clean, and professional -->
     <title>Bao You — GTM Systems & Revenue Operations Portfolio</title>
   </head>
   <body>
+    <!-- Accessibility fallback for users with disabled JavaScript -->
+    <noscript>You need to enable JavaScript to view this portfolio.</noscript>
+    
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

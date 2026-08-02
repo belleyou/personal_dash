@@ -518,13 +518,19 @@ const STATE_CODES = [
 
 interface WebToLeadFormProps {
   userEmail?: string;
+  isModalMode?: boolean;
+  initialActiveSection?: "submit" | "email" | null;
+  onClose?: () => void;
 }
 
 export const WebToLeadForm: React.FC<WebToLeadFormProps> = ({ 
-  userEmail = "you.bell521@gmail.com" 
+  userEmail = "you.bell521@gmail.com",
+  isModalMode = false,
+  initialActiveSection = null,
+  onClose
 }) => {
   // State to manage active panels
-  const [activeSection, setActiveSection] = useState<"submit" | "email" | null>(null);
+  const [activeSection, setActiveSection] = useState<"submit" | "email" | null>(initialActiveSection || null);
   
   // Salesforce Configuration States
   const [oid, setOid] = useState("00DgL00000TX4P7"); // Activated Production organization ID from user
@@ -857,47 +863,59 @@ San Jose, California`);
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto my-8 px-4 flex flex-col items-center">
+    <div className={`w-full max-w-5xl mx-auto px-4 flex flex-col items-center ${isModalMode ? "" : "my-8"}`}>
       {/* Whimsical 3D Sketchbook Buttons Side-By-Side */}
-      <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 z-10 w-full mb-10 select-none">
-        
-        {/* Submit a Project Sketchbook Button */}
-        <button
-          id="btn-submit-project"
-          onClick={() => {
-            setActiveSection(activeSection === "submit" ? null : "submit");
-          }}
-          className={`px-6 py-3 font-hand text-sm md:text-base font-extrabold transition-all duration-150 border-3 border-ink rounded-lg shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] flex items-center gap-2 cursor-pointer rotate-[-1.2deg] ${
-            activeSection === "submit"
-              ? "bg-highlight text-ink ring-2 ring-emerald-800/25"
-              : "bg-white hover:bg-emerald-50 text-ink"
-          }`}
-        >
-          <Database className={`h-4.5 w-4.5 shrink-0 ${activeSection === "submit" ? "text-emerald-800 animate-pulse" : "text-[#4b5563]"}`} />
-          <span>Submit a Project</span>
-        </button>
+      {!isModalMode && (
+        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 z-10 w-full mb-10 select-none">
+          
+          {/* Submit a Project Sketchbook Button */}
+          <button
+            id="btn-submit-project"
+            onClick={() => {
+              setActiveSection(activeSection === "submit" ? null : "submit");
+            }}
+            className={`px-6 py-3 font-hand text-sm md:text-base font-extrabold transition-all duration-150 border-3 border-ink rounded-lg shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] flex items-center gap-2 cursor-pointer rotate-[-1.2deg] ${
+              activeSection === "submit"
+                ? "bg-highlight text-ink ring-2 ring-emerald-800/25"
+                : "bg-white hover:bg-emerald-50 text-ink"
+            }`}
+          >
+            <Database className={`h-4.5 w-4.5 shrink-0 ${activeSection === "submit" ? "text-emerald-800 animate-pulse" : "text-[#4b5563]"}`} />
+            <span>Submit a Project</span>
+          </button>
 
-        {/* Email Me a Project Sketchbook Button */}
-        <button
-          id="btn-email-me-project"
-          onClick={() => {
-            setActiveSection(activeSection === "email" ? null : "email");
-          }}
-          className={`px-6 py-3 font-hand text-sm md:text-base font-extrabold transition-all duration-150 border-3 border-ink rounded-lg shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] flex items-center gap-2 cursor-pointer rotate-[0.8deg] ${
-            activeSection === "email"
-              ? "bg-highlight text-ink ring-2 ring-emerald-800/25"
-              : "bg-white hover:bg-rose-50 text-ink"
-          }`}
-        >
-          <Mail className={`h-4.5 w-4.5 shrink-0 ${activeSection === "email" ? "text-emerald-800 animate-pulse" : "text-[#4b5563]"}`} />
-          <span>Email Me a Project</span>
-        </button>
+          {/* Email Me a Project Sketchbook Button */}
+          <button
+            id="btn-email-me-project"
+            onClick={() => {
+              setActiveSection(activeSection === "email" ? null : "email");
+            }}
+            className={`px-6 py-3 font-hand text-sm md:text-base font-extrabold transition-all duration-150 border-3 border-ink rounded-lg shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:translate-x-0.5 active:shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] flex items-center gap-2 cursor-pointer rotate-[0.8deg] ${
+              activeSection === "email"
+                ? "bg-highlight text-ink ring-2 ring-emerald-800/25"
+                : "bg-white hover:bg-rose-50 text-ink"
+            }`}
+          >
+            <Mail className={`h-4.5 w-4.5 shrink-0 ${activeSection === "email" ? "text-emerald-800 animate-pulse" : "text-[#4b5563]"}`} />
+            <span>Email Me a Project</span>
+          </button>
 
-      </div>
+        </div>
+      )}
 
       {/* SECTION CONTENT OVERLAYS - Sub-sections display gracefully with hand-drawn canvas details */}
       {activeSection && (
         <div className="w-full bg-white border-3 border-ink rounded-xl p-6 sm:p-8 shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] notebook-column bg-graph-paper animate-fade-in mb-6 relative">
+          
+          {isModalMode && onClose && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute top-4 right-4 z-40 px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-900 border-2 border-ink rounded font-hand text-xs font-black cursor-pointer shadow-sm"
+            >
+              ✕ CLOSE FORM
+            </button>
+          )}
           
 
           {/* Form Fields Section */}
