@@ -1161,91 +1161,14 @@ export const CoffeeSketchSvg: React.FC<{ className?: string }> = ({ className = 
 
 
 /**
- * Hand-drawn iHerb logo sketch in green crayon-and-ink style 🌿
+ * Hand-drawn iHerb logo sketch in green badge style 🌿
  */
-export const IHerbLogoSketchSvg: React.FC<{ className?: string }> = ({ className = "h-10 w-24" }) => {
+export const IHerbLogoSketchSvg: React.FC<{ className?: string }> = ({ className = "h-11 w-11" }) => {
   return (
-    <svg viewBox="0 0 140 50" className={`${className} inline-block select-none`} xmlns="http://www.w3.org/2000/svg" aria-label="iHerb Logo">
-      {/* Soft leaf scribble fill */}
-      <path 
-        d="M 28 36 C 20 22, 22 10, 42 12 C 34 24, 34 38, 28 36 Z" 
-        fill="#bbf7d0" 
-        opacity="0.85" 
-      />
-      {/* Leaf vine strokes */}
-      <path d="M 26 31 Q 30 24 38 18" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" fill="none" />
-      {/* double-ink leaf outlines */}
-      <path 
-        d="M 28 36 C 20 22, 22 10, 42 12 C 34 24, 34 38, 28 36 Z" 
-        fill="none" 
-        stroke="#18181b" 
-        strokeWidth="2.5" 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-      />
-      <path 
-        d="M 29 35 C 21 21, 23 11, 41 13" 
-        fill="none" 
-        stroke="#15803d" 
-        strokeWidth="0.8" 
-        opacity="0.5" 
-      />
-      {/* Text "iHerb" hand-drawn letter-by-letter */}
-      <g fill="#18181b">
-        {/* i */}
-        <text x="50" y="34" fontFamily="var(--font-sans), 'Inter', sans-serif" fontSize="18" fontWeight="900" fontStyle="italic">i</text>
-        {/* Herb */}
-        <text x="58" y="34" fontFamily="var(--font-hand), 'Comic Sans MS', cursive" fontSize="21" fontWeight="900" fill="#15803d">Herb</text>
-      </g>
-      {/* Green underline crayon squiggle */}
-      <path d="M 50 40 Q 90 38 130 41" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" opacity="0.75" />
-      <path d="M 52 41 Q 88 39 126 40" fill="none" stroke="#16a34a" strokeWidth="1" strokeLinecap="round" opacity="0.4" />
-    </svg>
-  );
-};
-
-
-/**
- * Hand-drawn Google logo sketch in 4-quadrant crayon-and-ink style 🎨
- */
-export const GoogleLogoSketchSvg: React.FC<{ className?: string }> = ({ className = "h-10 w-24" }) => {
-  return (
-    <svg viewBox="0 0 140 50" className={`${className} inline-block select-none`} xmlns="http://www.w3.org/2000/svg" aria-label="Google Logo">
-      {/* The colorful G circle background sections */}
-      {/* Blue: right sector */}
-      <path d="M 28 25 L 43 25 C 43 21, 40 13, 28 13 C 24 13, 21 15, 18 18 Z" fill="#93c5fd" opacity="0.8" />
-      {/* Red: top sector */}
-      <path d="M 28 13 C 18 13, 14 21, 14 25 C 14 25, 15 15, 28 13 Z" fill="#fca5a5" opacity="0.8" />
-      {/* Green: bottom sector */}
-      <path d="M 14 25 C 14 34, 21 37, 28 37 C 36 37, 41 32, 42 27 L 28 27 L 28 25 Z" fill="#86efac" opacity="0.8" />
-      {/* Yellow: lower-left sector */}
-      <path d="M 14 25 C 14 31, 18 35, 23 36 Z" fill="#fef08a" opacity="0.8" />
-
-      {/* Double outline hand-drawn G */}
-      <path 
-        d="M 41 21 C 39 16, 34 13, 28 13 C 18.5 13, 13.5 20, 13.5 25 C 13.5 31, 18 37, 28 37 C 36 37, 41 32, 41.5 25 L 28 25 L 28 28.5 L 38 28.5 C 37.5 32, 34 34, 28 34 C 21 34, 17 30, 17 25 C 17 20, 21 16.5, 28 16.5 C 32.5 16.5, 35.5 18, 37.5 20 L 41 21 Z" 
-        fill="none" 
-        stroke="#18181b" 
-        strokeWidth="2.8" 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-      />
-      <path 
-        d="M 40.5 21.5 Q 35 15.5 28 15.5 C 19 15.5 14.5 21, 14.5 25 Q 14.5 32 28 32 Q 35 32 37.5 27" 
-        fill="none" 
-        stroke="#27272a" 
-        strokeWidth="1" 
-        opacity="0.4" 
-      />
-
-      {/* Hand-drawn "Google" text */}
-      <text x="52" y="32" fontFamily="var(--font-hand), 'Comic Sans MS', cursive" fontSize="21" fontWeight="900" fill="#18181b">
-        <tspan fill="#3b82f6">G</tspan>
-        <tspan fill="#ef4444">o</tspan>
-        <tspan fill="#f59e0b">o</tspan>
-        <tspan fill="#3b82f6">g</tspan>
-        <tspan fill="#10b981">l</tspan>
-        <tspan fill="#ef4444">e</tspan>
+    <svg viewBox="0 0 100 100" className={`${className} inline-block select-none`} xmlns="http://www.w3.org/2000/svg" aria-label="iHerb Logo">
+      <rect x="4" y="4" width="92" height="92" rx="22" fill="#3B821E" />
+      <text x="50" y="60" textAnchor="middle" fontFamily="'Inter', system-ui, -apple-system, sans-serif" fontWeight="800" fontSize="28" fill="#ffffff">
+        iHerb<tspan fontSize="12" dx="1" dy="-12">®</tspan>
       </text>
     </svg>
   );
@@ -1253,43 +1176,28 @@ export const GoogleLogoSketchSvg: React.FC<{ className?: string }> = ({ classNam
 
 
 /**
- * Hand-drawn Salesforce logo sketch with friendly cloud-shaped blue wash ☁️
+ * Official Google G multicolored logo 🎨
  */
-export const SalesforceLogoSketchSvg: React.FC<{ className?: string }> = ({ className = "h-10 w-24" }) => {
+export const GoogleLogoSketchSvg: React.FC<{ className?: string }> = ({ className = "h-11 w-11" }) => {
   return (
-    <svg viewBox="0 0 140 50" className={`${className} inline-block select-none`} xmlns="http://www.w3.org/2000/svg" aria-label="Salesforce Logo">
-      {/* Salesforce Cloud soft blue crayon wash */}
-      <path 
-        d="M 16 31 C 12 31, 11 25, 15 22 C 14 16, 21 12, 27 15 C 31 10, 42 12, 42 19 C 45 19, 47 24, 43 28 C 44 31, 38 33, 35 31 C 32 33, 22 34, 16 31 Z" 
-        fill="#bae6fd" 
-        opacity="0.85" 
-      />
-      {/* Double outline hand-drawn cloud */}
-      <path 
-        d="M 16 31 C 12 31, 11 25, 15 22 C 14 16, 21 12, 27 15 C 31 10, 42 12, 42 19 C 45 19, 47 24, 43 28 C 44 31, 38 33, 35 31 C 32 33, 22 34, 16 31 Z" 
-        fill="none" 
-        stroke="#18181b" 
-        strokeWidth="2.5" 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-      />
-      <path 
-        d="M 16.5 30 C 13.5 30, 12 25.5, 15.5 23 C 15 17, 21 13.5, 26 16 C 30 11.5, 40 13, 40 19.5" 
-        fill="none" 
-        stroke="#0284c7" 
-        strokeWidth="1" 
-        opacity="0.4" 
-      />
+    <svg viewBox="0 0 24 24" className={`${className} inline-block select-none`} xmlns="http://www.w3.org/2000/svg" aria-label="Google Logo">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+    </svg>
+  );
+};
 
-      {/* Salesforce Text */}
-      <text x="49" y="32" fontFamily="var(--font-sans), 'Inter', sans-serif" fontSize="14" fontWeight="900" fill="#0284c7">sales</text>
-      <text x="85" y="32" fontFamily="var(--font-hand), 'Comic Sans MS', cursive" fontSize="16" fontWeight="900" fill="#18181b">force</text>
-      
-      {/* Little action sparks */}
-      <g stroke="#0ea5e9" strokeWidth="1.5" strokeLinecap="round" opacity="0.7">
-        <line x1="12" y1="15" x2="8" y2="12" />
-        <line x1="43" y1="10" x2="45" y2="6" />
-      </g>
+
+/**
+ * Official Salesforce Cloud Logo ☁️
+ */
+export const SalesforceLogoSketchSvg: React.FC<{ className?: string }> = ({ className = "h-11 w-16" }) => {
+  return (
+    <svg viewBox="0 0 100 68" className={`${className} inline-block select-none`} xmlns="http://www.w3.org/2000/svg" aria-label="Salesforce Logo">
+      <path d="M 28 60 C 15 60 8 48 16 38 C 12 28 22 18 32 22 C 40 12 58 12 64 22 C 72 14 86 20 84 32 C 94 36 94 50 84 56 C 88 60 76 60 70 58 C 64 60 38 62 28 60 Z" fill="#00A1E0" />
+      <text x="50" y="44" textAnchor="middle" fontFamily="'ITCAvantGardeStd-Bk', 'Trebuchet MS', 'Geneva', sans-serif" fontStyle="italic" fontWeight="700" fontSize="15" fill="#ffffff" letterSpacing="-0.2px">salesforce</text>
     </svg>
   );
 };
@@ -1409,58 +1317,45 @@ export const SpaceXRocketSketchSvg: React.FC<{ className?: string }> = ({ classN
 
 
 /**
- * Hand-drawn Rubrik sketch logo / 3D block representation 🟦
+ * Official Rubrik geometric diamond star logo with text 💎
  */
-export const RubrikSketchSvg: React.FC<{ className?: string }> = ({ className = "h-12 w-12" }) => {
+export const RubrikSketchSvg: React.FC<{ className?: string }> = ({ className = "h-11 w-11" }) => {
   return (
-    <svg viewBox="0 0 100 100" className={`${className} inline-block select-none`} xmlns="http://www.w3.org/2000/svg" aria-label="Rubrik Logo">
-      {/* 3D isometric cube/block representation of Rubrik - Magenta & Teal */}
-      {/* Top Face */}
-      <path d="M 50 18 L 76 31 L 50 44 L 24 31 Z" fill="#67e8f9" opacity="0.9" stroke="#18181b" strokeWidth="2" strokeLinejoin="round" />
-      {/* Left Face */}
-      <path d="M 24 31 L 50 44 L 50 74 L 24 61 Z" fill="#0891b2" stroke="#18181b" strokeWidth="2" strokeLinejoin="round" />
-      {/* Right Face */}
-      <path d="M 50 44 L 76 31 L 76 61 L 50 74 Z" fill="#ec4899" stroke="#18181b" strokeWidth="2" strokeLinejoin="round" />
-      
-      {/* Stylized hand-drawn "R" in the middle */}
-      <path d="M 44 32 L 56 32 C 60 32 60 40 56 40 L 44 40 L 44 52 M 44 40 L 58 54" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M 44 32 L 44 54" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" fill="none" />
-      
-      {/* Sparkle highlights */}
-      <path d="M 82 20 L 84 22 L 82 24 L 80 22 Z" fill="#db2777" />
-      <path d="M 14 55 L 16 57 L 14 59 L 12 57 Z" fill="#06b6d4" />
+    <svg viewBox="0 0 100 90" className={`${className} inline-block select-none`} xmlns="http://www.w3.org/2000/svg" aria-label="Rubrik Logo">
+      <g stroke="#ffffff" strokeWidth="0.8">
+        {/* Top diamond */}
+        <path d="M 50 10 L 61 21 L 50 32 L 39 21 Z" fill="#00C3DA" />
+        {/* Right diamond */}
+        <path d="M 67 38 L 78 27 L 67 16 L 56 27 Z" fill="#00A0DC" />
+        {/* Bottom diamond */}
+        <path d="M 50 64 L 39 53 L 50 42 L 61 53 Z" fill="#0072CE" />
+        {/* Left diamond */}
+        <path d="M 33 38 L 22 49 L 33 60 L 44 49 Z" fill="#00D2B3" />
+        
+        {/* Corner accent diamonds */}
+        <polygon points="57,15 63,21 57,27 51,21" fill="#00D2B3" />
+        <polygon points="67,45 73,51 67,57 61,51" fill="#00C3DA" />
+        <polygon points="43,59 37,53 43,47 49,53" fill="#00A0DC" />
+        <polygon points="33,31 27,25 33,19 39,25" fill="#0072CE" />
+      </g>
+      {/* Rubrik Text */}
+      <text x="50" y="82" textAnchor="middle" fontFamily="'Inter', system-ui, sans-serif" fontWeight="800" fontSize="16" fill="#18181b">Rubrik</text>
     </svg>
   );
 };
 
 
 /**
- * Hand-drawn Quantcast sketch logo / 3D data grid representation 📊
+ * Official Quantcast curved arcs logo 📊
  */
-export const QuantcastSketchSvg: React.FC<{ className?: string }> = ({ className = "h-12 w-12" }) => {
+export const QuantcastSketchSvg: React.FC<{ className?: string }> = ({ className = "h-11 w-11" }) => {
   return (
     <svg viewBox="0 0 100 100" className={`${className} inline-block select-none`} xmlns="http://www.w3.org/2000/svg" aria-label="Quantcast Logo">
-      {/* Custom hand-drawn Q with a multi-layered blue/cyan block grid */}
-      {/* Background soft wash circle */}
-      <circle cx="50" cy="50" r="34" fill="#e0f2fe" opacity="0.7" />
-      
-      {/* Multiple vertical grid columns (representing audience segments) */}
-      {/* Col 1 */}
-      <rect x="30" y="32" width="8" height="30" rx="3" fill="#0284c7" stroke="#18181b" strokeWidth="2" />
-      {/* Col 2 */}
-      <rect x="42" y="24" width="8" height="42" rx="3" fill="#3b82f6" stroke="#18181b" strokeWidth="2" />
-      {/* Col 3 */}
-      <rect x="54" y="36" width="8" height="32" rx="3" fill="#06b6d4" stroke="#18181b" strokeWidth="2" />
-      {/* Col 4 */}
-      <rect x="66" y="44" width="8" height="20" rx="3" fill="#14b8a6" stroke="#18181b" strokeWidth="2" />
-      
-      {/* Dynamic swoop tail forming the letter "Q" shape */}
-      <path d="M 60 62 Q 72 74 84 72" fill="none" stroke="#18181b" strokeWidth="3.5" strokeLinecap="round" />
-      <path d="M 60 62 Q 72 74 84 72" fill="none" stroke="#6366f1" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
-      
-      {/* Sparkles */}
-      <path d="M 22 28 L 24 30 L 22 32 L 20 30 Z" fill="#3b82f6" />
-      <path d="M 78 30 L 80 32 L 78 34 L 76 32 Z" fill="#10b981" />
+      <rect width="100" height="100" rx="18" fill="#99F6E4" />
+      <g fill="#0F172A">
+        <path d="M 50 20 C 34 20 22 32 22 48 C 22 56 26 63 32 68 L 40 60 C 36 57 33 53 33 48 C 33 38 40 31 50 31 C 60 31 67 38 67 48 C 67 56 62 63 55 66 L 61 76 C 73 70 80 60 80 48 C 80 32 66 20 50 20 Z" />
+        <path d="M 38 48 C 38 41 43 37 50 37 C 57 37 61 41 61 48 L 73 60 L 63 70 L 50 57 L 38 48 Z" fill="#0F172A" />
+      </g>
     </svg>
   );
 };

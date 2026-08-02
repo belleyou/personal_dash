@@ -93,6 +93,7 @@ import {
   WavingHandSketchSvg,
   CoffeeSketchSvg,
   IHerbLogoSketchSvg,
+  RubrikSketchSvg,
   GoogleLogoSketchSvg,
   SalesforceLogoSketchSvg,
   TwitterLogoSketchSvg,
@@ -439,41 +440,39 @@ export default function App() {
   const totalOtherCerts = CERTIFICATIONS.filter(c => !c.isSalesforce).length;
 
   return (
-    <div className="min-h-screen bg-sketchbook-paper text-ink selection:bg-highlight font-sans antialiased relative pb-16 overflow-x-hidden">
+    <div className={`min-h-screen text-ink selection:bg-highlight font-sans antialiased relative overflow-x-hidden ${activePage === "home" ? "p-0 m-0 bg-[#f4f0ea]" : "bg-sketchbook-paper pb-16"}`}>
       
-      {/* Immersive Scanned Sketchbook Paper Overlay with faint wrinkles, smudges, and dust speckles */}
-      <div className="fixed inset-0 pointer-events-none z-0 select-none overflow-hidden opacity-90">
-        <svg className="absolute inset-0 w-full h-full opacity-65" xmlns="http://www.w3.org/2000/svg">
-          {/* Handdrawn soft gray charcoal shading smudges */}
-          <radialGradient id="smudge-1" cx="15%" cy="25%" r="35%">
-            <stop offset="0%" stopColor="#7c7365" stopOpacity="0.07" />
-            <stop offset="100%" stopColor="#ecebe6" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="smudge-2" cx="85%" cy="75%" r="45%">
-            <stop offset="0%" stopColor="#837c70" stopOpacity="0.06" />
-            <stop offset="100%" stopColor="#ecebe6" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="smudge-3" cx="50%" cy="10%" r="25%">
-            <stop offset="0%" stopColor="#1c160e" stopOpacity="0.04" />
-            <stop offset="100%" stopColor="#ecebe6" stopOpacity="0" />
-          </radialGradient>
+      {/* Immersive Scanned Sketchbook Paper Overlay with faint wrinkles, smudges, and dust speckles (Only active on subpages) */}
+      {activePage !== "home" && (
+        <div className="fixed inset-0 pointer-events-none z-0 select-none overflow-hidden opacity-90">
+          <svg className="absolute inset-0 w-full h-full opacity-65" xmlns="http://www.w3.org/2000/svg">
+            {/* Handdrawn soft gray charcoal shading smudges */}
+            <radialGradient id="smudge-1" cx="15%" cy="25%" r="35%">
+              <stop offset="0%" stopColor="#7c7365" stopOpacity="0.07" />
+              <stop offset="100%" stopColor="#ecebe6" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="smudge-2" cx="85%" cy="75%" r="45%">
+              <stop offset="0%" stopColor="#837c70" stopOpacity="0.06" />
+              <stop offset="100%" stopColor="#ecebe6" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="smudge-3" cx="50%" cy="10%" r="25%">
+              <stop offset="0%" stopColor="#1c160e" stopOpacity="0.04" />
+              <stop offset="100%" stopColor="#ecebe6" stopOpacity="0" />
+            </radialGradient>
 
-          <rect width="100%" height="100%" fill="url(#smudge-1)" />
-          <rect width="100%" height="100%" fill="url(#smudge-2)" />
-          <rect width="100%" height="100%" fill="url(#smudge-3)" />
+            <rect width="100%" height="100%" fill="url(#smudge-1)" />
+            <rect width="100%" height="100%" fill="url(#smudge-2)" />
+            <rect width="100%" height="100%" fill="url(#smudge-3)" />
 
-          {/* Faint paper wrinkles & creases removed for a clean, non-distracting flat paper background */}
-
-          {/* Genuine scanner dust, fibers, and microscopic speckles removed for a cleaner background per user request */}
-          
-          {/* Soft sketchbook paper vignette shadows in the outermost corners */}
-          <radialGradient id="vignette-effect" cx="50%" cy="50%" r="70%">
-            <stop offset="65%" stopColor="#000000" stopOpacity="0" />
-            <stop offset="100%" stopColor="#282218" stopOpacity="0.07" />
-          </radialGradient>
-          <rect width="100%" height="100%" fill="url(#vignette-effect)" />
-        </svg>
-      </div>
+            {/* Soft sketchbook paper vignette shadows in the outermost corners */}
+            <radialGradient id="vignette-effect" cx="50%" cy="50%" r="70%">
+              <stop offset="65%" stopColor="#000000" stopOpacity="0" />
+              <stop offset="100%" stopColor="#282218" stopOpacity="0.07" />
+            </radialGradient>
+            <rect width="100%" height="100%" fill="url(#vignette-effect)" />
+          </svg>
+        </div>
+      )}
       
       {/* Background accents removed for a cleaner flat paper look */}
       
@@ -520,7 +519,7 @@ export default function App() {
       {/* ========================================================
           PAGE CONTROLLER (Dynamic viewport based on hash)
          ======================================================== */}
-      <main className="max-w-7xl mx-auto px-4 pt-4">
+      <main className={activePage === "home" ? "w-full p-0 m-0" : "max-w-7xl mx-auto px-4 pt-4"}>
         <AnimatePresence mode="wait">
           <motion.div
             key={activePage}
@@ -561,6 +560,7 @@ export default function App() {
                 <div className="flex flex-wrap items-center justify-start gap-x-5 gap-y-2 select-none bg-white/20 p-2.5 rounded-lg border-2 border-dashed border-zinc-200 w-fit">
                   <span className="font-hand text-xs font-black text-zinc-600 tracking-wider mr-2">EXPERIENCE STACKS & LEADERSHIPS:</span>
                   <IHerbLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                  <RubrikSketchSvg className="h-8 w-16 hover:scale-105 active:scale-95 transition-transform duration-150" />
                   <GoogleLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
                   <SalesforceLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
                   <TwitterLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
@@ -1447,6 +1447,7 @@ export default function App() {
               <span className="font-hand text-sm font-extrabold text-zinc-500 uppercase tracking-widest">PROUD PORTFOLIO COMPANIES:</span>
               <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
                 <IHerbLogoSketchSvg className="h-9 w-24 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                <RubrikSketchSvg className="h-9 w-18 hover:scale-105 active:scale-95 transition-transform duration-150" />
                 <GoogleLogoSketchSvg className="h-9 w-24 hover:scale-105 active:scale-95 transition-transform duration-150" />
                 <SalesforceLogoSketchSvg className="h-9 w-24 hover:scale-105 active:scale-95 transition-transform duration-150" />
                 <TwitterLogoSketchSvg className="h-9 w-24 hover:scale-105 active:scale-95 transition-transform duration-150" />
@@ -2304,14 +2305,16 @@ export default function App() {
       {/* ========================================================
           VISUAL FOOTER
          ======================================================== */}
-      <footer className="text-center pt-10 mt-12 border-t-2 border-dashed border-zinc-305 max-w-6xl mx-auto px-4 select-none">
-        <p className="font-hand text-sm text-zinc-500">
-          {CONTACT_INFO.name} - GTM Systems Architect Pro.
-        </p>
-        <p className="font-mono text-[9px] text-zinc-400 mt-1 uppercase tracking-widest">
-          Copyright © 2026 Hyroxby Tech LLC
-        </p>
-      </footer>
+      {activePage !== "home" && (
+        <footer className="text-center pt-10 mt-12 border-t-2 border-dashed border-zinc-305 max-w-6xl mx-auto px-4 select-none">
+          <p className="font-hand text-sm text-zinc-500">
+            {CONTACT_INFO.name} - GTM Systems Architect Pro.
+          </p>
+          <p className="font-mono text-[9px] text-zinc-400 mt-1 uppercase tracking-widest">
+            Copyright © 2026 Hyroxby Tech LLC
+          </p>
+        </footer>
+      )}
 
       {/* 🎵 APPLE MUSIC POPUP WINDOW MODAL 🎵 */}
       <AnimatePresence>

@@ -25,8 +25,10 @@ import {
   Maximize2,
   Minimize2,
   Copy,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Presentation
 } from "lucide-react";
+import { GoogleSlidesIntegration } from "./GoogleSlidesIntegration";
 
 interface RevenueStreamlineCaseStudyProps {
   onCopyLink?: (text: string, label: string) => void;
@@ -39,7 +41,7 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
 }) => {
   const [currentSlide, setCurrentSlide] = useState<number>(1);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const [activeDetailTab, setActiveDetailTab] = useState<"deck" | "solutions" | "stack" | "rollout" | "qa">("deck");
+  const [activeDetailTab, setActiveDetailTab] = useState<"deck" | "solutions" | "stack" | "rollout" | "qa" | "slides">("deck");
   const [expandedQA, setExpandedQA] = useState<number | null>(null);
 
   const totalSlides = 14;
@@ -298,6 +300,18 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
           <HelpCircle className="h-4 w-4 text-purple-800" />
           <span>Executive Review Q&amp;A</span>
         </button>
+
+        <button
+          onClick={() => setActiveDetailTab("slides")}
+          className={`px-4 py-2 font-hand text-xs md:text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
+            activeDetailTab === "slides"
+              ? "bg-amber-300 text-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)]"
+              : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+          }`}
+        >
+          <Presentation className="h-4 w-4 text-amber-900" />
+          <span>Google Slides Integration</span>
+        </button>
       </div>
 
       {/* TAB 1: SLIDE DECK VIEWER */}
@@ -344,8 +358,17 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
               </button>
 
               <button
+                onClick={() => setActiveDetailTab("slides")}
+                className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-zinc-950 text-xs font-bold font-sans rounded-md flex items-center gap-1.5 transition-all cursor-pointer ml-1"
+                title="Google Slides Workspace"
+              >
+                <Presentation className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Google Slides</span>
+              </button>
+
+              <button
                 onClick={() => setIsFullscreen(!isFullscreen)}
-                className="p-1.5 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold rounded-md transition-all cursor-pointer ml-1"
+                className="p-1.5 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-md transition-all cursor-pointer border border-zinc-600"
                 title={isFullscreen ? "Exit Fullscreen" : "Expand Presentation"}
               >
                 {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
@@ -1266,6 +1289,13 @@ export const RevenueStreamlineCaseStudy: React.FC<RevenueStreamlineCaseStudyProp
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* TAB 6: GOOGLE SLIDES INTEGRATION */}
+      {activeDetailTab === "slides" && (
+        <div className="space-y-4">
+          <GoogleSlidesIntegration />
         </div>
       )}
     </div>
