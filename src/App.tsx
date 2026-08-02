@@ -556,15 +556,15 @@ export default function App() {
                   Global GTM CRM / Revenue Systems / Enterprise Applications Product Manager based in San Francisco Bay Area, CA.
                 </p>
                 
-                {/* Hand-drawn partner/portfolio company logos in order: iHerb, Google, Salesforce, Twitter, XAI */}
-                <div className="flex flex-wrap items-center justify-start gap-x-5 gap-y-2 select-none bg-white/20 p-2.5 rounded-lg border-2 border-dashed border-zinc-200 w-fit">
-                  <span className="font-hand text-xs font-black text-zinc-600 tracking-wider mr-2">EXPERIENCE STACKS & LEADERSHIPS:</span>
-                  <IHerbLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-                  <RubrikSketchSvg className="h-8 w-16 hover:scale-105 active:scale-95 transition-transform duration-150" />
-                  <GoogleLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-                  <SalesforceLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-                  <TwitterLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
-                  <XaiLogoSketchSvg className="h-8 w-22 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                {/* Hand-drawn partner/portfolio company logos in order: xAI, iHerb, Rubrik, Google, Salesforce, Twitter */}
+                <div className="flex flex-nowrap items-center justify-start gap-x-4 md:gap-x-5 select-none bg-white/20 p-2.5 rounded-lg border-2 border-dashed border-zinc-200 max-w-full overflow-x-auto">
+                  <span className="font-hand text-xs font-black text-zinc-600 tracking-wider mr-1 shrink-0 whitespace-nowrap">EXPERIENCE STACKS & LEADERSHIPS:</span>
+                  <XaiLogoSketchSvg className="h-8 w-22 shrink-0 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                  <IHerbLogoSketchSvg className="h-8 w-22 shrink-0 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                  <RubrikSketchSvg className="h-8 w-16 shrink-0 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                  <GoogleLogoSketchSvg className="h-8 w-22 shrink-0 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                  <SalesforceLogoSketchSvg className="h-8 w-22 shrink-0 hover:scale-105 active:scale-95 transition-transform duration-150" />
+                  <TwitterLogoSketchSvg className="h-8 w-22 shrink-0 hover:scale-105 active:scale-95 transition-transform duration-150" />
                 </div>
               </div>
               
