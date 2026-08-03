@@ -167,9 +167,10 @@
   pointer-events: none;
 }
 
-/* Smooth scrolling */
+/* Smooth scrolling and default 110% zoom */
 html {
   scroll-behavior: smooth;
+  zoom: 1.1;
 }
 
 /* Interactive hover scales */
