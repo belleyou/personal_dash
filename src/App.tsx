@@ -48,7 +48,9 @@ import {
   Flower,
   Settings,
   Lock,
-  Link
+  Link,
+  Bot,
+  RotateCcw
 } from "lucide-react";
 
 import baoSelfie from "./Selfie.png";
@@ -60,7 +62,10 @@ import padCover from "./PAD.jpeg";
 import amCover from "./AM.jpeg";
 import allstarCover from "./AllStar.jpeg";
 import docCover from "./Doc.jpeg";
+import { ChannelPartnerQTCAutomation } from "./components/ChannelPartnerQTCAutomation";
 import { RevenueStreamlineCaseStudy } from "./components/RevenueStreamlineCaseStudy";
+import { InactiveLeadsReengagement } from "./components/InactiveLeadsReengagement";
+import { ProjectTinderDeck } from "./components/ProjectTinderDeck";
 
 // Import types & static data
 import { 
@@ -284,7 +289,8 @@ export default function App() {
   const [hoveredNav, setHoveredNav] = useState<string>("home");
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // Career experience expansion
-  const [activeProjectTab, setActiveProjectTab] = useState<"revops_streamline" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("revops_streamline");
+  const [activeProjectTab, setActiveProjectTab] = useState<"channel_partner_qtc" | "revops_streamline" | "inactive_leads" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("channel_partner_qtc");
+  const [projectDisplayMode, setProjectDisplayMode] = useState<"tinder" | "detail" | "tabs">("tinder");
   const [certFilter, setCertFilter] = useState<"all" | "salesforce" | "other">("all");
   const [isMusicModalOpen, setIsMusicModalOpen] = useState(false);
   const [isSubmitProjectModalOpen, setIsSubmitProjectModalOpen] = useState(false);
@@ -330,12 +336,15 @@ export default function App() {
          if (queryStr) {
            const params = new URLSearchParams(queryStr);
            const tabId = params.get("tab");
+           const mode = params.get("mode");
            if (tabId) {
              setActiveProjectTab(tabId as any);
+             setProjectDisplayMode("detail");
+           } else if (mode === "tabs") {
+             setProjectDisplayMode("tabs");
+           } else {
+             setProjectDisplayMode("tinder");
            }
-         } else {
-           // Default tab if none specified
-           setActiveProjectTab("revops_streamline");
          }
        } else if (targetPage === "articles") {
          // If they requested a specific article, open it!
@@ -816,18 +825,116 @@ export default function App() {
         {activePage === "projects" && (
           <div className="space-y-10 mb-12">
             
-            <div className="border-b-3 border-ink pb-4">
-              <h2 className="font-hand text-3xl md:text-4xl font-extrabold text-ink flex items-center flex-wrap gap-2.5">
-                <span>Architectural Innovations & Case Studies</span>
-                <LightbulbSketchSvg className="h-9 w-9 shrink-0 hover:scale-110 active:scale-95 transition-transform duration-150 cursor-pointer" />
-              </h2>
-              <p className="font-sans text-sm text-zinc-650 mt-1">
-                A careful composition of high-performance system architectures, organic commercial blueprints, and optimized workflows.
-              </p>
+            <div className="border-b-3 border-ink pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h2 className="font-hand text-3xl md:text-4xl font-extrabold text-ink flex items-center flex-wrap gap-2.5">
+                  <span>Architectural Innovations & Case Studies</span>
+                  <LightbulbSketchSvg className="h-9 w-9 shrink-0 hover:scale-110 active:scale-95 transition-transform duration-150 cursor-pointer" />
+                </h2>
+                <p className="font-sans text-sm text-zinc-650 mt-1">
+                  A careful composition of high-performance system architectures, organic commercial blueprints, and optimized workflows.
+                </p>
+              </div>
+
+              {/* View Switcher: Project Card Deck vs Classic Tabs */}
+              <div className="flex items-center gap-1.5 p-1 bg-zinc-100 border-2 border-ink rounded-2xl shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] shrink-0 self-start md:self-auto">
+                <button
+                  onClick={() => setProjectDisplayMode("tinder")}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-hand text-xs md:text-sm font-black transition-all cursor-pointer select-none ${
+                    projectDisplayMode === "tinder"
+                      ? "bg-rose-500 text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] scale-105"
+                      : "text-zinc-600 hover:text-ink hover:bg-zinc-200"
+                  }`}
+                >
+                  <Flame className={`h-4 w-4 ${projectDisplayMode === "tinder" ? "fill-white" : "text-rose-500"}`} />
+                  <span>Project Card Deck 🎴</span>
+                </button>
+                <button
+                  onClick={() => setProjectDisplayMode("tabs")}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-hand text-xs md:text-sm font-black transition-all cursor-pointer select-none ${
+                    projectDisplayMode === "tabs" || projectDisplayMode === "detail"
+                      ? "bg-ink text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] scale-105"
+                      : "text-zinc-600 hover:text-ink hover:bg-zinc-200"
+                  }`}
+                >
+                  <FolderDot className="h-4 w-4" />
+                  <span>Tabs & Grid 📑</span>
+                </button>
+              </div>
             </div>
 
-            {/* Folder Tabs - Compact single row, horizontal scrollable without wrapping */}
-            <div className="flex flex-nowrap overflow-x-auto border-b-3 border-ink w-full gap-x-1.5 select-none pb-[3px] scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-track-transparent">
+            {projectDisplayMode === "tinder" ? (
+              <ProjectTinderDeck
+                onSelectProjectDetail={(tab) => {
+                  setActiveProjectTab(tab);
+                  setProjectDisplayMode("detail");
+                  window.scrollTo({ top: 400, behavior: "smooth" });
+                }}
+                onCopyLink={copyToClipboard}
+                copiedLabel={copiedText}
+              />
+            ) : (
+              <div className="space-y-6">
+                {/* Back to Project card deck helper banner when in detail mode */}
+                {projectDisplayMode === "detail" && (
+                  <div className="bg-amber-50 border-3 border-ink rounded-2xl p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] flex flex-wrap items-center justify-between gap-3 animate-fade-in">
+                    <div className="flex items-center gap-2.5">
+                      <span className="p-1.5 bg-rose-100 text-rose-600 rounded-full border-2 border-rose-300">
+                        <Flame className="h-4 w-4 fill-rose-500" />
+                      </span>
+                      <div>
+                        <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">
+                          Project Card Deck • Deep Dive View
+                        </span>
+                        <span className="font-hand font-bold text-sm sm:text-base text-ink">
+                          Inspecting Case Study / Architecture Details
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setProjectDisplayMode("tinder")}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-hand text-xs sm:text-sm font-bold border-2 border-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 cursor-pointer transition-all"
+                      >
+                        <RotateCcw className="h-3.5 w-3.5" />
+                        <span>← Back to Project Card Deck</span>
+                      </button>
+                      <button
+                        onClick={() => setProjectDisplayMode("tabs")}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-zinc-100 text-zinc-700 rounded-xl font-hand text-xs sm:text-sm font-bold border-2 border-zinc-300 cursor-pointer"
+                      >
+                        <span>Browse All Tabs</span>
+                        <ChevronRight className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Folder Tabs - Compact single row, horizontal scrollable without wrapping */}
+                <div className="flex flex-nowrap overflow-x-auto border-b-3 border-ink w-full gap-x-1.5 select-none pb-[3px] scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-track-transparent">
+              <a
+                href="#projects?tab=channel_partner_qtc"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
+                  activeProjectTab === "channel_partner_qtc"
+                    ? "bg-emerald-300 text-ink border-b-3 border-b-emerald-300 z-10 scale-105"
+                    : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
+                }`}
+              >
+                <Bot className="h-4 w-4 text-emerald-800 animate-pulse" />
+                Channel Partner QTC Automation 🤝 ⭐
+              </a>
+              <a
+                href="#projects?tab=inactive_leads"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
+                  activeProjectTab === "inactive_leads"
+                    ? "bg-emerald-200 text-ink border-b-3 border-b-emerald-200 z-10 scale-105"
+                    : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
+                }`}
+              >
+                <Bot className="h-4 w-4 text-emerald-800 animate-pulse" />
+                Inactive Leads Re-Engagement 🤖 ⭐
+              </a>
               <a
                 href="#projects?tab=revops_streamline"
                 className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
@@ -941,7 +1048,11 @@ export default function App() {
             </div>
 
             {/* Project Cards Grid / Walkthrough */}
-            {activeProjectTab === "revops_streamline" ? (
+            {activeProjectTab === "channel_partner_qtc" ? (
+              <ChannelPartnerQTCAutomation onCopyLink={copyToClipboard} copiedLabel={copiedText} />
+            ) : activeProjectTab === "inactive_leads" ? (
+              <InactiveLeadsReengagement onCopyLink={copyToClipboard} copiedLabel={copiedText} />
+            ) : activeProjectTab === "revops_streamline" ? (
               <RevenueStreamlineCaseStudy onCopyLink={copyToClipboard} copiedLabel={copiedText} />
             ) : activeProjectTab === "innovations_video" ? (
               <div className="bg-white border-3 border-ink rounded-xl p-6 md:p-8 shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] space-y-6 animate-fade-in">
@@ -1401,6 +1512,8 @@ export default function App() {
                     </div>
                   );
                 })}
+              </div>
+            )}
               </div>
             )}
 

@@ -367,6 +367,24 @@ export const TRADITIONAL_PROJECTS: Project[] = [
 
 export const AI_GTM_PROJECTS: Project[] = [
   {
+    title: "Channel Partner QTC Automation (Partner Portal & AI Agent Swarm)",
+    aiUse: "Multi-Agent Swarm (Identify & Dedupe, Discount Validation, Parallel Approval, OM Syncing)",
+    problem: "Severe indirect channel partner friction: Manual portal workflows, slow approvals (5 business days), slow QTC cycle time (8 days), 24% duplicate lead registrations, and revenue leakage ($145 ops cost per deal reg).",
+    solution: "As Product Manager, defined and led E2E Custom Partner Portal & Intelligent AI Agent Swarm with multi-channel self-service hooks (Slack/Teams), DRICAD governance, automated deduction engine, 24/7 self-service CPQ quote agent, and pre-filtering layer.",
+    impact: "Deal registration approval time cut from 5 days to < 10 mins (99.6% speedup), QTC cycle time reduced from 8 days to < 24 hrs, partner adoption (MAP) soared from 28% to 82%, duplicate registration dropped from 24% to < 2%, and channel ops cost slashed by 72%.",
+    tools: ["Salesforce Experience Cloud", "Slack / Teams Bots", "AI Agent Swarm", "CPQ / Billing", "ERP / Order Management", "DRICAD Governance"],
+    demoUrl: "#projects?tab=channel_partner_qtc",
+  },
+  {
+    title: "AI Dead Lead Reactivation System (Autonomous Re-Engagement)",
+    aiUse: "n8n Autonomous Orchestration + Clay Waterfall + ZeroBounce + OpenAI GPT-4o",
+    problem: "20,000+ high-potential dormant leads in Salesforce were untouched for >180 days, wasting valuable pipeline and costing excessive manual SDR hours for minimal return.",
+    solution: "Architected an end-to-end STAR reactivation pipeline: SOQL lead scoring in Salesforce, Clay/ZeroBounce waterfall verification, and OpenAI GPT-4o 3-sentence dynamic personalization dispatched via automated outreach.",
+    impact: "Generated $3.2M pipeline, reactivated 4,500+ dormant contacts, closed $850k ARR, and saved 100% manual SDR outreach hours (14.2x ROI).",
+    tools: ["Salesforce CRM", "n8n AI Engine", "OpenAI GPT-4o", "Clay Waterfall", "ZeroBounce API", "Smartlead / Gmail"],
+    demoUrl: "#projects?tab=inactive_leads",
+  },
+  {
     title: "Revenue Systems Streamline Initiative (HubSpot → Salesforce Migration)",
     aiUse: "n8n AI Orchestration & Claude 3.5 Sonnet Hierarchy Resolution",
     problem: "11 fragmented tools (Definitive, Clay, LISN, Modigie, Apollo, Nooks, Commonroom, Outreach, Dripify, Salesforce, HubSpot) caused data clashing and 60+ min upload delays (>1 hr per 50k SFDC / 10k HubSpot rows) scaling from 20 to 50 AEs.",
