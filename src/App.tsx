@@ -2334,6 +2334,263 @@ export default function App() {
 
             </div>
 
+            {/* Quick Launch / Local Dashboards & Application Endpoints */}
+            <div className="bg-white border-3 border-ink rounded-2xl p-6 sm:p-8 shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-lime-100 rounded-full blur-3xl opacity-50 -mr-6 -mt-6 pointer-events-none"></div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-dashed border-zinc-200 pb-5 mb-6">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-lime-100 border border-lime-300 text-lime-800 text-[10px] font-mono font-extrabold uppercase mb-1.5">
+                    <span className="h-2 w-2 rounded-full bg-lime-500 animate-pulse"></span>
+                    Local Environment & Workspace Launchpad
+                  </div>
+                  <h3 className="font-hand text-2xl sm:text-3xl font-black text-ink flex items-center gap-2">
+                    <Monitor className="h-6 w-6 text-indigo-600 shrink-0" />
+                    Internal Dashboards & Local Service Endpoints
+                  </h3>
+                </div>
+                <p className="font-sans text-xs text-zinc-500 max-w-sm">
+                  Quick-launch access links and file paths to local analytical dashboards, GTM admin consoles, and local microservices.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                {/* 1. Data Analyst Dashboard */}
+                <div className="bg-zinc-50 border-2 border-ink rounded-xl p-4 sm:p-5 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] transition-all flex flex-col justify-between group">
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-blue-100 border-2 border-ink flex items-center justify-center shrink-0">
+                          <Database className="h-4 w-4 text-blue-700" />
+                        </div>
+                        <div>
+                          <h4 className="font-sans font-extrabold text-sm sm:text-base text-zinc-900 leading-tight">
+                            Data Analyst Dashboard
+                          </h4>
+                          <span className="font-mono text-[10px] text-blue-700 font-bold uppercase">Codex Analytics Suite</span>
+                        </div>
+                      </div>
+                      <span className="px-2 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-700 font-mono text-[10px] font-bold shrink-0">
+                        HTML File
+                      </span>
+                    </div>
+
+                    <p className="font-sans text-xs text-zinc-600 mb-3 leading-relaxed">
+                      Custom SQL analytics workbench, metric aggregations, and exploratory data analysis dashboard.
+                    </p>
+
+                    <div className="bg-white border border-zinc-300 rounded-lg p-2 font-mono text-[11px] text-zinc-600 truncate mb-3 select-all">
+                      file:///Users/baoyou/Documents/Codex/Data%20Analyst%20Dash.html
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2 border-t border-zinc-200/80">
+                    <a
+                      href="file:///Users/baoyou/Documents/Codex/Data%20Analyst%20Dash.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-2 px-3 bg-white hover:bg-zinc-100 text-zinc-900 border-2 border-ink rounded-lg font-hand text-xs font-bold shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <span>Open Dashboard</span>
+                      <ArrowUpRight className="h-3.5 w-3.5 text-zinc-700" />
+                    </a>
+                    <button
+                      onClick={() => copyToClipboard("file:///Users/baoyou/Documents/Codex/Data%20Analyst%20Dash.html", "data_analyst_dash")}
+                      className="py-2 px-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg font-hand text-xs font-bold border-2 border-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 flex items-center justify-center gap-1.5 transition-all cursor-pointer select-none"
+                    >
+                      {copiedText === "data_analyst_dash" ? (
+                        <>
+                          <Check className="h-3.5 w-3.5 text-emerald-400" />
+                          <span>Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-3.5 w-3.5 text-zinc-300" />
+                          <span>Copy URL</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. GTM Admin Dashboard */}
+                <div className="bg-zinc-50 border-2 border-ink rounded-xl p-4 sm:p-5 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] transition-all flex flex-col justify-between group">
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-purple-100 border-2 border-ink flex items-center justify-center shrink-0">
+                          <Settings className="h-4 w-4 text-purple-700" />
+                        </div>
+                        <div>
+                          <h4 className="font-sans font-extrabold text-sm sm:text-base text-zinc-900 leading-tight">
+                            GTM Admin Dashboard
+                          </h4>
+                          <span className="font-mono text-[10px] text-purple-700 font-bold uppercase">RevOps & System Governance</span>
+                        </div>
+                      </div>
+                      <span className="px-2 py-0.5 rounded bg-purple-50 border border-purple-200 text-purple-700 font-mono text-[10px] font-bold shrink-0">
+                        HTML File
+                      </span>
+                    </div>
+
+                    <p className="font-sans text-xs text-zinc-600 mb-3 leading-relaxed">
+                      Salesforce enterprise architecture, RevOps governance controls, and GTM integration administration.
+                    </p>
+
+                    <div className="bg-white border border-zinc-300 rounded-lg p-2 font-mono text-[11px] text-zinc-600 truncate mb-3 select-all">
+                      file:///Users/baoyou/Documents/Codex/GTM%20Admin%20Dash.html
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2 border-t border-zinc-200/80">
+                    <a
+                      href="file:///Users/baoyou/Documents/Codex/GTM%20Admin%20Dash.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-2 px-3 bg-white hover:bg-zinc-100 text-zinc-900 border-2 border-ink rounded-lg font-hand text-xs font-bold shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <span>Open Dashboard</span>
+                      <ArrowUpRight className="h-3.5 w-3.5 text-zinc-700" />
+                    </a>
+                    <button
+                      onClick={() => copyToClipboard("file:///Users/baoyou/Documents/Codex/GTM%20Admin%20Dash.html", "gtm_admin_dash")}
+                      className="py-2 px-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg font-hand text-xs font-bold border-2 border-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 flex items-center justify-center gap-1.5 transition-all cursor-pointer select-none"
+                    >
+                      {copiedText === "gtm_admin_dash" ? (
+                        <>
+                          <Check className="h-3.5 w-3.5 text-emerald-400" />
+                          <span>Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-3.5 w-3.5 text-zinc-300" />
+                          <span>Copy URL</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3. Sales Enablement Ramp Automation Dashboard */}
+                <div className="bg-zinc-50 border-2 border-ink rounded-xl p-4 sm:p-5 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] transition-all flex flex-col justify-between group">
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-100 border-2 border-ink flex items-center justify-center shrink-0">
+                          <Zap className="h-4 w-4 text-emerald-700" />
+                        </div>
+                        <div>
+                          <h4 className="font-sans font-extrabold text-sm sm:text-base text-zinc-900 leading-tight">
+                            Sales Enablement Ramp Automation Dashboard
+                          </h4>
+                          <span className="font-mono text-[10px] text-emerald-700 font-bold uppercase">Port 5501 • Live Server</span>
+                        </div>
+                      </div>
+                      <span className="px-2 py-0.5 rounded bg-emerald-50 border border-emerald-300 text-emerald-700 font-mono text-[10px] font-bold flex items-center gap-1 shrink-0">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                        Port 5501
+                      </span>
+                    </div>
+
+                    <p className="font-sans text-xs text-zinc-600 mb-3 leading-relaxed">
+                      Real-time SDR/AE onboarding velocity, ramp milestone tracking, and automated curriculum telemetry.
+                    </p>
+
+                    <div className="bg-white border border-zinc-300 rounded-lg p-2 font-mono text-[11px] text-zinc-600 truncate mb-3 select-all">
+                      http://127.0.0.1:5501/Sales%20Enablement%20Ramp%20Automation%20Dashboard.html
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2 border-t border-zinc-200/80">
+                    <a
+                      href="http://127.0.0.1:5501/Sales%20Enablement%20Ramp%20Automation%20Dashboard.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-2 px-3 bg-emerald-500 hover:bg-emerald-600 text-white border-2 border-ink rounded-lg font-hand text-xs font-bold shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <span>Launch Live Server</span>
+                      <ArrowUpRight className="h-3.5 w-3.5 text-white" />
+                    </a>
+                    <button
+                      onClick={() => copyToClipboard("http://127.0.0.1:5501/Sales%20Enablement%20Ramp%20Automation%20Dashboard.html", "sales_enablement_dash")}
+                      className="py-2 px-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg font-hand text-xs font-bold border-2 border-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 flex items-center justify-center gap-1.5 transition-all cursor-pointer select-none"
+                    >
+                      {copiedText === "sales_enablement_dash" ? (
+                        <>
+                          <Check className="h-3.5 w-3.5 text-emerald-400" />
+                          <span>Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-3.5 w-3.5 text-zinc-300" />
+                          <span>Copy URL</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* 4. Local Host Port 8000 */}
+                <div className="bg-zinc-50 border-2 border-ink rounded-xl p-4 sm:p-5 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_rgba(24,24,27,1)] transition-all flex flex-col justify-between group">
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-amber-100 border-2 border-ink flex items-center justify-center shrink-0">
+                          <Globe className="h-4 w-4 text-amber-700" />
+                        </div>
+                        <div>
+                          <h4 className="font-sans font-extrabold text-sm sm:text-base text-zinc-900 leading-tight">
+                            Local Environment Gateway
+                          </h4>
+                          <span className="font-mono text-[10px] text-amber-700 font-bold uppercase">Port 8000 • Web Server</span>
+                        </div>
+                      </div>
+                      <span className="px-2 py-0.5 rounded bg-amber-50 border border-amber-300 text-amber-700 font-mono text-[10px] font-bold flex items-center gap-1 shrink-0">
+                        <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-ping"></span>
+                        Port 8000
+                      </span>
+                    </div>
+
+                    <p className="font-sans text-xs text-zinc-600 mb-3 leading-relaxed">
+                      Local Python/Node HTTP server root, microservices API endpoint, and local development gateway.
+                    </p>
+
+                    <div className="bg-white border border-zinc-300 rounded-lg p-2 font-mono text-[11px] text-zinc-600 truncate mb-3 select-all">
+                      http://localhost:8000/
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2 border-t border-zinc-200/80">
+                    <a
+                      href="http://localhost:8000/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-2 px-3 bg-amber-400 hover:bg-amber-500 text-zinc-950 border-2 border-ink rounded-lg font-hand text-xs font-bold shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <span>Open Localhost:8000</span>
+                      <ArrowUpRight className="h-3.5 w-3.5 text-zinc-900" />
+                    </a>
+                    <button
+                      onClick={() => copyToClipboard("http://localhost:8000/", "localhost_8000")}
+                      className="py-2 px-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg font-hand text-xs font-bold border-2 border-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 flex items-center justify-center gap-1.5 transition-all cursor-pointer select-none"
+                    >
+                      {copiedText === "localhost_8000" ? (
+                        <>
+                          <Check className="h-3.5 w-3.5 text-emerald-400" />
+                          <span>Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-3.5 w-3.5 text-zinc-300" />
+                          <span>Copy URL</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         )}
 
