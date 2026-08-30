@@ -65,6 +65,7 @@ import docCover from "./Doc.jpeg";
 import { ChannelPartnerQTCAutomation } from "./components/ChannelPartnerQTCAutomation";
 import { RevenueStreamlineCaseStudy } from "./components/RevenueStreamlineCaseStudy";
 import { InactiveLeadsReengagement } from "./components/InactiveLeadsReengagement";
+import { GongRevenueIntelligenceAgent } from "./components/GongRevenueIntelligenceAgent";
 import { ProjectTinderDeck } from "./components/ProjectTinderDeck";
 import { DataAnalystDashboard } from "./components/DataAnalystDashboard";
 
@@ -290,7 +291,7 @@ export default function App() {
   const [hoveredNav, setHoveredNav] = useState<string>("home");
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // Career experience expansion
-  const [activeProjectTab, setActiveProjectTab] = useState<"channel_partner_qtc" | "revops_streamline" | "inactive_leads" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("channel_partner_qtc");
+  const [activeProjectTab, setActiveProjectTab] = useState<"gong_revenue_agent" | "channel_partner_qtc" | "revops_streamline" | "inactive_leads" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("gong_revenue_agent");
   const [projectDisplayMode, setProjectDisplayMode] = useState<"tinder" | "detail" | "tabs">("tinder");
   const [certFilter, setCertFilter] = useState<"all" | "salesforce" | "other">("all");
   const [isMusicModalOpen, setIsMusicModalOpen] = useState(false);
@@ -915,6 +916,17 @@ export default function App() {
                 {/* Folder Tabs - Compact single row, horizontal scrollable without wrapping */}
                 <div className="flex flex-nowrap overflow-x-auto border-b-3 border-ink w-full gap-x-1.5 select-none pb-[3px] scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-track-transparent">
               <a
+                href="#projects?tab=gong_revenue_agent"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
+                  activeProjectTab === "gong_revenue_agent"
+                    ? "bg-violet-300 text-ink border-b-3 border-b-violet-300 z-10 scale-105"
+                    : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
+                }`}
+              >
+                <Bot className="h-4 w-4 text-violet-900 animate-pulse" />
+                Gong Revenue Agent 🧠 ⭐
+              </a>
+              <a
                 href="#projects?tab=channel_partner_qtc"
                 className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
                   activeProjectTab === "channel_partner_qtc"
@@ -1049,7 +1061,9 @@ export default function App() {
             </div>
 
             {/* Project Cards Grid / Walkthrough */}
-            {activeProjectTab === "channel_partner_qtc" ? (
+            {activeProjectTab === "gong_revenue_agent" ? (
+              <GongRevenueIntelligenceAgent onCopyLink={copyToClipboard} copiedLabel={copiedText} />
+            ) : activeProjectTab === "channel_partner_qtc" ? (
               <ChannelPartnerQTCAutomation onCopyLink={copyToClipboard} copiedLabel={copiedText} />
             ) : activeProjectTab === "inactive_leads" ? (
               <InactiveLeadsReengagement onCopyLink={copyToClipboard} copiedLabel={copiedText} />

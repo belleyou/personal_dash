@@ -367,6 +367,15 @@ export const TRADITIONAL_PROJECTS: Project[] = [
 
 export const AI_GTM_PROJECTS: Project[] = [
   {
+    title: "Gong Revenue Intelligence Agent (Pre-Call Prep, MEDDIC Sync & Forecast Checks)",
+    aiUse: "Gong Transcript Extraction + Claude Structured Synthesis + Deterministic n8n Confidence Scorer",
+    problem: "Three symptoms, one root cause: AEs entered calls blind to CRM account state; post-call MEDDIC & Task updates lagged by days (38% MEDDIC completion, 54% next step freshness); forecast reviews ran on stale CRM fields missing buyer verbal signals recorded in Gong.",
+    solution: "Architected a unified 3-stream agent on a single data spine: (1) Stream A Pre-Call Brief delivered in Slack from SFDC + Gong history, (2) Stream B Post-Call MEDDIC & Task delta-sync with deterministic n8n confidence gate and zero-overwrite rules, (3) Stream C Scheduled forecast-integrity check flagging hard/soft mismatches, and a durable Notion Deal Intelligence audit log.",
+    impact: "Boosted MEDDIC field completion from 38% to 86%, Next Step freshness from 54% to 91%, reduced AE post-call admin by 17 min/call, cut manager deal-review prep by 40%, and eliminated unreviewed AI overwrites.",
+    tools: ["Gong API", "Salesforce Core", "Claude 3.5 Sonnet", "n8n Orchestrator", "Slack Interactive Cards", "Notion Database"],
+    demoUrl: "#projects?tab=gong_revenue_agent",
+  },
+  {
     title: "Channel Partner QTC Automation (Partner Portal & AI Agent Swarm)",
     aiUse: "Multi-Agent Swarm (Identify & Dedupe, Discount Validation, Parallel Approval, OM Syncing)",
     problem: "Severe indirect channel partner friction: Manual portal workflows, slow approvals (5 business days), slow QTC cycle time (8 days), 24% duplicate lead registrations, and revenue leakage ($145 ops cost per deal reg).",

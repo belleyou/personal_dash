@@ -53,7 +53,7 @@ export interface TinderCardItem {
   impact: string;
   tools: string[];
   aiUse?: string;
-  targetTab: "channel_partner_qtc" | "inactive_leads" | "revops_streamline" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales";
+  targetTab: "gong_revenue_agent" | "channel_partner_qtc" | "inactive_leads" | "revops_streamline" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales";
   isSpecialCaseStudy: boolean;
   demoUrl?: string;
   stats?: { label: string; value: string }[];
@@ -62,6 +62,28 @@ export interface TinderCardItem {
 
 // Master list of all cards for the Project Card Deck
 export const MASTER_DECK: TinderCardItem[] = [
+  {
+    id: "gong_revenue_agent",
+    title: "Gong Revenue Intelligence Agent",
+    category: "Star Case Study",
+    categoryColor: "text-violet-900",
+    categoryBg: "bg-violet-100 border-violet-300",
+    icon: Bot,
+    problem: "Three symptoms, one root cause: AEs enter calls blind to CRM state; post-call MEDDIC & Task logging is inconsistent (38% completion, 54% freshness); forecast reviews run on stale CRM fields missing buyer verbal signals recorded in Gong.",
+    solution: "Consolidated 3-stream agent on one spine: Stream A Pre-Call Slack briefs, Stream B Post-Call MEDDIC & Task delta-sync with deterministic n8n confidence gate and zero-overwrite rules, Stream C Scheduled forecast checks, and a durable Notion audit log.",
+    impact: "MEDDIC field completion jumped 38% → 86%, Next Step freshness 54% → 91%, AE post-call admin reduced by 17 min/call, manager deal-review prep cut by 40%, and zero unreviewed AI overwrites.",
+    tools: ["Gong API", "Salesforce Core", "Claude 3.5 Sonnet", "n8n Orchestrator", "Slack Interactive Cards", "Notion Database"],
+    aiUse: "Gong Webhooks + Claude Synthesis + Deterministic n8n Scorer",
+    targetTab: "gong_revenue_agent",
+    isSpecialCaseStudy: true,
+    highlightBadge: "🔥 STAR Architectural Case Study",
+    stats: [
+      { label: "MEDDIC Fill", value: "86% (from 38%)" },
+      { label: "Next Step Fresh", value: "91% (from 54%)" },
+      { label: "AE Admin Time", value: "-17 min/call" },
+      { label: "Review Prep", value: "-40% Time" }
+    ]
+  },
   {
     id: "channel_partner_qtc",
     title: "Channel Partner QTC Automation",
