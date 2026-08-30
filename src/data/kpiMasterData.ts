@@ -347,10 +347,10 @@ export const KPI_MASTER_DATA: KPIRecord[] = [
     function: "Lead & Contact Management",
     object: "Lead + Contact",
     dataSources: "Salesforce + Marketo / HubSpot",
-    dimensions: "Object Type, Source",
+    dimensions: "Email / Phone Match, Name, Country, Zip Code, Job Title, Object Type, Source",
     type: "Lagging",
     bestVisualization: "KPI counter + benchmark bar",
-    analysisPurpose: "Monitors duplicate rate across object type, source."
+    analysisPurpose: "Detects and calculates duplicate lead and contact rate across sources, identifying records sharing (identical Email OR Phone) along with matching First Name, Last Name, Country, Zip Code, and Job Title."
   },
   {
     id: "KPI-031",
@@ -1762,106 +1762,221 @@ export function generateLanguageScripts(kpi: KPIRecord): Record<string, string> 
   // For SOQL, if data source is purely external finance DW and not Salesforce object, SOQL returns Null
   const isPureExternalDW = kpi.dataSources.includes("Internal DW") && !kpi.dataSources.includes("Salesforce");
 
-  // SOQL Script
+  // SOQL Script (Supports Salesforce Summer '26 Pilot: FORMULA() in WHERE clause)
   let soqlScript = "Null";
   if (!isPureExternalDW && kpi.dataSources.includes("Salesforce")) {
-    if (metricName === "Opportunity Win Rate Last Quarter") {
-      soqlScript = `SELECT Owner.Name, Region__c, Product__c,
-       COUNT(Id) totalClosedOpportunities,
-       SUM(CASE WHEN IsWon = TRUE THEN 1 ELSE 0 END) totalWonOpportunities,
-       (SUM(CASE WHEN IsWon = TRUE THEN 1.0 ELSE 0.0 END) / COUNT(Id)) * 100.0 winRatePercent
+    const lowerMetric = metricName.toLowerCase();
+    const lowerPurpose = kpi.analysisPurpose.toLowerCase();
+
+    if (metricName === "Duplicate rate" || kpi.id === "KPI-030") {
+      soqlScript = `// SOQL (Summer '26 Pilot): Detect Duplicate Lead Groups with Demographic Parity
+// Rule: (Same Email OR Same Phone) AND Same FirstName, LastName, Country, PostalCode, Title
+SELECT FirstName, LastName, Country, PostalCode, Title, Email,
+       COUNT(Id) duplicateCount,
+       MIN(CreatedDate) earliestCreated,
+       MAX(CreatedDate) latestCreated
+FROM Lead
+WHERE IsConverted = FALSE
+  AND Email != NULL
+  AND PostalCode != NULL
+  AND Title != NULL
+GROUP BY FirstName, LastName, Country, PostalCode, Title, Email
+HAVING COUNT(Id) > 1
+ORDER BY COUNT(Id) DESC`;
+    } else if (metricName === "Opportunity Win Rate Last Quarter") {
+      soqlScript = `// SOQL (Summer '26 Pilot): Filter closed-won deals with cycle length calculation via FORMULA()
+SELECT Owner.Name, Region__c, IsWon,
+       COUNT(Id) totalOpportunities,
+       SUM(Amount) totalAmount,
+       AVG(Amount) avgDealSize
 FROM Opportunity
 WHERE IsClosed = TRUE 
   AND CloseDate = LAST_QUARTER
-GROUP BY Owner.Name, Region__c, Product__c
-ORDER BY (SUM(CASE WHEN IsWon = TRUE THEN 1.0 ELSE 0.0 END) / COUNT(Id)) DESC`;
+  AND FORMULA('CloseDate - CreatedDate') >= 0
+GROUP BY Owner.Name, Region__c, IsWon
+ORDER BY COUNT(Id) DESC`;
     } else if (metricName === "Opportunity Loss Rate Last Quarter") {
-      soqlScript = `SELECT Loss_Reason__c, Owner.Name, Region__c,
-       COUNT(Id) totalClosedOpportunities,
-       SUM(CASE WHEN IsWon = FALSE THEN 1 ELSE 0 END) totalLostOpportunities,
-       (SUM(CASE WHEN IsWon = FALSE THEN 1.0 ELSE 0.0 END) / COUNT(Id)) * 100.0 lossRatePercent
+      soqlScript = `// SOQL (Summer '26 Pilot): Filter closed-lost opportunities evaluating deal lifespan via FORMULA()
+SELECT Loss_Reason__c, Region__c,
+       COUNT(Id) totalLostOpportunities,
+       SUM(Amount) lostAmount
 FROM Opportunity
 WHERE IsClosed = TRUE 
+  AND IsWon = FALSE
   AND CloseDate = LAST_QUARTER
-GROUP BY Loss_Reason__c, Owner.Name, Region__c
+  AND FORMULA('CloseDate - CreatedDate') >= 0
+GROUP BY Loss_Reason__c, Region__c
 ORDER BY COUNT(Id) DESC`;
     } else if (metricName === "Lead Conversion Rate Last Quarter") {
-      soqlScript = `SELECT LeadSource, Segment__c, Region__c,
-       COUNT(Id) totalLeadsCaptured,
-       SUM(CASE WHEN IsConverted = TRUE THEN 1 ELSE 0 END) totalConvertedLeads,
-       (SUM(CASE WHEN IsConverted = TRUE THEN 1.0 ELSE 0.0 END) / COUNT(Id)) * 100.0 conversionRatePercent
+      soqlScript = `// SOQL (Summer '26 Pilot): Measure converted leads using FORMULA() for conversion duration in WHERE clause
+SELECT LeadSource, Segment__c, IsConverted,
+       COUNT(Id) totalLeads
 FROM Lead
 WHERE CreatedDate = LAST_QUARTER
-GROUP BY LeadSource, Segment__c, Region__c
-ORDER BY (SUM(CASE WHEN IsConverted = TRUE THEN 1.0 ELSE 0.0 END) / COUNT(Id)) DESC`;
+  AND (IsConverted = FALSE OR FORMULA('ConvertedDate - CreatedDate') >= 0)
+GROUP BY LeadSource, Segment__c, IsConverted
+ORDER BY COUNT(Id) DESC`;
     } else if (metricName === "Lead Qualified Rate Last Quarter") {
-      soqlScript = `SELECT LeadSource, Segment__c, Rating,
-       COUNT(Id) totalLeadsCaptured,
-       SUM(CASE WHEN Status IN ('Qualified', 'Sales Qualified', 'MQL') OR IsConverted = TRUE THEN 1 ELSE 0 END) qualifiedLeads,
-       (SUM(CASE WHEN Status IN ('Qualified', 'Sales Qualified', 'MQL') OR IsConverted = TRUE THEN 1.0 ELSE 0.0 END) / COUNT(Id)) * 100.0 qualifiedRatePercent
+      soqlScript = `SELECT LeadSource, Segment__c, Status,
+       COUNT(Id) totalLeads
 FROM Lead
 WHERE CreatedDate = LAST_QUARTER
-GROUP BY LeadSource, Segment__c, Rating
-ORDER BY qualifiedRatePercent DESC`;
+  AND Status IN ('Qualified', 'Sales Qualified', 'MQL')
+GROUP BY LeadSource, Segment__c, Status
+ORDER BY COUNT(Id) DESC`;
     } else if (metricName === "Lead Disqualified Rate Last Quarter") {
       soqlScript = `SELECT Disqualification_Reason__c, LeadSource, Region__c,
-       COUNT(Id) totalLeadsCaptured,
-       SUM(CASE WHEN Status = 'Disqualified' THEN 1 ELSE 0 END) disqualifiedLeads,
-       (SUM(CASE WHEN Status = 'Disqualified' THEN 1.0 ELSE 0.0 END) / COUNT(Id)) * 100.0 disqualifiedRatePercent
+       COUNT(Id) totalDisqualifiedLeads
 FROM Lead
 WHERE CreatedDate = LAST_QUARTER
+  AND Status = 'Disqualified'
 GROUP BY Disqualification_Reason__c, LeadSource, Region__c
-ORDER BY disqualifiedLeads DESC`;
-    } else if (obj.includes("Opportunity") && metricName.toLowerCase().includes("stage")) {
-      soqlScript = `SELECT StageName, Region__c, Owner.Name, Territory__c, LeadSource,
+ORDER BY COUNT(Id) DESC`;
+    } else if (lowerMetric.includes("cycle") || lowerMetric.includes("velocity") || lowerMetric.includes("duration") || lowerPurpose.includes("cycle time") || lowerPurpose.includes("days to close")) {
+      // Sales cycle and deal duration calculation via Summer '26 FORMULA()
+      soqlScript = `// SOQL (Summer '26 Pilot): Filter deals meeting cycle velocity thresholds using FORMULA() in WHERE clause
+SELECT StageName, Region__c, Owner.Name, LeadSource,
+       COUNT(Id) oppCount,
+       AVG(Amount) avgAmount,
+       SUM(Amount) totalPipeline
+FROM Opportunity
+WHERE IsClosed = TRUE
+  AND FORMULA('CloseDate - CreatedDate') <= 90
+GROUP BY StageName, Region__c, Owner.Name, LeadSource
+ORDER BY SUM(Amount) DESC`;
+    } else if (lowerMetric.includes("slippage") || lowerMetric.includes("push") || lowerPurpose.includes("push") || lowerPurpose.includes("slippage")) {
+      // Deal push / slippage via Summer '26 FORMULA()
+      soqlScript = `// SOQL (Summer '26 Pilot): Filter slipped opportunities where CloseDate moved past original target using FORMULA()
+SELECT StageName, Owner.Name, Region__c, ForecastCategoryName,
+       COUNT(Id) slippedDealsCount,
+       SUM(Amount) slippedValue
+FROM Opportunity
+WHERE IsClosed = FALSE
+  AND FORMULA('CloseDate - Original_Close_Date__c') > 0
+GROUP BY StageName, Owner.Name, Region__c, ForecastCategoryName
+ORDER BY SUM(Amount) DESC`;
+    } else if (lowerMetric.includes("discount") || lowerMetric.includes("margin") || lowerPurpose.includes("discount") || lowerPurpose.includes("price realization")) {
+      // Price realization / discounting via Summer '26 FORMULA()
+      soqlScript = `// SOQL (Summer '26 Pilot): Identify discounted line items using FORMULA() difference in WHERE clause
+SELECT Opportunity.Name, Product2.Name, UnitPrice, ListPrice, Quantity,
+       TotalPrice, Opportunity.Owner.Name
+FROM OpportunityLineItem
+WHERE FORMULA('ListPrice - UnitPrice') > 0
+ORDER BY TotalPrice DESC`;
+    } else if (lowerMetric.includes("sla") || lowerMetric.includes("speed to lead") || lowerMetric.includes("response time") || lowerPurpose.includes("response time") || lowerPurpose.includes("first touch")) {
+      // Lead response SLA via Summer '26 FORMULA()
+      soqlScript = `// SOQL (Summer '26 Pilot): Filter leads within response SLA window using FORMULA() in WHERE clause
+SELECT LeadSource, Status, Owner.Name, Country,
+       COUNT(Id) respondedLeadsCount
+FROM Lead
+WHERE CreatedDate = THIS_QUARTER
+  AND FORMULA('First_Touch_Date__c - CreatedDate') <= 1
+GROUP BY LeadSource, Status, Owner.Name, Country
+ORDER BY COUNT(Id) DESC`;
+    } else if (lowerMetric.includes("quota") || lowerMetric.includes("attainment") || lowerPurpose.includes("quota attainment")) {
+      // Quota attainment variance via Summer '26 FORMULA()
+      soqlScript = `// SOQL (Summer '26 Pilot): Filter opportunities contributing to quota surplus/deficit using FORMULA()
+SELECT Owner.Name, Region__c, IsWon,
+       COUNT(Id) wonDealsCount,
+       SUM(Amount) totalClosedWonRevenue,
+       AVG(Amount) averageDealSize
+FROM Opportunity
+WHERE IsClosed = TRUE
+  AND IsWon = TRUE
+  AND CloseDate = THIS_FISCAL_YEAR
+  AND FORMULA('CloseDate - CreatedDate') >= 0
+GROUP BY Owner.Name, Region__c, IsWon
+ORDER BY SUM(Amount) DESC`;
+    } else if (lowerMetric.includes("renewal") || lowerMetric.includes("expansion") || lowerMetric.includes("churn") || lowerMetric.includes("grr") || lowerMetric.includes("nrr")) {
+      // Contract and Subscription duration / expansion via Summer '26 FORMULA()
+      soqlScript = `// SOQL (Summer '26 Pilot): Filter contracts reaching renewal term using FORMULA() in WHERE clause
+SELECT Account.Name, Status, StartDate, EndDate, ContractTerm,
+       SpecialTerms, Owner.Name
+FROM Contract
+WHERE StatusCode = 'Activated'
+  AND FORMULA('EndDate - StartDate') >= 365
+ORDER BY EndDate ASC`;
+    } else if (obj.includes("Opportunity") && (lowerMetric.includes("stage") || lowerMetric.includes("pipeline") || lowerMetric.includes("forecast"))) {
+      soqlScript = `// SOQL (Summer '26 Pilot): Aggregate open pipeline with active lifespan filtering via FORMULA()
+SELECT StageName, Region__c, Owner.Name, Territory__c, LeadSource,
        SUM(Amount) totalPipelineValue, COUNT(Id) oppCount
 FROM Opportunity
 WHERE IsClosed = FALSE
+  AND FORMULA('CloseDate - CreatedDate') >= 0
 GROUP BY StageName, Region__c, Owner.Name, Territory__c, LeadSource
 ORDER BY SUM(Amount) DESC`;
-    } else if (obj.includes("Opportunity") && metricName.toLowerCase().includes("win rate")) {
-      soqlScript = `SELECT Owner.Name, Region__c, LeadSource,
+    } else if (obj.includes("Opportunity") && lowerMetric.includes("win rate")) {
+      soqlScript = `// SOQL (Summer '26 Pilot): Analyze closed opportunities with valid date range via FORMULA()
+SELECT Owner.Name, Region__c, IsWon,
        COUNT(Id) totalOpps,
-       SUM(CASE WHEN IsWon = TRUE THEN 1 ELSE 0 END) wonOpps,
-       AVG(Amount) avgACV
+       AVG(Amount) avgACV,
+       SUM(Amount) totalAmount
 FROM Opportunity
 WHERE IsClosed = TRUE
-GROUP BY Owner.Name, Region__c, LeadSource`;
-    } else if (obj.includes("Lead") && metricName.toLowerCase().includes("conversion")) {
-      soqlScript = `SELECT LeadSource, Status, IsConverted,
-       COUNT(Id) totalLeads,
-       SUM(CASE WHEN IsConverted = TRUE THEN 1 ELSE 0 END) convertedCount
+  AND FORMULA('CloseDate - CreatedDate') >= 0
+GROUP BY Owner.Name, Region__c, IsWon
+ORDER BY COUNT(Id) DESC`;
+    } else if (obj.includes("Lead") && lowerMetric.includes("conversion")) {
+      soqlScript = `// SOQL (Summer '26 Pilot): Evaluate lead conversion pipeline with duration checks via FORMULA()
+SELECT LeadSource, Status, IsConverted,
+       COUNT(Id) totalLeads
 FROM Lead
-GROUP BY LeadSource, Status, IsConverted`;
+WHERE CreatedDate = THIS_YEAR
+  AND (IsConverted = FALSE OR FORMULA('ConvertedDate - CreatedDate') >= 0)
+GROUP BY LeadSource, Status, IsConverted
+ORDER BY COUNT(Id) DESC`;
     } else if (obj.includes("Task") || obj.includes("Activity")) {
-      soqlScript = `SELECT Owner.Name, TaskSubtype, Status, Priority, ActivityDate,
+      soqlScript = `// SOQL (Summer '26 Pilot): Query seller activities within active cadence window
+SELECT Owner.Name, TaskSubtype, Status, Priority, ActivityDate,
        COUNT(Id) totalActivities
 FROM Task
 WHERE ActivityDate = THIS_QUARTER
 GROUP BY Owner.Name, TaskSubtype, Status, Priority, ActivityDate`;
     } else if (obj.includes("Quote")) {
-      soqlScript = `SELECT Opportunity.Name, Status, Discount, TotalPrice, GrandTotal,
+      soqlScript = `// SOQL (Summer '26 Pilot): Filter quotes evaluating discount variances with FORMULA() in WHERE clause
+SELECT Opportunity.Name, Status, Discount, TotalPrice, GrandTotal,
        Opportunity.Owner.Name, CreatedDate
 FROM Quote
 WHERE CreatedDate = THIS_YEAR
+  AND FORMULA('GrandTotal - Subtotal') <= 0
 ORDER BY GrandTotal DESC`;
     } else if (obj.includes("Account")) {
-      soqlScript = `SELECT Type, Industry, Region__c, AnnualRevenue, Owner.Name,
+      soqlScript = `// SOQL (Summer '26 Pilot): Aggregate accounts across segments
+SELECT Type, Industry, Region__c, AnnualRevenue, Owner.Name,
        COUNT(Id) totalAccounts
 FROM Account
+WHERE CreatedDate = THIS_FISCAL_YEAR
 GROUP BY Type, Industry, Region__c, AnnualRevenue, Owner.Name`;
     } else {
       const mainObj = obj.split("+")[0].trim().replace(/\s+/g, "");
-      soqlScript = `SELECT Id, Name, CreatedDate, SystemModstamp
+      soqlScript = `// SOQL (Summer '26 Pilot): Query ${mainObj} records with active system delta evaluation via FORMULA()
+SELECT Id, Name, CreatedDate, SystemModstamp
 FROM ${mainObj}
 WHERE CreatedDate = THIS_FISCAL_YEAR
+  AND FORMULA('SystemModstamp - CreatedDate') >= 0
 LIMIT 200`;
     }
   }
 
   // Google Sheets Formula
   let googleSheetsScript = "Null";
-  if (metricName === "Opportunity Win Rate Last Quarter") {
+  if (metricName === "Duplicate rate" || kpi.id === "KPI-030") {
+    googleSheetsScript = `=LET(
+  totalRecords, COUNTA(LEAD_CONTACT_ID),
+  duplicateFlags, MAP(
+    FIRST_NAME, LAST_NAME, EMAIL, PHONE, COUNTRY, ZIP_CODE, JOB_TITLE,
+    LAMBDA(fn, ln, em, ph, ctry, zip, ttl,
+      LET(
+        emailMatches, IF(em <> "", COUNTIFS(FIRST_NAME, fn, LAST_NAME, ln, COUNTRY, ctry, ZIP_CODE, zip, JOB_TITLE, ttl, EMAIL, em), 0),
+        phoneMatches, IF(ph <> "", COUNTIFS(FIRST_NAME, fn, LAST_NAME, ln, COUNTRY, ctry, ZIP_CODE, zip, JOB_TITLE, ttl, PHONE, ph), 0),
+        IF(OR(emailMatches > 1, phoneMatches > 1), 1, 0)
+      )
+    )
+  ),
+  duplicateTotal, SUM(duplicateFlags),
+  IFERROR(duplicateTotal / totalRecords, "Null")
+)`;
+  } else if (metricName === "Opportunity Win Rate Last Quarter") {
     googleSheetsScript = `=IFERROR(
   COUNTIFS(OPP_STAGE, "Closed Won", OPP_CLOSE_QUARTER, "Last Quarter", OPP_REGION, DIMENSION_KEY) /
   COUNTIFS(OPP_IS_CLOSED, TRUE, OPP_CLOSE_QUARTER, "Last Quarter", OPP_REGION, DIMENSION_KEY),
@@ -1905,7 +2020,43 @@ LIMIT 200`;
 
   // Excel Formula
   let excelScript = "Null";
-  if (metricName === "Opportunity Win Rate Last Quarter") {
+  if (metricName === "Duplicate rate" || kpi.id === "KPI-030") {
+    excelScript = `=LET(
+  totalRecords, COUNTA(LeadContactTable[Id]),
+  duplicateFlags, MAP(
+    LeadContactTable[FirstName],
+    LeadContactTable[LastName],
+    LeadContactTable[Email],
+    LeadContactTable[Phone],
+    LeadContactTable[Country],
+    LeadContactTable[PostalCode],
+    LeadContactTable[Title],
+    LAMBDA(fn, ln, em, ph, ctry, zp, ttl,
+      LET(
+        emailMatchCount, IF(em <> "", COUNTIFS(
+          LeadContactTable[FirstName], fn,
+          LeadContactTable[LastName], ln,
+          LeadContactTable[Country], ctry,
+          LeadContactTable[PostalCode], zp,
+          LeadContactTable[Title], ttl,
+          LeadContactTable[Email], em
+        ), 0),
+        phoneMatchCount, IF(ph <> "", COUNTIFS(
+          LeadContactTable[FirstName], fn,
+          LeadContactTable[LastName], ln,
+          LeadContactTable[Country], ctry,
+          LeadContactTable[PostalCode], zp,
+          LeadContactTable[Title], ttl,
+          LeadContactTable[Phone], ph
+        ), 0),
+        IF(OR(emailMatchCount > 1, phoneMatchCount > 1), 1, 0)
+      )
+    )
+  ),
+  duplicateTotal, SUM(duplicateFlags),
+  IF(totalRecords > 0, duplicateTotal / totalRecords, "Null")
+)`;
+  } else if (metricName === "Opportunity Win Rate Last Quarter") {
     excelScript = `=LET(
   won, COUNTIFS(OpportunityTable[Stage], "Closed Won", OpportunityTable[CloseQuarter], "Last Quarter", OpportunityTable[Region], [@Region]),
   closedTotal, COUNTIFS(OpportunityTable[IsClosed], TRUE, OpportunityTable[CloseQuarter], "Last Quarter", OpportunityTable[Region], [@Region]),
@@ -1951,7 +2102,97 @@ LIMIT 200`;
 
   // Java Script (Spring / Streams / JDBC)
   let javaScript = "";
-  if (isLastQuarter && metricName.toLowerCase().includes("opportunity")) {
+  if (metricName === "Duplicate rate" || kpi.id === "KPI-030") {
+    javaScript = `// KPI Engine Service Implementation for: Duplicate rate (KPI-030)
+// Rule: (Same Email OR Same Phone) AND Same (FirstName + LastName + Country + ZipCode + JobTitle)
+package com.codex.analytics.kpi.service;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import com.codex.analytics.model.LeadContactRecord;
+
+public class DuplicateRateService {
+
+    public static class DuplicateRateReport {
+        private final int totalRecords;
+        private final int duplicateCount;
+        private final double duplicateRate;
+        private final Map<String, List<LeadContactRecord>> matchedClusters;
+
+        public DuplicateRateReport(int totalRecords, int duplicateCount, double duplicateRate, Map<String, List<LeadContactRecord>> matchedClusters) {
+            this.totalRecords = totalRecords;
+            this.duplicateCount = duplicateCount;
+            this.duplicateRate = duplicateRate;
+            this.matchedClusters = matchedClusters;
+        }
+
+        public int getTotalRecords() { return totalRecords; }
+        public int getDuplicateCount() { return duplicateCount; }
+        public double getDuplicateRate() { return duplicateRate; }
+        public Map<String, List<LeadContactRecord>> getMatchedClusters() { return matchedClusters; }
+    }
+
+    public DuplicateRateReport calculateDuplicateRate(List<LeadContactRecord> records) {
+        if (records == null || records.isEmpty()) {
+            return new DuplicateRateReport(0, 0, 0.0, Collections.emptyMap());
+        }
+
+        int totalCount = records.size();
+        Map<String, List<LeadContactRecord>> emailClusters = new HashMap<>();
+        Map<String, List<LeadContactRecord>> phoneClusters = new HashMap<>();
+
+        // Group by composite demographic key + normalized identifier
+        for (LeadContactRecord r : records) {
+            String demographicKey = String.format("%s|%s|%s|%s|%s",
+                clean(r.getFirstName()),
+                clean(r.getLastName()),
+                clean(r.getCountry()),
+                clean(r.getZipCode()),
+                clean(r.getJobTitle())
+            );
+
+            if (r.getEmail() != null && !r.getEmail().isBlank()) {
+                String emailKey = demographicKey + "|EMAIL:" + clean(r.getEmail());
+                emailClusters.computeIfAbsent(emailKey, k -> new ArrayList<>()).add(r);
+            }
+
+            if (r.getPhone() != null && !r.getPhone().isBlank()) {
+                String cleanPhone = r.getPhone().replaceAll("[^0-9]", "");
+                if (!cleanPhone.isEmpty()) {
+                    String phoneKey = demographicKey + "|PHONE:" + cleanPhone;
+                    phoneClusters.computeIfAbsent(phoneKey, k -> new ArrayList<>()).add(r);
+                }
+            }
+        }
+
+        Set<String> duplicateRecordIds = new HashSet<>();
+        Map<String, List<LeadContactRecord>> identifiedClusters = new HashMap<>();
+
+        emailClusters.forEach((key, list) -> {
+            if (list.size() > 1) {
+                list.forEach(item -> duplicateRecordIds.add(item.getId()));
+                identifiedClusters.put("EMAIL_MATCH:" + key, list);
+            }
+        });
+
+        phoneClusters.forEach((key, list) -> {
+            if (list.size() > 1) {
+                list.forEach(item -> duplicateRecordIds.add(item.getId()));
+                identifiedClusters.put("PHONE_MATCH:" + key, list);
+            }
+        });
+
+        int duplicates = duplicateRecordIds.size();
+        double rate = totalCount > 0 ? (double) duplicates / totalCount : 0.0;
+
+        return new DuplicateRateReport(totalCount, duplicates, rate, identifiedClusters);
+    }
+
+    private String clean(String str) {
+        return str == null ? "" : str.trim().toLowerCase();
+    }
+}`;
+  } else if (isLastQuarter && metricName.toLowerCase().includes("opportunity")) {
     javaScript = `// KPI Engine Service Implementation for: ${metricName}
 package com.codex.analytics.kpi.service;
 
@@ -2049,7 +2290,72 @@ public class ${metricName.replace(/[^a-zA-Z0-9]/g, "")}Service {
 
   // Python Script (Pandas & SQLAlchemy)
   let pythonScript = "";
-  if (isLastQuarter && metricName.toLowerCase().includes("opportunity")) {
+  if (metricName === "Duplicate rate" || kpi.id === "KPI-030") {
+    pythonScript = `import pandas as pd
+import numpy as np
+
+def calculate_kpi_030_duplicate_rate(df: pd.DataFrame) -> dict:
+    """
+    KPI ID: KPI-030
+    Metric: Duplicate rate
+    Function: Lead & Contact Management
+    Dimensions: Email / Phone Match, Name, Country, Zip Code, Job Title, Object Type, Source
+    Rule: Detects all leads/contacts with (same email OR same phone) 
+          AND same first_name AND same last_name AND same country AND same zip_code AND same job_title.
+    """
+    if df.empty or 'id' not in df.columns:
+        return {'total_records': 0, 'duplicate_count': 0, 'duplicate_rate': 0.0, 'duplicates_df': pd.DataFrame()}
+
+    work_df = df.copy()
+
+    # Normalize fields for deterministic comparison
+    for col in ['first_name', 'last_name', 'email', 'country', 'zip_code', 'job_title']:
+        if col in work_df.columns:
+            work_df[col] = work_df[col].astype(str).str.strip().str.lower().replace({'nan': '', 'none': ''})
+        else:
+            work_df[col] = ''
+
+    if 'phone' in work_df.columns:
+        work_df['phone_clean'] = work_df['phone'].astype(str).str.replace(r'\\D', '', regex=True).replace({'nan': '', 'none': ''})
+    else:
+        work_df['phone_clean'] = ''
+
+    # Base demographic key: first_name + last_name + country + zip_code + job_title
+    work_df['demo_key'] = (
+        work_df['first_name'] + '|' +
+        work_df['last_name'] + '|' +
+        work_df['country'] + '|' +
+        work_df['zip_code'] + '|' +
+        work_df['job_title']
+    )
+
+    # 1. Email matches: (same email != '') AND same demo_key
+    email_mask = work_df['email'] != ''
+    email_dup_flags = work_df[email_mask].duplicated(subset=['demo_key', 'email'], keep=False)
+    email_dup_ids = set(work_df[email_mask][email_dup_flags]['id'])
+
+    # 2. Phone matches: (same phone != '') AND same demo_key
+    phone_mask = work_df['phone_clean'] != ''
+    phone_dup_flags = work_df[phone_mask].duplicated(subset=['demo_key', 'phone_clean'], keep=False)
+    phone_dup_ids = set(work_df[phone_mask][phone_dup_flags]['id'])
+
+    # Union of all duplicates matching either Email or Phone with demographic parity
+    all_duplicate_ids = email_dup_ids.union(phone_dup_ids)
+    total_records = len(work_df)
+    duplicate_count = len(all_duplicate_ids)
+    duplicate_rate = (duplicate_count / total_records) if total_records > 0 else 0.0
+
+    work_df['is_duplicate'] = work_df['id'].isin(all_duplicate_ids)
+
+    return {
+        'total_records': total_records,
+        'duplicate_count': duplicate_count,
+        'duplicate_rate': round(duplicate_rate, 4),
+        'duplicate_rate_percentage': f"{round(duplicate_rate * 100, 2)}%",
+        'duplicates_df': work_df[work_df['is_duplicate']][['id', 'first_name', 'last_name', 'email', 'phone', 'country', 'zip_code', 'job_title']]
+    }
+`;
+  } else if (isLastQuarter && metricName.toLowerCase().includes("opportunity")) {
     pythonScript = `import pandas as pd
 import numpy as np
 
@@ -2159,35 +2465,180 @@ def calculate_${kpi.id.toLowerCase().replace("-", "_")}(df: pd.DataFrame) -> pd.
   }
 
   // JSON / GraphQL Schema Payload
-  const jsonScript = JSON.stringify(
-    {
-      kpiId: kpi.id,
-      metricName: kpi.metric,
-      aggregationFunction: kpi.function,
-      targetObject: kpi.object,
-      dataSources: kpi.dataSources.split("+").map((s) => s.trim()),
-      dimensions: kpi.dimensions.split(",").map((d) => d.trim()),
-      classification: kpi.type,
-      recommendedChart: kpi.bestVisualization,
-      queryDefinition: {
-        dimensions: kpi.dimensions.split(",").map((d) => d.trim().toLowerCase().replace(/\s+/g, "_")),
-        measures: [
-          { name: "total_value", aggregate: "SUM", field: "amount" },
-          { name: "record_count", aggregate: "COUNT", field: "id" }
-        ],
-        filters: [
-          { field: "is_deleted", operator: "EQUALS", value: false },
-          ...(isLastQuarter ? [{ field: "time_period", operator: "EQUALS", value: "LAST_QUARTER" }] : [])
-        ]
-      }
-    },
-    null,
-    2
-  );
+  let jsonScript = "";
+  if (metricName === "Duplicate rate" || kpi.id === "KPI-030") {
+    jsonScript = JSON.stringify(
+      {
+        kpiId: kpi.id,
+        metricName: kpi.metric,
+        aggregationFunction: kpi.function,
+        targetObject: kpi.object,
+        dataSources: kpi.dataSources.split("+").map((s) => s.trim()),
+        dimensions: kpi.dimensions.split(",").map((d) => d.trim()),
+        classification: kpi.type,
+        recommendedChart: kpi.bestVisualization,
+        deduplicationSpecification: {
+          evaluationScope: ["Lead", "Contact"],
+          ruleLogic: "AND",
+          identityClusters: [
+            {
+              operator: "OR",
+              conditions: [
+                { field: "email", matchType: "EXACT_NORMALIZED", ignoreBlank: true },
+                { field: "phone", matchType: "NUMERIC_DIGITS_ONLY", ignoreBlank: true }
+              ]
+            },
+            { field: "first_name", matchType: "CASE_INSENSITIVE_TRIMMED" },
+            { field: "last_name", matchType: "CASE_INSENSITIVE_TRIMMED" },
+            { field: "country", matchType: "ISO_OR_STANDARDIZED_NAME" },
+            { field: "zip_code", matchType: "STANDARDIZED_POSTAL_CODE" },
+            { field: "job_title", matchType: "CASE_INSENSITIVE_TRIMMED" }
+          ]
+        },
+        queryDefinition: {
+          dimensions: ["source", "object_type", "country"],
+          measures: [
+            {
+              name: "total_records_evaluated",
+              aggregate: "COUNT",
+              field: "id"
+            },
+            {
+              name: "duplicate_records_detected",
+              aggregate: "COUNT_DEDUPLICATED_MATCHES",
+              ruleId: "MATCH_EMAIL_OR_PHONE_AND_DEMOGRAPHICS"
+            },
+            {
+              name: "duplicate_rate_percentage",
+              formula: "(duplicate_records_detected / total_records_evaluated) * 100.0"
+            }
+          ],
+          filters: [
+            { field: "is_deleted", operator: "EQUALS", value: false }
+          ]
+        }
+      },
+      null,
+      2
+    );
+  } else {
+    jsonScript = JSON.stringify(
+      {
+        kpiId: kpi.id,
+        metricName: kpi.metric,
+        aggregationFunction: kpi.function,
+        targetObject: kpi.object,
+        dataSources: kpi.dataSources.split("+").map((s) => s.trim()),
+        dimensions: kpi.dimensions.split(",").map((d) => d.trim()),
+        classification: kpi.type,
+        recommendedChart: kpi.bestVisualization,
+        queryDefinition: {
+          dimensions: kpi.dimensions.split(",").map((d) => d.trim().toLowerCase().replace(/\s+/g, "_")),
+          measures: [
+            { name: "total_value", aggregate: "SUM", field: "amount" },
+            { name: "record_count", aggregate: "COUNT", field: "id" }
+          ],
+          filters: [
+            { field: "is_deleted", operator: "EQUALS", value: false },
+            ...(isLastQuarter ? [{ field: "time_period", operator: "EQUALS", value: "LAST_QUARTER" }] : [])
+          ]
+        }
+      },
+      null,
+      2
+    );
+  }
 
   // SQL (Postgres / Snowflake / BigQuery)
   let sqlScript = "";
-  if (metricName === "Opportunity Win Rate Last Quarter") {
+  if (metricName === "Duplicate rate" || kpi.id === "KPI-030") {
+    sqlScript = `-- KPI: Duplicate rate (KPI-030)
+-- Target: Lead + Contact | Data Sources: Salesforce + Marketo / HubSpot
+-- Matching Rule: (Same Email OR Same Phone) AND Same FirstName AND Same LastName AND Same Country AND Same ZipCode AND Same JobTitle
+
+WITH normalized_records AS (
+    -- Combine Leads and Contacts into unified record stream
+    SELECT 
+        'Lead' AS record_type,
+        id AS record_id,
+        LOWER(TRIM(COALESCE(first_name, ''))) AS first_name,
+        LOWER(TRIM(COALESCE(last_name, ''))) AS last_name,
+        LOWER(TRIM(COALESCE(email, ''))) AS email,
+        REGEXP_REPLACE(COALESCE(phone, ''), '[^0-9]', '', 'g') AS phone_clean,
+        UPPER(TRIM(COALESCE(country, ''))) AS country,
+        TRIM(COALESCE(postal_code, '')) AS zip_code,
+        LOWER(TRIM(COALESCE(title, ''))) AS job_title,
+        lead_source AS source_channel,
+        created_date
+    FROM warehouse_crm.leads
+    WHERE is_deleted = FALSE
+
+    UNION ALL
+
+    SELECT 
+        'Contact' AS record_type,
+        id AS record_id,
+        LOWER(TRIM(COALESCE(first_name, ''))) AS first_name,
+        LOWER(TRIM(COALESCE(last_name, ''))) AS last_name,
+        LOWER(TRIM(COALESCE(email, ''))) AS email,
+        REGEXP_REPLACE(COALESCE(phone, ''), '[^0-9]', '', 'g') AS phone_clean,
+        UPPER(TRIM(COALESCE(mailing_country, ''))) AS country,
+        TRIM(COALESCE(mailing_postal_code, '')) AS zip_code,
+        LOWER(TRIM(COALESCE(title, ''))) AS job_title,
+        'Direct CRM Contact' AS source_channel,
+        created_date
+    FROM warehouse_crm.contacts
+    WHERE is_deleted = FALSE
+),
+email_matched_duplicates AS (
+    -- Match on same Email + FirstName + LastName + Country + Zip + JobTitle
+    SELECT 
+        record_id
+    FROM (
+        SELECT 
+            record_id,
+            COUNT(*) OVER (
+                PARTITION BY first_name, last_name, country, zip_code, job_title, email
+            ) AS match_count
+        FROM normalized_records
+        WHERE email <> ''
+    ) t
+    WHERE match_count > 1
+),
+phone_matched_duplicates AS (
+    -- Match on same Phone + FirstName + LastName + Country + Zip + JobTitle
+    SELECT 
+        record_id
+    FROM (
+        SELECT 
+            record_id,
+            COUNT(*) OVER (
+                PARTITION BY first_name, last_name, country, zip_code, job_title, phone_clean
+            ) AS match_count
+        FROM normalized_records
+        WHERE phone_clean <> ''
+    ) t
+    WHERE match_count > 1
+),
+all_duplicate_ids AS (
+    SELECT record_id FROM email_matched_duplicates
+    UNION
+    SELECT record_id FROM phone_matched_duplicates
+)
+SELECT 
+    r.record_type,
+    r.source_channel,
+    COUNT(r.record_id) AS total_records_evaluated,
+    COUNT(d.record_id) AS total_duplicate_records,
+    ROUND(
+        (COUNT(d.record_id)::NUMERIC / NULLIF(COUNT(r.record_id), 0)) * 100.0, 
+        2
+    ) AS duplicate_rate_percentage
+FROM normalized_records r
+LEFT JOIN all_duplicate_ids d ON r.record_id = d.record_id
+GROUP BY r.record_type, r.source_channel
+ORDER BY total_duplicate_records DESC;`;
+  } else if (metricName === "Opportunity Win Rate Last Quarter") {
     sqlScript = `-- KPI: Opportunity Win Rate Last Quarter (KPI-153)
 -- Target: Opportunity | Data Sources: Salesforce / Data Warehouse
 WITH last_quarter_opps AS (
@@ -2370,7 +2821,122 @@ ORDER BY total_pipeline_arr DESC;`;
 
   // Apex (Salesforce Apex Controller)
   let apexScript = "";
-  if (isLastQuarter && metricName.toLowerCase().includes("opportunity")) {
+  if (metricName === "Duplicate rate" || kpi.id === "KPI-030") {
+    apexScript = `// Apex Controller: Duplicate Rate Engine for Leads & Contacts (KPI-030)
+// Matching Rule: (Same Email OR Same Phone) AND Same FirstName AND LastName AND Country AND PostalCode AND Title
+public with sharing class KPI030_DuplicateRateController {
+
+    public class DuplicateRateSummary {
+        @AuraEnabled public Integer totalRecords { get; set; }
+        @AuraEnabled public Integer duplicateCount { get; set; }
+        @AuraEnabled public Decimal duplicateRatePercent { get; set; }
+        @AuraEnabled public List<DuplicateCluster> clusters { get; set; }
+    }
+
+    public class DuplicateCluster {
+        @AuraEnabled public String matchType { get; set; }
+        @AuraEnabled public String clusterKey { get; set; }
+        @AuraEnabled public Integer recordCount { get; set; }
+        @AuraEnabled public List<Id> recordIds { get; set; }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static DuplicateRateSummary calculateDuplicateRate(String objectScope) {
+        try {
+            DuplicateRateSummary summary = new DuplicateRateSummary();
+            summary.clusters = new List<DuplicateCluster>();
+            Set<Id> duplicateRecordIds = new Set<Id>();
+
+            // Query active Leads with demographic attributes
+            List<Lead> leads = [
+                SELECT Id, FirstName, LastName, Email, Phone, Country, PostalCode, Title, LeadSource 
+                FROM Lead 
+                WHERE IsConverted = false 
+                ORDER BY CreatedDate DESC 
+                LIMIT 5000
+            ];
+
+            summary.totalRecords = leads.size();
+            if (leads.isEmpty()) {
+                summary.duplicateCount = 0;
+                summary.duplicateRatePercent = 0.0;
+                return summary;
+            }
+
+            Map<String, List<Id>> emailClusters = new Map<String, List<Id>>();
+            Map<String, List<Id>> phoneClusters = new Map<String, List<Id>>();
+
+            for (Lead ld : leads) {
+                String fn = ld.FirstName != null ? ld.FirstName.trim().toLowerCase() : '';
+                String ln = ld.LastName != null ? ld.LastName.trim().toLowerCase() : '';
+                String ctry = ld.Country != null ? ld.Country.trim().toUpperCase() : '';
+                String zip = ld.PostalCode != null ? ld.PostalCode.trim() : '';
+                String ttl = ld.Title != null ? ld.Title.trim().toLowerCase() : '';
+                String demoKey = fn + '|' + ln + '|' + ctry + '|' + zip + '|' + ttl;
+
+                // Match by Email + Demographics
+                if (String.isNotBlank(ld.Email)) {
+                    String emailKey = demoKey + '|EMAIL:' + ld.Email.trim().toLowerCase();
+                    if (!emailClusters.containsKey(emailKey)) {
+                        emailClusters.put(emailKey, new List<Id>());
+                    }
+                    emailClusters.get(emailKey).add(ld.Id);
+                }
+
+                // Match by Phone + Demographics
+                if (String.isNotBlank(ld.Phone)) {
+                    String cleanPhone = ld.Phone.replaceAll('[^0-9]', '');
+                    if (String.isNotBlank(cleanPhone)) {
+                        String phoneKey = demoKey + '|PHONE:' + cleanPhone;
+                        if (!phoneClusters.containsKey(phoneKey)) {
+                            phoneClusters.put(phoneKey, new List<Id>());
+                        }
+                        phoneClusters.get(phoneKey).add(ld.Id);
+                    }
+                }
+            }
+
+            // Collect Email Duplicate Clusters
+            for (String key : emailClusters.keySet()) {
+                List<Id> ids = emailClusters.get(key);
+                if (ids.size() > 1) {
+                    duplicateRecordIds.addAll(ids);
+                    DuplicateCluster cl = new DuplicateCluster();
+                    cl.matchType = 'EMAIL_MATCH';
+                    cl.clusterKey = key;
+                    cl.recordCount = ids.size();
+                    cl.recordIds = ids;
+                    summary.clusters.add(cl);
+                }
+            }
+
+            // Collect Phone Duplicate Clusters
+            for (String key : phoneClusters.keySet()) {
+                List<Id> ids = phoneClusters.get(key);
+                if (ids.size() > 1) {
+                    duplicateRecordIds.addAll(ids);
+                    DuplicateCluster cl = new DuplicateCluster();
+                    cl.matchType = 'PHONE_MATCH';
+                    cl.clusterKey = key;
+                    cl.recordCount = ids.size();
+                    cl.recordIds = ids;
+                    summary.clusters.add(cl);
+                }
+            }
+
+            summary.duplicateCount = duplicateRecordIds.size();
+            summary.duplicateRatePercent = summary.totalRecords > 0 
+                ? (((Decimal)summary.duplicateCount / summary.totalRecords) * 100.0).setScale(2)
+                : 0.0;
+
+            return summary;
+        } catch (Exception ex) {
+            throw new AuraHandledException('Error calculating duplicate rate: ' + ex.getMessage());
+        }
+    }
+}
+`;
+  } else if (isLastQuarter && metricName.toLowerCase().includes("opportunity")) {
     apexScript = `// Apex Controller Implementation for: ${metricName}
 public with sharing class ${kpi.id.replace("-", "")}_QuarterController {
     

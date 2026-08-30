@@ -14,9 +14,14 @@ import {
   CheckCircle2,
   ArrowUpDown,
   ExternalLink,
-  Table
+  Table,
+  HelpCircle,
+  X,
+  Zap,
+  Target
 } from "lucide-react";
 import { KPI_MASTER_DATA, KPIRecord, generateLanguageScripts } from "../data/kpiMasterData";
+import { searchKpisSemantically, SEMANTIC_INTENT_PRESETS, SemanticSearchResult } from "../utils/kpiSemanticSearch";
 
 export type ScriptLanguage =
   | "Google Sheets"
@@ -42,6 +47,7 @@ const SCRIPT_LANGUAGES: ScriptLanguage[] = [
 export const MetricLookupScriptGenerator: React.FC = () => {
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState<string>("rate");
+  const [isSemanticMode, setIsSemanticMode] = useState<boolean>(true);
   const [selectedMetric, setSelectedMetric] = useState<string>("All Metrics");
   const [selectedFunction, setSelectedFunction] = useState<string>("All Functions");
   const [selectedObject, setSelectedObject] = useState<string>("All Objects");
@@ -98,24 +104,49 @@ export const MetricLookupScriptGenerator: React.FC = () => {
     return ["All KPI IDs", ...KPI_MASTER_DATA.map((k) => `${k.id} - ${k.metric.slice(0, 30)}...`)];
   }, []);
 
-  // Filtered dataset
-  const filteredKpis = useMemo(() => {
-    return KPI_MASTER_DATA.filter((k) => {
-      // Global Search
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        const match =
+  // Filtered dataset with Semantic Search Relevance Engine
+  const searchResultsWithScores = useMemo(() => {
+    const hasSearch = searchQuery.trim().length > 0;
+
+    let candidateKpis: { kpi: KPIRecord; score: number; semanticReason?: string; matchedTokens?: string[] }[] = [];
+
+    if (hasSearch && isSemanticMode) {
+      // Execute Semantic Search
+      const semanticResults = searchKpisSemantically(searchQuery, KPI_MASTER_DATA);
+      candidateKpis = semanticResults.map((res) => ({
+        kpi: res.kpi,
+        score: res.score,
+        semanticReason: res.semanticReason,
+        matchedTokens: res.matchedTokens
+      }));
+    } else if (hasSearch && !isSemanticMode) {
+      // Exact Keyword / Substring mode
+      const q = searchQuery.toLowerCase().trim();
+      candidateKpis = KPI_MASTER_DATA.filter((k) => {
+        return (
           k.metric.toLowerCase().includes(q) ||
           k.function.toLowerCase().includes(q) ||
           k.object.toLowerCase().includes(q) ||
           k.dataSources.toLowerCase().includes(q) ||
           k.dimensions.toLowerCase().includes(q) ||
           k.analysisPurpose.toLowerCase().includes(q) ||
-          k.id.toLowerCase().includes(q);
-        if (!match) return false;
-      }
+          k.id.toLowerCase().includes(q)
+        );
+      }).map((k) => ({
+        kpi: k,
+        score: 100,
+        semanticReason: "Exact keyword match"
+      }));
+    } else {
+      // No search query - return all
+      candidateKpis = KPI_MASTER_DATA.map((k) => ({
+        kpi: k,
+        score: 100
+      }));
+    }
 
-      // Dropdown filters
+    // Apply secondary categorical filters
+    return candidateKpis.filter(({ kpi: k }) => {
       if (selectedMetric !== "All Metrics" && k.metric !== selectedMetric) return false;
       if (selectedFunction !== "All Functions" && k.function !== selectedFunction) return false;
       if (selectedObject !== "All Objects" && !k.object.includes(selectedObject)) return false;
@@ -131,6 +162,7 @@ export const MetricLookupScriptGenerator: React.FC = () => {
     });
   }, [
     searchQuery,
+    isSemanticMode,
     selectedMetric,
     selectedFunction,
     selectedObject,
@@ -141,6 +173,16 @@ export const MetricLookupScriptGenerator: React.FC = () => {
     purposeSearch,
     selectedKpiId
   ]);
+
+  const filteredKpis = useMemo(() => {
+    return searchResultsWithScores.map((item) => item.kpi);
+  }, [searchResultsWithScores]);
+
+  // Compute active KPI's semantic match info if available
+  const activeKpiSemanticInfo = useMemo(() => {
+    if (!activeKpi) return null;
+    return searchResultsWithScores.find((item) => item.kpi.id === activeKpi.id);
+  }, [activeKpi, searchResultsWithScores]);
 
   // Compute generated script for current active KPI and language
   const generatedScripts = useMemo(() => {
@@ -215,9 +257,8 @@ export const MetricLookupScriptGenerator: React.FC = () => {
             </h2>
           </div>
           <p className="text-xs text-zinc-300 mt-1 max-w-2xl leading-relaxed">
-            Instantly query, filter, and generate cross-language execution scripts across{" "}
-            <span className="text-teal-300 font-semibold">{KPI_MASTER_DATA.length} RevOps & GTM metrics</span>.
-            Supports exact query translation across Google Sheets, Excel, Java, Python, JSON, SQL, SOQL, and Apex with strict Null fallback parity.
+            Instantly search 157 RevOps & GTM metrics using <span className="text-teal-300 font-semibold">Semantic Concept AI & Ontology Search</span>.
+            Supports exact multi-language code generation across Google Sheets, Excel, Java, Python, JSON, SQL, SOQL, and Apex with strict Null fallback parity.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -231,36 +272,95 @@ export const MetricLookupScriptGenerator: React.FC = () => {
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
         {/* Left Column: Metric Lookup & Script Generator */}
         <div className="xl:col-span-6 bg-[#f8faf7] border-2 border-zinc-300/80 rounded-2xl p-6 shadow-sm space-y-5">
-          {/* Header */}
-          <div className="flex items-center justify-between">
+          {/* Header with Search Mode Controls */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <h3 className="text-xl font-extrabold text-zinc-900 tracking-tight">
               Metric Lookup & Script Generator
             </h3>
-            <span className="text-xs font-mono text-zinc-500 bg-zinc-200/70 px-2.5 py-1 rounded-md">
-              {filteredKpis.length} Matched
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsSemanticMode(!isSemanticMode)}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer border ${
+                  isSemanticMode
+                    ? "bg-teal-900 text-teal-100 border-teal-700 shadow-xs"
+                    : "bg-white text-zinc-700 border-zinc-300 hover:bg-zinc-100"
+                }`}
+                title="Toggle between Semantic Concept Search and Strict Keyword Match"
+              >
+                <Sparkles className={`w-3.5 h-3.5 ${isSemanticMode ? "text-teal-300 fill-teal-300/20" : "text-zinc-400"}`} />
+                <span>{isSemanticMode ? "Semantic AI Active" : "Exact Keyword"}</span>
+              </button>
+              <span className="text-xs font-mono text-zinc-700 bg-zinc-200/80 px-2.5 py-1 rounded-md font-semibold">
+                {filteredKpis.length} Matched
+              </span>
+            </div>
           </div>
 
           {/* Primary Search Bar with 'Generate Scripts' button */}
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search metric name, function, object, or keywords..."
-                className="w-full pl-3.5 pr-4 py-2.5 bg-white border-2 border-zinc-300 rounded-lg text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-teal-700 transition-colors shadow-sm"
-              />
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
+                  {isSemanticMode ? (
+                    <Sparkles className="w-4 h-4 text-teal-600" />
+                  ) : (
+                    <Search className="w-4 h-4 text-zinc-400" />
+                  )}
+                </div>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={
+                    isSemanticMode
+                      ? "Search naturally (e.g., 'sales velocity', 'churn risk', 'duplicate leads', 'rep quota', 'CAC payback')..."
+                      : "Search exact keywords in metric name, object, or dimensions..."
+                  }
+                  className="w-full pl-9 pr-8 py-2.5 bg-white border-2 border-zinc-300 rounded-lg text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-teal-700 transition-colors shadow-sm"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-zinc-400 hover:text-zinc-600 cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+              <button
+                onClick={handleGenerateScripts}
+                className="px-5 py-2.5 bg-[#b84826] hover:bg-[#a23d1f] text-white font-bold text-sm rounded-lg shadow-sm active:translate-y-0.5 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+              >
+                <span>Generate Scripts</span>
+              </button>
             </div>
-            <button
-              onClick={handleGenerateScripts}
-              className="px-5 py-2.5 bg-[#b84826] hover:bg-[#a23d1f] text-white font-bold text-sm rounded-lg shadow-sm active:translate-y-0.5 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
-            >
-              <span>Generate Scripts</span>
-            </button>
+
+            {/* Semantic Intent Concept Presets */}
+            {isSemanticMode && (
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center justify-between text-[11px] text-zinc-500">
+                  <span className="font-semibold text-zinc-600">Quick Semantic Concept Presets:</span>
+                  <span className="italic">Click to test instant semantic retrieval</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {SEMANTIC_INTENT_PRESETS.map((preset) => (
+                    <button
+                      key={preset.id}
+                      onClick={() => {
+                        setSearchQuery(preset.query.split(" ").slice(0, 3).join(" "));
+                      }}
+                      className="px-2 py-1 rounded-md text-[11px] font-medium bg-white hover:bg-teal-50 border border-zinc-300 hover:border-teal-400 text-zinc-700 hover:text-teal-900 transition-all cursor-pointer shadow-2xs flex items-center gap-1"
+                      title={preset.description}
+                    >
+                      <span>{preset.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* 2-Column Filter Grid */}
+          {/* 3-Column Dropdown Filter Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             {/* Metric */}
             <div className="space-y-1">
@@ -499,9 +599,16 @@ export const MetricLookupScriptGenerator: React.FC = () => {
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2 border-b border-zinc-200">
             <div>
-              <h3 className="text-xl font-extrabold text-zinc-900 tracking-tight">
-                KPI Master Reference
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-xl font-extrabold text-zinc-900 tracking-tight">
+                  KPI Master Reference
+                </h3>
+                {isSemanticMode && searchQuery.trim() && (
+                  <span className="px-2 py-0.5 text-[10px] bg-teal-100 text-teal-800 font-bold rounded-full border border-teal-300">
+                    Semantic Ranked
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-zinc-500 mt-0.5">
                 Showing <span className="font-bold text-zinc-800">{filteredKpis.length}</span> of{" "}
                 <span className="font-bold text-zinc-800">{KPI_MASTER_DATA.length}</span> KPIs
@@ -532,14 +639,14 @@ export const MetricLookupScriptGenerator: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-200 text-zinc-700 font-sans">
-                {filteredKpis.length === 0 ? (
+                {searchResultsWithScores.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="text-center py-12 text-zinc-400 italic">
-                      No KPIs found matching your current filter criteria.
+                      No KPIs found matching your current search or filter criteria.
                     </td>
                   </tr>
                 ) : (
-                  filteredKpis.map((kpi) => {
+                  searchResultsWithScores.map(({ kpi, score, semanticReason, matchedTokens }) => {
                     const isSelected = activeKpi.id === kpi.id;
                     return (
                       <tr
@@ -553,15 +660,41 @@ export const MetricLookupScriptGenerator: React.FC = () => {
                       >
                         {/* Metric with blue highlighted badge or link text */}
                         <td className="py-2 px-3 align-top">
-                          <span
-                            className={`inline-block px-2 py-1 rounded text-xs leading-normal ${
-                              isSelected
-                                ? "bg-teal-200/80 text-teal-950 font-semibold"
-                                : "bg-[#c8e1fc]/70 text-[#0d3b66] hover:bg-[#bcdbfc]"
-                            }`}
-                          >
-                            {kpi.metric}
-                          </span>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span
+                                className={`inline-block px-2 py-1 rounded text-xs leading-normal ${
+                                  isSelected
+                                    ? "bg-teal-200/80 text-teal-950 font-semibold"
+                                    : "bg-[#c8e1fc]/70 text-[#0d3b66] hover:bg-[#bcdbfc]"
+                                }`}
+                              >
+                                {kpi.metric}
+                              </span>
+                              {/* Semantic Relevance Badge when search query is active */}
+                              {isSemanticMode && searchQuery.trim() && (
+                                <span
+                                  className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold ${
+                                    score >= 75
+                                      ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                                      : score >= 45
+                                      ? "bg-teal-100 text-teal-800 border border-teal-300"
+                                      : "bg-zinc-100 text-zinc-600 border border-zinc-200"
+                                  }`}
+                                  title={semanticReason || "Semantic relevance score"}
+                                >
+                                  {score}% match
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Semantic matched reason preview */}
+                            {isSemanticMode && searchQuery.trim() && semanticReason && (
+                              <div className="text-[10px] text-zinc-500 italic pl-0.5">
+                                💡 {semanticReason}
+                              </div>
+                            )}
+                          </div>
                         </td>
 
                         {/* Function */}
@@ -594,7 +727,14 @@ export const MetricLookupScriptGenerator: React.FC = () => {
           {activeKpi && (
             <div className="p-4 bg-white rounded-xl border border-zinc-300 text-xs space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-zinc-900 text-sm">{activeKpi.metric}</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-zinc-900 text-sm">{activeKpi.metric}</span>
+                  {activeKpiSemanticInfo && isSemanticMode && searchQuery.trim() && (
+                    <span className="px-2 py-0.5 bg-teal-100 text-teal-900 rounded-md font-mono text-[10px] font-bold border border-teal-300">
+                      {activeKpiSemanticInfo.score}% Semantic Match
+                    </span>
+                  )}
+                </div>
                 <span className="px-2 py-0.5 bg-zinc-900 text-white rounded font-mono text-[10px]">
                   {activeKpi.type}
                 </span>
@@ -610,6 +750,11 @@ export const MetricLookupScriptGenerator: React.FC = () => {
               <p className="text-zinc-500 italic text-[11px] border-t border-zinc-100 pt-1.5">
                 <span className="font-semibold text-zinc-700 not-italic">Purpose:</span> {activeKpi.analysisPurpose}
               </p>
+              {activeKpiSemanticInfo?.semanticReason && isSemanticMode && searchQuery.trim() && (
+                <div className="text-[11px] text-teal-800 bg-teal-50/80 p-2 rounded border border-teal-200">
+                  <span className="font-bold">Semantic Search Match Logic:</span> {activeKpiSemanticInfo.semanticReason}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -617,3 +762,4 @@ export const MetricLookupScriptGenerator: React.FC = () => {
     </div>
   );
 };
+
