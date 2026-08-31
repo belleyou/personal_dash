@@ -33,6 +33,7 @@ import {
   Terminal
 } from "lucide-react";
 import { MetricLookupScriptGenerator } from "./MetricLookupScriptGenerator";
+import { KPIDiagnosticTool } from "./KPIDiagnosticTool";
 import { KPI_MASTER_DATA } from "../data/kpiMasterData";
 import { googleSignIn, logout, getAccessToken, auth } from "../lib/googleAuth";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
@@ -93,7 +94,7 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
   const [selectedLeadSource, setSelectedLeadSource] = useState<string>("All");
   const [selectedProduct, setSelectedProduct] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [activeTab, setActiveTab] = useState<"kpi_scripts" | "overview" | "funnel" | "sql_workbench" | "frd_specs" | "data_table">("kpi_scripts");
+  const [activeTab, setActiveTab] = useState<"kpi_scripts" | "kpi_diagnostics" | "overview" | "funnel" | "sql_workbench" | "frd_specs" | "data_table">("kpi_scripts");
 
   // SQL Query Workbench state
   const [sqlQuery, setSqlQuery] = useState<string>(
@@ -541,6 +542,19 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
             <span className="px-1.5 py-0.2 bg-teal-800/80 text-teal-200 text-[10px] rounded font-mono">{KPI_MASTER_DATA.length} KPIs</span>
           </button>
           <button
+            onClick={() => setActiveTab("kpi_diagnostics")}
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
+              activeTab === "kpi_diagnostics"
+                ? "bg-indigo-900 text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
+            }`}
+          >
+            <span>🔬 KPI Formula Diagnostics</span>
+            <span className="px-1.5 py-0.2 bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] rounded font-mono font-bold">
+              157 Validated
+            </span>
+          </button>
+          <button
             onClick={() => setActiveTab("overview")}
             className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
               activeTab === "overview"
@@ -596,6 +610,13 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
         {activeTab === "kpi_scripts" && (
           <div className="w-full">
             <MetricLookupScriptGenerator />
+          </div>
+        )}
+
+        {/* Tab: KPI Formula Diagnostics Tool */}
+        {activeTab === "kpi_diagnostics" && (
+          <div className="w-full">
+            <KPIDiagnosticTool />
           </div>
         )}
 

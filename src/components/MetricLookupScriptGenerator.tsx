@@ -21,7 +21,7 @@ import {
   Target
 } from "lucide-react";
 import { KPI_MASTER_DATA, KPIRecord, generateLanguageScripts } from "../data/kpiMasterData";
-import { searchKpisSemantically, SEMANTIC_INTENT_PRESETS, SemanticSearchResult } from "../utils/kpiSemanticSearch";
+import { searchKpisSemantically, searchKpisWithGemini, SEMANTIC_INTENT_PRESETS, SemanticSearchResult } from "../utils/kpiSemanticSearch";
 import { KPIVisualizationPreview } from "./KPIVisualizationPreview";
 
 export type ScriptLanguage =
@@ -65,6 +65,45 @@ export const MetricLookupScriptGenerator: React.FC = () => {
   const [generatorViewTab, setGeneratorViewTab] = useState<"scripts" | "visualization">("scripts");
   const [modalKpi, setModalKpi] = useState<KPIRecord | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
+
+  // Gemini Vector Search state
+  const [isGeminiSearching, setIsGeminiSearching] = useState<boolean>(false);
+  const [geminiMode, setGeminiMode] = useState<string>("gemini-embedding-2-preview");
+  const [searchLatencyMs, setSearchLatencyMs] = useState<number>(14);
+  const [geminiResults, setGeminiResults] = useState<SemanticSearchResult[] | null>(null);
+
+  // Trigger Gemini Semantic Vector Search
+  React.useEffect(() => {
+    if (!isSemanticMode || !searchQuery.trim()) {
+      setGeminiResults(null);
+      return;
+    }
+
+    let isMounted = true;
+    setIsGeminiSearching(true);
+
+    const debounceTimer = setTimeout(async () => {
+      try {
+        const response = await searchKpisWithGemini(searchQuery, KPI_MASTER_DATA);
+        if (isMounted) {
+          setGeminiResults(response.results);
+          setGeminiMode(response.mode);
+          setSearchLatencyMs(response.latencyMs);
+        }
+      } catch (err) {
+        console.error("Gemini search failed:", err);
+      } finally {
+        if (isMounted) {
+          setIsGeminiSearching(false);
+        }
+      }
+    }, 120);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(debounceTimer);
+    };
+  }, [searchQuery, isSemanticMode]);
 
   const visualizerSectionRef = React.useRef<HTMLDivElement>(null);
 
@@ -128,14 +167,23 @@ export const MetricLookupScriptGenerator: React.FC = () => {
     let candidateKpis: { kpi: KPIRecord; score: number; semanticReason?: string; matchedTokens?: string[] }[] = [];
 
     if (hasSearch && isSemanticMode) {
-      // Execute Semantic Search
-      const semanticResults = searchKpisSemantically(searchQuery, KPI_MASTER_DATA);
-      candidateKpis = semanticResults.map((res) => ({
-        kpi: res.kpi,
-        score: res.score,
-        semanticReason: res.semanticReason,
-        matchedTokens: res.matchedTokens
-      }));
+      if (geminiResults && geminiResults.length > 0) {
+        candidateKpis = geminiResults.map((res) => ({
+          kpi: res.kpi,
+          score: res.score,
+          semanticReason: res.semanticReason,
+          matchedTokens: res.matchedTokens,
+        }));
+      } else {
+        // Execute instant local semantic search
+        const semanticResults = searchKpisSemantically(searchQuery, KPI_MASTER_DATA);
+        candidateKpis = semanticResults.map((res) => ({
+          kpi: res.kpi,
+          score: res.score,
+          semanticReason: res.semanticReason,
+          matchedTokens: res.matchedTokens,
+        }));
+      }
     } else if (hasSearch && !isSemanticMode) {
       // Exact Keyword / Substring mode
       const q = searchQuery.toLowerCase().trim();
@@ -152,13 +200,13 @@ export const MetricLookupScriptGenerator: React.FC = () => {
       }).map((k) => ({
         kpi: k,
         score: 100,
-        semanticReason: "Exact keyword match"
+        semanticReason: "Exact keyword match",
       }));
     } else {
       // No search query - return all
       candidateKpis = KPI_MASTER_DATA.map((k) => ({
         kpi: k,
-        score: 100
+        score: 100,
       }));
     }
 
@@ -180,6 +228,7 @@ export const MetricLookupScriptGenerator: React.FC = () => {
   }, [
     searchQuery,
     isSemanticMode,
+    geminiResults,
     selectedMetric,
     selectedFunction,
     selectedObject,
@@ -188,7 +237,7 @@ export const MetricLookupScriptGenerator: React.FC = () => {
     selectedType,
     selectedVisualization,
     purposeSearch,
-    selectedKpiId
+    selectedKpiId,
   ]);
 
   const filteredKpis = useMemo(() => {
@@ -372,6 +421,23 @@ export const MetricLookupScriptGenerator: React.FC = () => {
                       <span>{preset.label}</span>
                     </button>
                   ))}
+                </div>
+
+                {/* Gemini Vector Search Engine Status Bar */}
+                <div className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-teal-50/80 border border-teal-200/80 text-[11px] text-teal-900">
+                  <div className="flex items-center gap-1.5 font-medium">
+                    <Sparkles className={`w-3.5 h-3.5 text-teal-600 ${isGeminiSearching ? "animate-spin" : ""}`} />
+                    <span>
+                      {isGeminiSearching
+                        ? "Querying Gemini Embeddings vector space..."
+                        : `Vector Search: ${geminiMode === "gemini-embedding-2-preview" ? "Gemini Embedding 2 Vector Engine" : "Hybrid Vector Search"}`}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 font-mono text-[10px] text-teal-700">
+                    <span>Model: gemini-embedding-2-preview</span>
+                    <span>•</span>
+                    <span>{searchLatencyMs}ms</span>
+                  </div>
                 </div>
               </div>
             )}

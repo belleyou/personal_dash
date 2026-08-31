@@ -351,3 +351,75 @@ export function searchKpisSemantically(
 
   return results;
 }
+
+export interface GeminiSearchResponse {
+  results: SemanticSearchResult[];
+  mode: "gemini-embedding-2-preview" | "deterministic-vector-projection" | "local-vector-engine";
+  geminiModel?: string;
+  latencyMs: number;
+}
+
+/**
+ * Searches the 157 KPI Library using server-side Gemini Embeddings vector engine
+ * with automatic fallback to local semantic search.
+ */
+export async function searchKpisWithGemini(
+  query: string,
+  kpis: KPIRecord[],
+  options?: { maxResults?: number }
+): Promise<GeminiSearchResponse> {
+  const startTime = Date.now();
+  if (!query || !query.trim()) {
+    const defaultList = searchKpisSemantically("", kpis, options);
+    return {
+      results: defaultList,
+      mode: "local-vector-engine",
+      latencyMs: 0,
+    };
+  }
+
+  try {
+    const res = await fetch("/api/gemini/semantic-search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: query.trim(), topK: options?.maxResults || 157 }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Server returned ${res.status}`);
+    }
+
+    const data = await res.json();
+    if (data.success && Array.isArray(data.results)) {
+      // Map server response to SemanticSearchResult
+      const mappedResults: SemanticSearchResult[] = data.results.map((r: any) => {
+        const kpi = kpis.find((k) => k.id === (r.kpi?.id || r.kpiId)) || r.kpi;
+        return {
+          kpi,
+          score: r.score,
+          matchConfidence: r.matchConfidence as any,
+          matchedTokens: r.matchedTokens || [],
+          semanticReason: r.semanticReason || "Gemini Vector Similarity Fit",
+        };
+      }).filter((item: any) => item.kpi);
+
+      return {
+        results: mappedResults,
+        mode: data.mode || "gemini-embedding-2-preview",
+        geminiModel: data.geminiModel,
+        latencyMs: data.latencyMs || (Date.now() - startTime),
+      };
+    }
+  } catch (error) {
+    console.warn("Gemini semantic search API request failed, using client vector engine:", error);
+  }
+
+  // Fallback to local semantic search engine
+  const localResults = searchKpisSemantically(query, kpis, options);
+  return {
+    results: localResults,
+    mode: "local-vector-engine",
+    latencyMs: Date.now() - startTime,
+  };
+}
+
