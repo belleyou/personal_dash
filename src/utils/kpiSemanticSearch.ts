@@ -60,15 +60,57 @@ const DOMAIN_SYNONYMS: Record<string, string[]> = {
 
   // Pipeline & Funnel
   pipeline: ["deal flow", "opportunities", "funnel", "coverage ratio", "pipeline generation", "inflow", "waterfall", "staged deals"],
-  funnel: ["conversion", "drop off", "stage progression", "top of funnel", "middle of funnel", "bottom of funnel", "pass through rate"],
-  waterfall: ["pipeline movement", "created", "won", "lost", "pushed", "pulled", "increased", "decreased"]
+  funnel: ["conversion", "drop off", "stage progression", "top of funnel", "middle of funnel", "bottom of funnel", "pass through rate", "waterfall", "stage conversion", "dwell time"],
+  waterfall: ["pipeline movement", "created", "won", "lost", "pushed", "pulled", "increased", "decreased", "nrr waterfall", "grr waterfall", "funnel waterfall"],
+
+  // Commercial Trades & Verticals
+  trade: ["vertical", "industry", "commercial hvac", "electrical solar", "plumbing piping", "general contracting", "commercial roofing", "enterprise saas", "healthcare systems", "logistics", "trade breakdown", "trade win rate"],
+  hvac: ["mechanical", "commercial hvac", "trade", "field service", "contractor"],
+  solar: ["electrical", "renewable", "solar energy", "trade breakdown"],
+  contracting: ["general contractor", "roofing", "plumbing", "construction", "commercial trade"],
+
+  // Speed-to-Lead, SLA & Latency
+  sla_lead: ["speed to lead", "first touch latency", "response sla", "5 min sla", "first touch delay", "inbound latency", "contact speed"],
+  
+  // Campaign & Unit Economics
+  campaign_ledger: ["campaign spend", "cpl", "cac payback", "campaign roi", "won logos", "booked arr", "campaign economics"]
 };
 
 // Pre-calculated Intent Vector Keywords for RevOps Domains
 export const SEMANTIC_INTENT_PRESETS = [
   {
+    id: "trade_breakdown",
+    label: "🏗️ Trade & Vertical Breakdown",
+    query: "trade breakdown commercial hvac electrical solar plumbing general contracting commercial roofing enterprise saas healthcare logistics win rates booked arr",
+    description: "Analyze volume distribution, win rates, and booked ARR across key commercial trades."
+  },
+  {
+    id: "channel_sla",
+    label: "🎯 Channel Attribution & Speed-to-Lead",
+    query: "channel attribution outbound ai inbound organic partner referral paid search trade show speed to lead first touch latency 5 min sla",
+    description: "Assess lead share, win rates, CAC, and first-touch SLA compliance (< 5 min)."
+  },
+  {
+    id: "funnel_waterfall",
+    label: "🌪️ 5-Stage Funnel Progression",
+    query: "5-stage funnel progression lead ingress 100% mql qualified sql validated active opportunity closed won booked pass through rate dwell time drop off",
+    description: "Visual stage waterfall tracking progression and drop-off diagnostics."
+  },
+  {
+    id: "campaign_ledger_roi",
+    label: "📈 Campaign Performance & Ledger",
+    query: "campaign performance economics blended cpl cac net campaign roi cac payback period spend leads generated sqls won logos booked arr",
+    description: "Executive economics and detailed campaign spend/bookings ledger."
+  },
+  {
+    id: "velocity_nrr",
+    label: "⚡ Pipeline Velocity & NRR Waterfall",
+    query: "pipeline velocity simulation opps win rate acv sales cycle days net revenue retention nrr waterfall gross revenue retention grr starting expansion churn ending arr",
+    description: "Model pipeline velocity simulations and cohort NRR/GRR waterfalls."
+  },
+  {
     id: "velocity_cycle",
-    label: "⚡ Deal Velocity & Latency",
+    label: "⏱️ Deal Velocity & Latency",
     query: "deal cycle length pipeline velocity response time speed to close",
     description: "Measure sales acceleration, sales cycle length, and lead response SLA."
   },

@@ -1748,6 +1748,94 @@ export const KPI_MASTER_DATA: KPIRecord[] = [
     type: "Lagging",
     bestVisualization: "Sorted bar chart",
     analysisPurpose: "Tracks the proportion of leads flagged as unqualified, bogus, or spam during the previous quarter to adjust ICP and top-of-funnel targeting."
+  },
+  {
+    id: "KPI-158",
+    metric: "Trade Breakdown: Volume distribution, win rates, and booked ARR across commercial trades",
+    function: "Trade & Industry Analysis",
+    object: "Opportunity + Account",
+    dataSources: "Salesforce + Internal DW — Finance PO",
+    dimensions: "Trade (Commercial HVAC & Mechanical, Electrical & Solar, Plumbing & Industrial Piping, General Contracting, Commercial Roofing, Enterprise SaaS, Healthcare Systems, Logistics), Region, Rep, Quarter",
+    type: "Lagging",
+    bestVisualization: "Grouped bar + KPI counters",
+    analysisPurpose: "Monitors live opportunity volume distribution, competitive win rates, and booked ARR across key commercial trades including Commercial HVAC & Mechanical, Electrical & Solar, Plumbing & Industrial Piping, General Contracting, Commercial Roofing, Enterprise SaaS, Healthcare Systems, and Logistics to optimize vertical sales motions."
+  },
+  {
+    id: "KPI-159",
+    metric: "Channel Attribution: Lead share, win rates, and estimated customer acquisition costs",
+    function: "GTM & Channel Analysis",
+    object: "Campaign + Lead + Opportunity + Spend",
+    dataSources: "Salesforce + Marketo / HubSpot + Internal DW — Finance PO",
+    dimensions: "Channel (Outbound AI, Inbound Organic, Partner Referral, Paid Search, Trade Show), Campaign, Region, Time",
+    type: "Lagging",
+    bestVisualization: "Bubble chart",
+    analysisPurpose: "Measures lead volume share, closed-won win rates, and estimated acquisition costs across Outbound AI, Inbound Organic, Partner Referral, Paid Search, and Trade Show channels to optimize GTM resource allocation."
+  },
+  {
+    id: "KPI-160",
+    metric: "Speed-to-Lead and SLA tracking: First-touch latency in minutes (< 5 min)",
+    function: "Lead-to-Account (L2A) Analysis",
+    object: "Lead + Activity",
+    dataSources: "Salesforce + Marketo / HubSpot",
+    dimensions: "First Touch Latency (Minutes), SLA Breach (< 5 min), Channel, Rep, Territory, Time",
+    type: "Leading",
+    bestVisualization: "KPI counter + benchmark bar",
+    analysisPurpose: "Measures elapsed first-touch latency in minutes from lead creation to sales engagement, tracking adherence to the sub-5-minute target SLA benchmark (< 5 min) to prevent lead decay."
+  },
+  {
+    id: "KPI-161",
+    metric: "5-Stage Funnel Progression: Lead Ingress (100%) → MQL → SQL → Opportunity → Closed Won",
+    function: "Funnel & Conversion Analysis",
+    object: "Lead + Opportunity + History",
+    dataSources: "Salesforce + Marketo / HubSpot",
+    dimensions: "Funnel Stage (Lead Ingress 100% -> MQL Qualified -> SQL Validated -> Active Opportunity -> Closed Won Booked), Pass-Through Rate %, Drop-Off Reason, Dwell Time (Days)",
+    type: "Leading",
+    bestVisualization: "Funnel chart",
+    analysisPurpose: "Visualizes the 5-stage progression from raw Lead Ingress (100%) through MQL Qualified, SQL Validated, Active Opportunity, and Closed Won Booked, diagnosing stage-to-stage conversion percentages, drop-offs, and sales cycle dwell times."
+  },
+  {
+    id: "KPI-162",
+    metric: "Campaign Performance Executive Economics (CPL, CAC, Net ROI %, CAC Payback)",
+    function: "Marketing & Campaign ROI Analysis",
+    object: "Campaign + Spend + Lead + Opportunity + Invoice",
+    dataSources: "Salesforce + Marketo / HubSpot + Internal DW — Finance PO",
+    dimensions: "Campaign, Channel, Spend, CPL, CAC, Net Campaign ROI %, CAC Payback (Months), Quarter",
+    type: "Lagging",
+    bestVisualization: "Dual-axis combo chart",
+    analysisPurpose: "Computes executive unit economics including Blended Cost Per Lead (CPL), Customer Acquisition Cost (CAC), Net Campaign ROI %, and CAC Payback Period in months across marketing investments."
+  },
+  {
+    id: "KPI-163",
+    metric: "Campaign Performance Ledger: Spend, leads generated, SQLs, won logos, and booked ARR",
+    function: "Marketing & Campaign ROI Analysis",
+    object: "Campaign + Lead + Opportunity",
+    dataSources: "Salesforce + Marketo / HubSpot + Internal DW — Finance PO",
+    dimensions: "Campaign Name, Program Type, Spend Budget, Leads Generated, SQLs Generated, Won Logos, Booked ARR, Time",
+    type: "Lagging",
+    bestVisualization: "Sorted bar chart",
+    analysisPurpose: "Detailed performance ledger breaking down spend, leads generated, SQLs generated, won customer logos, and booked ARR by campaign initiative."
+  },
+  {
+    id: "KPI-164",
+    metric: "Pipeline Velocity & Scenario Simulation: (# Opps × Win Rate % × ACV) / Sales Cycle Days",
+    function: "Sales Efficiency & Velocity Analysis",
+    object: "Opportunity",
+    dataSources: "Salesforce",
+    dimensions: "Opportunity Volume, Win Rate %, Average Contract Value (ACV), Sales Cycle Days, Pipeline Velocity ($/Day), Region, Segment",
+    type: "Leading",
+    bestVisualization: "Bubble chart",
+    analysisPurpose: "Computes daily pipeline velocity via the formula: (# Opportunities × Win Rate % × Average Deal Size ACV) / Sales Cycle Length in Days, and powers interactive simulation engines to model revenue sensitivity."
+  },
+  {
+    id: "KPI-165",
+    metric: "Net Revenue Retention (NRR) and Gross Revenue Retention (GRR) Cohort Waterfall",
+    function: "Customer Retention & Expansion Analysis",
+    object: "Subscription + Contract + Invoice + Account",
+    dataSources: "Salesforce + Internal DW — Finance PO",
+    dimensions: "Starting ARR, Expansion ARR, Contraction ARR, Churn ARR, Ending ARR, NRR %, GRR %, Customer Cohort, Segment",
+    type: "Lagging",
+    bestVisualization: "Variance waterfall + exception table",
+    analysisPurpose: "Decomposes customer cohort recurring revenue: Starting ARR + Expansion ARR - Contraction ARR - Churn ARR = Ending ARR, reporting both Net Revenue Retention (NRR %) and Gross Revenue Retention (GRR %) to evaluate net revenue durability."
   }
 ];
 

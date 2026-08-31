@@ -34,6 +34,11 @@ import {
 } from "lucide-react";
 import { MetricLookupScriptGenerator } from "./MetricLookupScriptGenerator";
 import { KPIDiagnosticTool } from "./KPIDiagnosticTool";
+import { TradeBreakdownSection } from "./TradeBreakdownSection";
+import { ChannelAndSlaSection } from "./ChannelAndSlaSection";
+import { FunnelWaterfallSection } from "./FunnelWaterfallSection";
+import { CampaignEconomicsLedgerSection } from "./CampaignEconomicsLedgerSection";
+import { SalesVelocitySimulatorSection } from "./SalesVelocitySimulatorSection";
 import { KPI_MASTER_DATA } from "../data/kpiMasterData";
 import { googleSignIn, logout, getAccessToken, auth } from "../lib/googleAuth";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
@@ -94,7 +99,20 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
   const [selectedLeadSource, setSelectedLeadSource] = useState<string>("All");
   const [selectedProduct, setSelectedProduct] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [activeTab, setActiveTab] = useState<"kpi_scripts" | "kpi_diagnostics" | "overview" | "funnel" | "sql_workbench" | "frd_specs" | "data_table">("kpi_scripts");
+  const [activeTab, setActiveTab] = useState<
+    | "kpi_scripts"
+    | "kpi_diagnostics"
+    | "trade_breakdown"
+    | "channel_sla"
+    | "funnel_waterfall"
+    | "campaign_ledger"
+    | "sales_velocity"
+    | "overview"
+    | "funnel"
+    | "sql_workbench"
+    | "frd_specs"
+    | "data_table"
+  >("kpi_scripts");
 
   // SQL Query Workbench state
   const [sqlQuery, setSqlQuery] = useState<string>(
@@ -551,8 +569,58 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
           >
             <span>🔬 KPI Formula Diagnostics</span>
             <span className="px-1.5 py-0.2 bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] rounded font-mono font-bold">
-              157 Validated
+              {KPI_MASTER_DATA.length} Validated
             </span>
+          </button>
+          <button
+            onClick={() => setActiveTab("trade_breakdown")}
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
+              activeTab === "trade_breakdown"
+                ? "bg-highlight text-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
+            }`}
+          >
+            🏗️ Trade Breakdown
+          </button>
+          <button
+            onClick={() => setActiveTab("channel_sla")}
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
+              activeTab === "channel_sla"
+                ? "bg-highlight text-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
+            }`}
+          >
+            🎯 Channel & SLA (&lt;5m)
+          </button>
+          <button
+            onClick={() => setActiveTab("funnel_waterfall")}
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
+              activeTab === "funnel_waterfall"
+                ? "bg-highlight text-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
+            }`}
+          >
+            🌪️ 5-Stage Funnel Waterfall
+          </button>
+          <button
+            onClick={() => setActiveTab("campaign_ledger")}
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
+              activeTab === "campaign_ledger"
+                ? "bg-highlight text-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
+            }`}
+          >
+            📈 Campaign Economics & Ledger
+          </button>
+          <button
+            onClick={() => setActiveTab("sales_velocity")}
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
+              activeTab === "sales_velocity"
+                ? "bg-highlight text-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
+            }`}
+          >
+            ⚡ Sales Velocity & NRR
           </button>
           <button
             onClick={() => setActiveTab("overview")}
@@ -563,16 +631,6 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
             }`}
           >
             📊 Executive Analytics & Charts
-          </button>
-          <button
-            onClick={() => setActiveTab("funnel")}
-            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
-              activeTab === "funnel"
-                ? "bg-highlight text-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
-                : "bg-white text-zinc-600 hover:bg-zinc-100"
-            }`}
-          >
-            🌪️ Conversion Funnel Analysis
           </button>
           <button
             onClick={() => setActiveTab("sql_workbench")}
@@ -617,6 +675,41 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
         {activeTab === "kpi_diagnostics" && (
           <div className="w-full">
             <KPIDiagnosticTool />
+          </div>
+        )}
+
+        {/* Tab: Trade Breakdown */}
+        {activeTab === "trade_breakdown" && (
+          <div className="w-full">
+            <TradeBreakdownSection />
+          </div>
+        )}
+
+        {/* Tab: Channel Attribution & SLA */}
+        {activeTab === "channel_sla" && (
+          <div className="w-full">
+            <ChannelAndSlaSection />
+          </div>
+        )}
+
+        {/* Tab: 5-Stage Funnel Waterfall */}
+        {activeTab === "funnel_waterfall" && (
+          <div className="w-full">
+            <FunnelWaterfallSection />
+          </div>
+        )}
+
+        {/* Tab: Campaign Performance & Ledger */}
+        {activeTab === "campaign_ledger" && (
+          <div className="w-full">
+            <CampaignEconomicsLedgerSection />
+          </div>
+        )}
+
+        {/* Tab: Sales Velocity & NRR Waterfall */}
+        {activeTab === "sales_velocity" && (
+          <div className="w-full">
+            <SalesVelocitySimulatorSection />
           </div>
         )}
 
