@@ -68,6 +68,7 @@ import { InactiveLeadsReengagement } from "./components/InactiveLeadsReengagemen
 import { GongRevenueIntelligenceAgent } from "./components/GongRevenueIntelligenceAgent";
 import { ProjectTinderDeck } from "./components/ProjectTinderDeck";
 import { DataAnalystDashboard } from "./components/DataAnalystDashboard";
+import { GTMAdminDashboard } from "./components/GTMAdminDashboard";
 
 // Import types & static data
 import { 
@@ -326,7 +327,7 @@ export default function App() {
        // Support path and queries like articles?id=salesforce-scale or projects?tab=n8n_orchestration
        const [pagePath, queryStr] = fullHash.split("?");
 
-       const targetPage = ["home", "about", "certifications", "projects", "articles", "career", "contact", "meet", "thank-you", "data-analyst-dashboard"].includes(pagePath)
+       const targetPage = ["home", "about", "certifications", "projects", "articles", "career", "contact", "meet", "thank-you", "data-analyst-dashboard", "gtm-admin-dashboard"].includes(pagePath)
          ? pagePath
          : "home";
 
@@ -2456,15 +2457,13 @@ export default function App() {
                   </div>
 
                   <div className="flex items-center gap-2 pt-2 border-t border-zinc-200/80">
-                    <a
-                      href="file:///Users/baoyou/Documents/Codex/GTM%20Admin%20Dash.html"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 py-2 px-3 bg-white hover:bg-zinc-100 text-zinc-900 border-2 border-ink rounded-lg font-hand text-xs font-bold shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                    <button
+                      onClick={() => navigateToPage("gtm-admin-dashboard")}
+                      className="flex-1 py-2 px-3 bg-purple-600 hover:bg-purple-700 text-white border-2 border-ink rounded-lg font-hand text-xs font-bold shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 flex items-center justify-center gap-1.5 transition-all cursor-pointer select-none"
                     >
                       <span>Open Dashboard</span>
-                      <ArrowUpRight className="h-3.5 w-3.5 text-zinc-700" />
-                    </a>
+                      <ArrowUpRight className="h-3.5 w-3.5 text-white" />
+                    </button>
                     <button
                       onClick={() => copyToClipboard("file:///Users/baoyou/Documents/Codex/GTM%20Admin%20Dash.html", "gtm_admin_dash")}
                       className="py-2 px-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg font-hand text-xs font-bold border-2 border-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 flex items-center justify-center gap-1.5 transition-all cursor-pointer select-none"
@@ -2611,6 +2610,13 @@ export default function App() {
         {activePage === "data-analyst-dashboard" && (
           <div className="w-full">
             <DataAnalystDashboard onBackToChat={() => navigateToPage("meet")} />
+          </div>
+        )}
+
+        {/* 8B. GTM ADMIN DASHBOARD & VENDOR OOB RECREATION */}
+        {activePage === "gtm-admin-dashboard" && (
+          <div className="w-full">
+            <GTMAdminDashboard onBackToMain={() => navigateToPage("meet")} />
           </div>
         )}
 
