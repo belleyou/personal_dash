@@ -268,6 +268,7 @@ export const RAW_GTM_CSV = `
 "Loomly","Content & social","Create, manage and distribute brand content","Free–$249+/mo","SMB | MMS","Generative content and brand insights","API, webhooks and partner connectors","Built-in / assisted","—","No native node","HTTP Request"
 "Loopy Loyalty","Marketing automation","Create, personalize and measure lifecycle campaigns","Free–custom","SMB | MMS | LCS","Content generation, segmentation, optimization","API, webhooks and partner connectors","Built-in / assisted","—","No native node","HTTP Request"
 "Lucky Orange","Analytics & intelligence","Analyze buyer activity, calls and revenue performance","Free–custom","SMB | MMS","Conversation AI, forecasting and anomaly detection","API, webhooks and partner connectors","Built-in / assisted","—","No native node","HTTP Request"
+"Lucidchart","Productivity & events","Coordinate work, meetings, forms and events","Free–$9+/user/mo","SMB | MMS | LCS","AI prompt-to-diagram, automated flow generation, and visual summaries","Broad ecosystem + REST API","Built-in / assisted","Lucidchart REST API","https://api.iconify.design/simple-icons/lucid.svg?color=%23f96302","HTTP Request"
 "Lusha","Data & enrichment","Find, verify and enrich company and contact data","Free credits–custom","SMB | MMS | LCS","AI research, matching and enrichment","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
 "MadKudu","ABM & intent","Identify, prioritize and engage target accounts","Custom / annual","SMB | MMS | LCS","Intent scoring and account recommendations","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
 "Magento / Adobe Commerce","Commerce & payments","Run commerce, billing, subscriptions and finance ops","Usage-based / custom","SMB | MMS","Fraud, recommendations and finance automation","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
@@ -569,6 +570,8 @@ const VENDOR_AI_OVERVIEWS: Record<string, string> = {
   "gong": "Gong is a revenue intelligence platform that captures and analyzes customer interactions across video calls, phone calls, and emails to provide AI-powered deal insights and pipeline forecasting.",
   "hubspot": "HubSpot is an inbound CRM, marketing, and customer service platform that unifies lead generation, multi-touch attribution, and lifecycle automation for scaling businesses.",
   "leandata": "LeanData is a revenue orchestration platform built natively on Salesforce that automates lead-to-account matching, routing, and complex multi-object territory governance.",
+  "lucidchart": "Lucidchart is an intelligent diagramming and visual collaboration platform that enables teams to map business processes, system architectures, data flows, and organization charts in real time.",
+  "lucid": "Lucidchart is an intelligent diagramming and visual collaboration platform that enables teams to map business processes, system architectures, data flows, and organization charts in real time.",
   "outreach": "Outreach is an enterprise sales execution platform that automates multi-channel sales engagement sequences, rep activity tracking, and pipeline management.",
   "salesforce": "Salesforce is a cloud-based CRM platform that manages sales pipelines, customer interactions, account hierarchies, and automated revenue operations across global enterprises.",
   "salesloft": "Salesloft is an AI-powered revenue engagement platform that helps sales teams execute orchestrated digital cadences, track buyer interactions, and forecast deals.",
@@ -721,6 +724,9 @@ function getExample1SignalSSOT(vendorName: string, category: string): string {
   if (v.includes("stripe") || v.includes("chargebee") || v.includes("zuora") || v.includes("dealhub")) {
     return "Create a CPQ quote when opportunity stage and product configuration are complete.";
   }
+  if (v.includes("lucid")) {
+    return "Automatically generate an architecture flowchart or account org chart when an enterprise opportunity reaches Stage 2 in Salesforce.";
+  }
 
   // Category fallback
   if (cat.includes("abm") || cat.includes("intent")) {
@@ -812,6 +818,9 @@ function getExample2EngageCPQ(vendorName: string, category: string): string {
   }
   if (v.includes("apollo") || v.includes("clearbit") || v.includes("zoominfo")) {
     return "Route a buying-committee contact to the parent-account owner and notify the SDR.";
+  }
+  if (v.includes("lucid")) {
+    return "Embed dynamic process map diagrams and approval hierarchy flowcharts into customer proposal decks and CPQ quote packages.";
   }
 
   // Category fallback

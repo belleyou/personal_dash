@@ -20,6 +20,83 @@ export function getOobActionsForVendor(vendor: GTMVendor): OOBAction[] {
   const cat = vendor.category.toLowerCase();
   const vName = vendor.vendor;
 
+  if (vName.toLowerCase().includes("lucid")) {
+    return [
+      {
+        id: "lucid_generate_diagram",
+        name: "Generate GTM Architecture Flowchart from API Payload",
+        description: "Creates an intelligent visual process map or data flow diagram in Lucidchart using structured schema or text prompts.",
+        method: "POST",
+        endpoint: `/api/v1/documents/diagrams/generate`,
+        defaultParams: {
+          title: "Enterprise RevOps Ingestion & SSoT Architecture 2026",
+          diagramType: "System Architecture Flow",
+          components: [
+            "Website Form Ingestion",
+            "Real-time IP & Email Enrichment (Clearbit / ZoomInfo)",
+            "Lead-to-Account Hierarchy Matcher (LeanData)",
+            "Salesforce CRM Master SSoT",
+            "Outreach / Salesloft SDR Cadences"
+          ],
+          exportFormat: "SVG / PNG / Interactive URL",
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 165,
+          statusCode: 200,
+          result: {
+            documentId: "lucid_doc_882901a",
+            title: params.title || "Enterprise RevOps Ingestion & SSoT Architecture 2026",
+            editUrl: "https://lucid.app/lucidchart/882901a/edit",
+            viewUrl: "https://lucid.app/documents/embedded/882901a",
+            nodesGenerated: 5,
+            connectionsCreated: 4,
+            theme: "Modern Enterprise Indigo",
+            aiAutoLayoutApplied: true,
+            status: "Document published and share permissions configured.",
+          },
+          log: [
+            `[${v.vendor}] Authenticating with Lucid REST API using OAuth 2.0 Bearer token...`,
+            `[${v.vendor}] Ingesting 5 architecture nodes and directional relationship graph...`,
+            `[${v.vendor}] Applying Lucid AI auto-layout engine for optimal node spacing and routing...`,
+            `[${v.vendor}] Document created successfully. Interactive embed URL generated.`,
+          ],
+        }),
+      },
+      {
+        id: "lucid_sync_salesforce_orgchart",
+        name: "Sync Salesforce Buying Committee to Lucidchart Org Chart",
+        description: "Extracts contact reporting relationships from Salesforce Account records and renders an interactive Org Chart diagram.",
+        method: "POST",
+        endpoint: `/api/v1/salesforce/sync-orgchart`,
+        defaultParams: {
+          salesforceAccountId: "0018000000abc123",
+          accountName: "Snowflake Inc.",
+          includeDecisionMakers: true,
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 138,
+          statusCode: 200,
+          result: {
+            account: params.accountName || "Snowflake Inc.",
+            syncedContacts: 14,
+            hierarchicalLevels: 3,
+            identifiedChampions: ["VP of Revenue Operations", "Chief Technology Officer"],
+            blockersFlagged: ["Procurement Director"],
+            lucidchartUrl: "https://lucid.app/lucidchart/orgchart-snowflake-2026",
+            lastSyncTimestamp: new Date().toISOString(),
+          },
+          log: [
+            `[${v.vendor}] Fetching Contact & Opportunity Contact Role records from Salesforce...`,
+            `[${v.vendor}] Constructing hierarchical reporting tree based on ReportsToId...`,
+            `[${v.vendor}] Synchronizing visual nodes to Lucidchart account folder. Complete.`,
+          ],
+        }),
+      },
+    ];
+  }
+
   // Specific tailored actions based on vendor category and name
   if (cat.includes("abm") || cat.includes("intent")) {
     return [
