@@ -54,48 +54,18 @@ const DOMAIN_SYNONYMS: Record<string, string[]> = {
 
   // Leads, Qualification & Inbound/Outbound
   qualification: ["mql", "sql", "sal", "lead score", "qualification rate", "acceptance rate", "disqualification", "fit score", "intent score"],
-  sla: ["service level agreement", "response time", "first touch latency", "routing speed", "assignment time", "follow up time", "speed to lead"],
-  conversion: ["win rate", "stage conversion", "lead to opp", "opp to close", "funnel pass through", "close rate", "lead to sql", "sql to won"],
+  sla: ["service level agreement", "response time", "first touch latency", "routing speed", "assignment time", "follow up time"],
+  conversion: ["win rate", "stage conversion", "lead to opp", "opp to close", "funnel pass through", "close rate"],
   routing: ["lead assignment", "territory routing", "round robin", "sla", "auto assignment", "speed to lead"],
-  trade: ["industry", "vertical", "contractor", "hvac", "electrical", "plumbing", "roofing", "general contracting", "commercial trade"],
 
   // Pipeline & Funnel
-  pipeline: ["deal flow", "opportunities", "funnel", "coverage ratio", "pipeline generation", "inflow", "waterfall", "staged deals", "velocity"],
-  funnel: ["conversion", "drop off", "stage progression", "top of funnel", "middle of funnel", "bottom of funnel", "pass through rate", "waterfall"],
-  waterfall: ["pipeline movement", "created", "won", "lost", "pushed", "pulled", "increased", "decreased", "funnel stages"],
-
-  // Campaign & Acquisition
-  campaign: ["ad spend", "cpl", "cac", "roi", "roas", "channel efficiency", "paid search", "campaign spend", "lead cost"],
-  cpl: ["cost per lead", "lead acquisition cost", "marketing cost per lead", "cpc", "campaign cost"],
-  acv: ["average contract value", "deal size", "arr per deal", "tcv", "contract size"]
+  pipeline: ["deal flow", "opportunities", "funnel", "coverage ratio", "pipeline generation", "inflow", "waterfall", "staged deals"],
+  funnel: ["conversion", "drop off", "stage progression", "top of funnel", "middle of funnel", "bottom of funnel", "pass through rate"],
+  waterfall: ["pipeline movement", "created", "won", "lost", "pushed", "pulled", "increased", "decreased"]
 };
 
 // Pre-calculated Intent Vector Keywords for RevOps Domains
 export const SEMANTIC_INTENT_PRESETS = [
-  {
-    id: "lead_gen_flow",
-    label: "🚀 Lead Gen Flow (Trades & Sources)",
-    query: "new leads by trade lead source inbound outbound ai contractor vertical hvac electrical speed to lead",
-    description: "Analyze lead ingress velocity, trade & vertical distribution, and speed to lead SLA compliance."
-  },
-  {
-    id: "funnel_conversion",
-    label: "🌪️ Funnel Conversion (Lead → SQL → Won)",
-    query: "lead to sql closed won funnel conversion rate stage progression waterfall pass through drop off",
-    description: "Track end-to-end conversion rates from raw lead to MQL, SQL, Opportunity, and Closed Won."
-  },
-  {
-    id: "campaign_perf",
-    label: "📈 Campaign Performance (CPL, CAC, ROI)",
-    query: "campaign performance cost per lead cpl customer acquisition cost cac roi roas cac payback period",
-    description: "Calculate unit economics, blended/paid CAC, CPL, campaign ROI %, and payback horizons."
-  },
-  {
-    id: "sales_efficiency",
-    label: "⚡ Sales Efficiency (Win Rate, Velocity, ACV, NRR)",
-    query: "sales efficiency win rate pipeline velocity acv average contract value net revenue retention nrr grr",
-    description: "Evaluate core sales velocity levers, win rates, average deal size, and cohort NRR expansion."
-  },
   {
     id: "velocity_cycle",
     label: "⚡ Deal Velocity & Latency",

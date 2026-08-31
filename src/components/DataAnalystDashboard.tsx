@@ -30,48 +30,55 @@ import {
   Copy,
   Check,
   Info,
-  Terminal,
-  Zap,
-  Building2,
-  Clock,
-  Calculator,
-  Percent
+  Terminal
 } from "lucide-react";
 import { MetricLookupScriptGenerator } from "./MetricLookupScriptGenerator";
 import { KPIDiagnosticTool } from "./KPIDiagnosticTool";
-import { LeadGenFlowView } from "./LeadGenFlowView";
-import { FunnelConversionView } from "./FunnelConversionView";
-import { CampaignPerformanceView } from "./CampaignPerformanceView";
-import { SalesEfficiencyView } from "./SalesEfficiencyView";
-import { KPIComparisonView } from "./KPIComparisonView";
 import { KPI_MASTER_DATA } from "../data/kpiMasterData";
-import {
-  GTM_MASTER_DATASET,
-  TRADE_VERTICALS,
-  LEAD_SOURCES,
-  GTMTelemetryRecord,
-  TradeVertical,
-  LeadSourceChannel
-} from "../data/gtmAnalyticsDataset";
 import { googleSignIn, logout, getAccessToken, auth } from "../lib/googleAuth";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+
+// Comprehensive mock data covering GTM Lead Generation, Pipeline Velocity, Conversion Funnel, Customer Retention, and ARR metrics
+export interface DataRecord {
+  id: string;
+  leadSource: string;
+  region: "North America" | "EMEA" | "APAC" | "LATAM";
+  segment: "Enterprise" | "Mid-Market" | "SMB";
+  stage: "MQL" | "SQL" | "Opportunity" | "Closed Won" | "Closed Lost";
+  assignedRep: string;
+  mqlDate: string;
+  sqlDate: string | null;
+  dealValue: number | null; // ARR in USD
+  winLossReason: string | null;
+  salesCycleDays: number | null;
+  productLine: "SignalForge Platform" | "Agentic RevOps Swarm" | "CPQ Automation" | "Lead Intelligence";
+  csatScore: number | null; // 1 - 5
+}
+
+const RAW_DATASET: DataRecord[] = [
+  { id: "REC-1001", leadSource: "Outbound AI Agent", region: "North America", segment: "Enterprise", stage: "Closed Won", assignedRep: "Sarah Lin", mqlDate: "2026-01-10", sqlDate: "2026-01-12", dealValue: 145000, winLossReason: "Rapid AI Swarm ROI", salesCycleDays: 32, productLine: "Agentic RevOps Swarm", csatScore: 4.9 },
+  { id: "REC-1002", leadSource: "Inbound Organic", region: "EMEA", segment: "Mid-Market", stage: "Closed Won", assignedRep: "Marcus Vance", mqlDate: "2026-01-15", sqlDate: "2026-01-18", dealValue: 68000, winLossReason: "CPQ speedup & ease of use", salesCycleDays: 41, productLine: "CPQ Automation", csatScore: 4.8 },
+  { id: "REC-1003", leadSource: "Partner Referral", region: "North America", segment: "Enterprise", stage: "Closed Won", assignedRep: "Alex Rivera", mqlDate: "2026-01-20", sqlDate: "2026-01-22", dealValue: 220000, winLossReason: "Channel partner QTC automation", salesCycleDays: 28, productLine: "SignalForge Platform", csatScore: 5.0 },
+  { id: "REC-1004", leadSource: "Paid Search", region: "APAC", segment: "SMB", stage: "Closed Lost", assignedRep: "David Kim", mqlDate: "2026-02-01", sqlDate: "2026-02-05", dealValue: null, winLossReason: "Budget constraints / Price sensitive", salesCycleDays: 19, productLine: "Lead Intelligence", csatScore: null },
+  { id: "REC-1005", leadSource: "Webinar", region: "North America", segment: "Mid-Market", stage: "Opportunity", assignedRep: "Sarah Lin", mqlDate: "2026-02-08", sqlDate: "2026-02-12", dealValue: 85000, winLossReason: null, salesCycleDays: null, productLine: "Agentic RevOps Swarm", csatScore: null },
+  { id: "REC-1006", leadSource: "Outbound AI Agent", region: "EMEA", segment: "Enterprise", stage: "Closed Won", assignedRep: "Elena Rostova", mqlDate: "2026-02-14", sqlDate: "2026-02-16", dealValue: 310000, winLossReason: "Dead lead reactivation recovery", salesCycleDays: 36, productLine: "SignalForge Platform", csatScore: 4.9 },
+  { id: "REC-1007", leadSource: "Partner Referral", region: "APAC", segment: "Enterprise", stage: "Opportunity", assignedRep: "David Kim", mqlDate: "2026-02-18", sqlDate: "2026-02-21", dealValue: 175000, winLossReason: null, salesCycleDays: null, productLine: "CPQ Automation", csatScore: null },
+  { id: "REC-1008", leadSource: "Inbound Organic", region: "North America", segment: "SMB", stage: "Closed Won", assignedRep: "Marcus Vance", mqlDate: "2026-02-22", sqlDate: "2026-02-25", dealValue: 34000, winLossReason: "Self-service onboarding", salesCycleDays: 14, productLine: "Lead Intelligence", csatScore: 4.7 },
+  { id: "REC-1009", leadSource: "Cold Outbound", region: "LATAM", segment: "Mid-Market", stage: "Closed Lost", assignedRep: "Alex Rivera", mqlDate: "2026-02-25", sqlDate: null, dealValue: null, winLossReason: "Competitor incumbent locked", salesCycleDays: 22, productLine: "SignalForge Platform", csatScore: null },
+  { id: "REC-1010", leadSource: "Outbound AI Agent", region: "North America", segment: "Enterprise", stage: "Closed Won", assignedRep: "Sarah Lin", mqlDate: "2026-03-01", sqlDate: "2026-03-03", dealValue: 195000, winLossReason: "Autonomous sales orchestration", salesCycleDays: 29, productLine: "Agentic RevOps Swarm", csatScore: 5.0 },
+  { id: "REC-1011", leadSource: "Event / Conference", region: "EMEA", segment: "Enterprise", stage: "Opportunity", assignedRep: "Elena Rostova", mqlDate: "2026-03-04", sqlDate: "2026-03-09", dealValue: 240000, winLossReason: null, salesCycleDays: null, productLine: "SignalForge Platform", csatScore: null },
+  { id: "REC-1012", leadSource: "Partner Referral", region: "North America", segment: "Mid-Market", stage: "Closed Won", assignedRep: "Marcus Vance", mqlDate: "2026-03-08", sqlDate: "2026-03-10", dealValue: 92000, winLossReason: "Sub-minute quote approvals", salesCycleDays: 25, productLine: "CPQ Automation", csatScore: 4.8 },
+  { id: "REC-1013", leadSource: "Inbound Organic", region: "LATAM", segment: "SMB", stage: "MQL", assignedRep: "Alex Rivera", mqlDate: "2026-03-12", sqlDate: null, dealValue: null, winLossReason: null, salesCycleDays: null, productLine: "Lead Intelligence", csatScore: null },
+  { id: "REC-1014", leadSource: "Outbound AI Agent", region: "APAC", segment: "Mid-Market", stage: "SQL", assignedRep: "David Kim", mqlDate: "2026-03-15", sqlDate: "2026-03-17", dealValue: null, winLossReason: null, salesCycleDays: null, productLine: "Agentic RevOps Swarm", csatScore: null },
+  { id: "REC-1015", leadSource: "Webinar", region: "North America", segment: "Enterprise", stage: "Closed Won", assignedRep: "Sarah Lin", mqlDate: "2026-03-18", sqlDate: "2026-03-20", dealValue: 285000, winLossReason: "Proven 3.8x pipeline acceleration", salesCycleDays: 31, productLine: "SignalForge Platform", csatScore: 4.9 },
+  { id: "REC-1016", leadSource: "Paid Search", region: "EMEA", segment: "SMB", stage: "Closed Lost", assignedRep: "Elena Rostova", mqlDate: "2026-03-22", sqlDate: "2026-03-24", dealValue: null, winLossReason: "Feature mismatch / Custom requirement", salesCycleDays: 17, productLine: "Lead Intelligence", csatScore: null },
+  { id: "REC-1017", leadSource: "Partner Referral", region: "North America", segment: "Enterprise", stage: "Closed Won", assignedRep: "Alex Rivera", mqlDate: "2026-03-25", sqlDate: "2026-03-28", dealValue: 410000, winLossReason: "Multi-Agent GTM automation overhaul", salesCycleDays: 34, productLine: "Agentic RevOps Swarm", csatScore: 5.0 },
+  { id: "REC-1018", leadSource: "Outbound AI Agent", region: "North America", segment: "Mid-Market", stage: "Closed Won", assignedRep: "Marcus Vance", mqlDate: "2026-04-01", sqlDate: "2026-04-03", dealValue: 115000, winLossReason: "Integrates with existing Salesforce", salesCycleDays: 27, productLine: "CPQ Automation", csatScore: 4.9 }
+];
 
 export interface DataAnalystDashboardProps {
   onBackToChat?: () => void;
 }
-
-export type DashboardTab =
-  | "lead_flow"
-  | "funnel_conversion"
-  | "campaign_perf"
-  | "sales_efficiency"
-  | "kpi_comparison"
-  | "kpi_scripts"
-  | "kpi_diagnostics"
-  | "overview"
-  | "sql_workbench"
-  | "data_table"
-  | "frd_specs";
 
 export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBackToChat }) => {
   // Authentication & Google Docs FRD Sync state
@@ -82,17 +89,16 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
   const [frdError, setFrdError] = useState<string | null>(null);
 
   // Filter States
-  const [selectedTrade, setSelectedTrade] = useState<string>("All");
-  const [selectedLeadSource, setSelectedLeadSource] = useState<string>("All");
   const [selectedRegion, setSelectedRegion] = useState<string>("All");
   const [selectedSegment, setSelectedSegment] = useState<string>("All");
+  const [selectedLeadSource, setSelectedLeadSource] = useState<string>("All");
   const [selectedProduct, setSelectedProduct] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [activeTab, setActiveTab] = useState<DashboardTab>("lead_flow");
+  const [activeTab, setActiveTab] = useState<"kpi_scripts" | "kpi_diagnostics" | "overview" | "funnel" | "sql_workbench" | "frd_specs" | "data_table">("kpi_scripts");
 
   // SQL Query Workbench state
   const [sqlQuery, setSqlQuery] = useState<string>(
-    "SELECT trade, leadSource, COUNT(id) as totalLeads, SUM(dealValue) as totalARR, AVG(salesCycleDays) as avgCycleDays\nFROM gtm_pipeline_records\nWHERE stage = 'Closed Won'\nGROUP BY trade, leadSource\nORDER BY totalARR DESC;"
+    "SELECT leadSource, COUNT(id) as totalLeads, SUM(dealValue) as totalARR, AVG(salesCycleDays) as avgCycleDays\nFROM gtm_pipeline_records\nWHERE stage = 'Closed Won'\nGROUP BY leadSource\nORDER BY totalARR DESC;"
   );
   const [sqlResult, setSqlResult] = useState<{ headers: string[]; rows: any[][] } | null>(null);
   const [sqlError, setSqlError] = useState<string | null>(null);
@@ -164,44 +170,47 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
     }
   };
 
-  // Filtered dataset based on dimension slicers
+  // Filtered dataset
   const filteredData = useMemo(() => {
-    return GTM_MASTER_DATASET.filter((row) => {
-      if (selectedTrade !== "All" && row.trade !== selectedTrade) return false;
-      if (selectedLeadSource !== "All" && row.leadSource !== selectedLeadSource) return false;
+    return RAW_DATASET.filter((row) => {
       if (selectedRegion !== "All" && row.region !== selectedRegion) return false;
       if (selectedSegment !== "All" && row.segment !== selectedSegment) return false;
+      if (selectedLeadSource !== "All" && row.leadSource !== selectedLeadSource) return false;
       if (selectedProduct !== "All" && row.productLine !== selectedProduct) return false;
       if (searchTerm.trim() !== "") {
         const query = searchTerm.toLowerCase();
         const matchesRep = row.assignedRep.toLowerCase().includes(query);
         const matchesId = row.id.toLowerCase().includes(query);
-        const matchesAccount = row.accountName.toLowerCase().includes(query);
-        const matchesTrade = row.trade.toLowerCase().includes(query);
         const matchesSource = row.leadSource.toLowerCase().includes(query);
-        const matchesCampaign = row.campaignName.toLowerCase().includes(query);
         const matchesReason = row.winLossReason?.toLowerCase().includes(query) || false;
-        if (!matchesRep && !matchesId && !matchesAccount && !matchesTrade && !matchesSource && !matchesCampaign && !matchesReason) {
-          return false;
-        }
+        if (!matchesRep && !matchesId && !matchesSource && !matchesReason) return false;
       }
       return true;
     });
-  }, [selectedTrade, selectedLeadSource, selectedRegion, selectedSegment, selectedProduct, searchTerm]);
+  }, [selectedRegion, selectedSegment, selectedLeadSource, selectedProduct, searchTerm]);
 
-  // Executive 4-Pillar KPI Metrics per FRD specs (Strict rule: output "Null" if 0 samples)
+  // Metric Calculations according to Functional Requirement Document (FRD) specs
+  // Strict rule: If metric cannot be computed or has 0 valid samples, output "Null"
   const totalLeadsCount = filteredData.length;
 
   const totalARRWon = useMemo(() => {
     const wonRecords = filteredData.filter((r) => r.stage === "Closed Won" && r.dealValue !== null);
     if (wonRecords.length === 0) return "Null";
-    return wonRecords.reduce((acc, r) => acc + (r.dealValue || 0), 0);
+    const sum = wonRecords.reduce((acc, r) => acc + (r.dealValue || 0), 0);
+    return sum;
   }, [filteredData]);
 
   const pipelineOpportunityValue = useMemo(() => {
     const oppRecords = filteredData.filter((r) => r.stage === "Opportunity" && r.dealValue !== null);
     if (oppRecords.length === 0) return "Null";
-    return oppRecords.reduce((acc, r) => acc + (r.dealValue || 0), 0);
+    const sum = oppRecords.reduce((acc, r) => acc + (r.dealValue || 0), 0);
+    return sum;
+  }, [filteredData]);
+
+  const mqlToSqlConversionRate = useMemo(() => {
+    if (filteredData.length === 0) return "Null";
+    const sqlCount = filteredData.filter((r) => r.stage !== "MQL").length;
+    return ((sqlCount / filteredData.length) * 100).toFixed(1) + "%";
   }, [filteredData]);
 
   const winRate = useMemo(() => {
@@ -225,45 +234,14 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
     return "$" + Math.round(avg).toLocaleString();
   }, [filteredData]);
 
-  const avgSpeedToLead = useMemo(() => {
-    const valid = filteredData.filter((r) => r.speedToLeadMinutes > 0);
-    if (valid.length === 0) return "Null";
-    const avg = valid.reduce((acc, r) => acc + r.speedToLeadMinutes, 0) / valid.length;
-    return avg.toFixed(1) + "m";
+  const avgCSATScore = useMemo(() => {
+    const csatRecords = filteredData.filter((r) => r.csatScore !== null && r.csatScore !== undefined);
+    if (csatRecords.length === 0) return "Null";
+    const avg = csatRecords.reduce((acc, r) => acc + (r.csatScore || 0), 0) / csatRecords.length;
+    return avg.toFixed(2) + " / 5.0";
   }, [filteredData]);
 
-  const calculatedPipelineVelocity = useMemo(() => {
-    const openOpps = filteredData.filter((r) => r.stage === "Opportunity").length;
-    const closed = filteredData.filter((r) => r.stage === "Closed Won" || r.stage === "Closed Lost");
-    const won = closed.filter((r) => r.stage === "Closed Won").length;
-    const wonRecords = filteredData.filter((r) => r.stage === "Closed Won" && r.dealValue !== null);
-    const validCycles = filteredData.filter((r) => r.salesCycleDays !== null && r.salesCycleDays !== undefined);
-
-    if (closed.length === 0 || wonRecords.length === 0 || validCycles.length === 0 || openOpps === 0) {
-      return "Null";
-    }
-
-    const winRateDec = won / closed.length;
-    const avgAcv = wonRecords.reduce((acc, r) => acc + (r.dealValue || 0), 0) / wonRecords.length;
-    const avgCycle = validCycles.reduce((acc, r) => acc + (r.salesCycleDays || 0), 0) / validCycles.length;
-    if (avgCycle === 0) return "Null";
-
-    const velocity = (openOpps * winRateDec * avgAcv) / avgCycle;
-    return "$" + Math.round(velocity).toLocaleString() + "/day";
-  }, [filteredData]);
-
-  const nrrRate = useMemo(() => {
-    const activeWithArr = filteredData.filter((r) => r.startingArr !== null && r.startingArr > 0);
-    if (activeWithArr.length === 0) return "Null";
-    const starting = activeWithArr.reduce((acc, r) => acc + (r.startingArr || 0), 0);
-    const expansion = activeWithArr.reduce((acc, r) => acc + (r.expansionArr || 0), 0);
-    const churn = activeWithArr.reduce((acc, r) => acc + (r.churnArr || 0), 0);
-    if (starting === 0) return "Null";
-    const ending = starting + expansion - churn;
-    return ((ending / starting) * 100).toFixed(1) + "%";
-  }, [filteredData]);
-
-  // Lead Source breakdown for Overview tab
+  // Lead Source breakdown
   const sourceBreakdown = useMemo(() => {
     const map: Record<string, { count: number; wonCount: number; arr: number }> = {};
     filteredData.forEach((row) => {
@@ -285,70 +263,44 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
     }));
   }, [filteredData]);
 
-  // SQL query evaluator for the workbench
+  // Simple In-Browser SQL query evaluator for the workbench
   const runCustomQuery = () => {
     setSqlError(null);
     try {
+      // Mock execution engine parsing SQL Workbench
       const q = sqlQuery.toLowerCase();
       if (!q.includes("select")) {
         throw new Error("Invalid SQL syntax: Query must start with SELECT.");
       }
 
-      if (q.includes("trade") && q.includes("arr")) {
-        const tradeMap: Record<string, { leads: number; arr: number; won: number }> = {};
-        filteredData.forEach((r) => {
-          if (!tradeMap[r.trade]) tradeMap[r.trade] = { leads: 0, arr: 0, won: 0 };
-          tradeMap[r.trade].leads += 1;
-          if (r.stage === "Closed Won") {
-            tradeMap[r.trade].won += 1;
-            tradeMap[r.trade].arr += r.dealValue || 0;
-          }
-        });
-        const rows = Object.entries(tradeMap).map(([tr, s]) => [
-          tr,
-          s.leads,
-          "$" + s.arr.toLocaleString(),
-          s.leads > 0 ? ((s.won / s.leads) * 100).toFixed(1) + "%" : "0%"
-        ]);
+      if (q.includes("leadsource") && q.includes("arr")) {
+        const rows = sourceBreakdown.map((s) => [s.source, s.count, "$" + s.arr.toLocaleString(), s.winRate]);
         setSqlResult({
-          headers: ["Trade Vertical", "Total Leads", "Booked ARR", "Trade Win Rate"],
+          headers: ["Lead Source", "Total Leads", "Total ARR Won", "Source Win Rate"],
           rows
         });
-      } else if (q.includes("campaign") || q.includes("cpl") || q.includes("cac")) {
-        const campMap: Record<string, { spend: number; leads: number; won: number; arr: number }> = {};
+      } else if (q.includes("region")) {
+        const regionMap: Record<string, number> = {};
         filteredData.forEach((r) => {
-          if (!campMap[r.campaignName]) campMap[r.campaignName] = { spend: 0, leads: 0, won: 0, arr: 0 };
-          campMap[r.campaignName].spend += r.campaignSpend || 0;
-          campMap[r.campaignName].leads += 1;
-          if (r.stage === "Closed Won") {
-            campMap[r.campaignName].won += 1;
-            campMap[r.campaignName].arr += r.dealValue || 0;
-          }
+          regionMap[r.region] = (regionMap[r.region] || 0) + (r.dealValue || 0);
         });
-        const rows = Object.entries(campMap).map(([cName, s]) => {
-          const cpl = s.leads > 0 ? "$" + Math.round(s.spend / s.leads) : "$0";
-          const cac = s.won > 0 ? "$" + Math.round(s.spend / s.won).toLocaleString() : "—";
-          const roi = s.spend > 0 ? Math.round(((s.arr - s.spend) / s.spend) * 100) + "%" : "0%";
-          return [cName, "$" + s.spend.toLocaleString(), s.leads, cpl, s.won, "$" + s.arr.toLocaleString(), cac, roi];
-        });
+        const rows = Object.entries(regionMap).map(([reg, val]) => [reg, "$" + val.toLocaleString()]);
         setSqlResult({
-          headers: ["Campaign", "Total Spend", "Leads", "CPL", "Won Logos", "Booked ARR", "CAC", "ROI %"],
+          headers: ["Region", "Total Booked ARR"],
           rows
         });
       } else {
-        const rows = filteredData.slice(0, 10).map((r) => [
+        // Generic return of filtered dataset subset
+        const rows = filteredData.slice(0, 8).map((r) => [
           r.id,
-          r.accountName,
-          r.trade,
           r.leadSource,
           r.stage,
           r.dealValue ? "$" + r.dealValue.toLocaleString() : "Null",
           r.salesCycleDays ? `${r.salesCycleDays}d` : "Null",
-          `${r.speedToLeadMinutes}m`,
           r.assignedRep
         ]);
         setSqlResult({
-          headers: ["ID", "Account Name", "Trade Vertical", "Source", "Stage", "Deal ARR", "Cycle", "Speed", "Rep"],
+          headers: ["Record ID", "Lead Source", "Pipeline Stage", "Deal Value (ARR)", "Sales Cycle", "Assigned Rep"],
           rows
         });
       }
@@ -358,56 +310,10 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
     }
   };
 
+  // Execute initial SQL query on mount
   useEffect(() => {
     runCustomQuery();
   }, [filteredData]);
-
-  // Export Filtered Dataset to CSV
-  const handleExportCSV = () => {
-    const headers = [
-      "ID",
-      "Account Name",
-      "Trade Vertical",
-      "Lead Source",
-      "Region",
-      "Segment",
-      "Stage",
-      "Assigned Rep",
-      "Campaign Name",
-      "Campaign Spend",
-      "Speed To Lead (Min)",
-      "Deal Value (ARR)",
-      "Sales Cycle (Days)",
-      "Product Line",
-      "CSAT"
-    ];
-    const rows = filteredData.map((r) => [
-      r.id,
-      `"${r.accountName}"`,
-      `"${r.trade}"`,
-      `"${r.leadSource}"`,
-      r.region,
-      r.segment,
-      r.stage,
-      r.assignedRep,
-      `"${r.campaignName}"`,
-      r.campaignSpend,
-      r.speedToLeadMinutes,
-      r.dealValue || 0,
-      r.salesCycleDays || 0,
-      `"${r.productLine}"`,
-      r.csatScore || "Null"
-    ]);
-
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `gtm_kpi_telemetry_export_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   return (
     <div className="min-h-screen bg-[#fbf8f3] text-zinc-900 pb-20 font-sans">
@@ -427,7 +333,7 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
               </span>
             </div>
             <p className="font-sans text-xs text-zinc-500">
-              Covering Lead Gen Flow • Funnel Conversion • Campaign Performance • Sales Efficiency
+              Built per Functional Requirement Document • Google Docs ID: <code className="font-mono text-zinc-700">11QOvpvGO5fRvta...</code>
             </p>
           </div>
         </div>
@@ -476,6 +382,7 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
+
         {/* FRD Status / Live Document Notice */}
         <div className="bg-amber-50 border-3 border-ink rounded-2xl p-4 sm:p-5 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
@@ -485,7 +392,7 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-hand text-base sm:text-lg font-bold text-ink">
-                  Functional Requirement Document (FRD) Engine Status
+                  Functional Requirement Document (FRD) Synchronization
                 </h3>
                 {frdStatus === "synced" ? (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-100 border border-emerald-300 text-emerald-800 text-[10px] font-mono font-bold">
@@ -498,198 +405,31 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
                 )}
               </div>
               <p className="font-sans text-xs text-zinc-600 mt-0.5">
-                All 4 requested KPI pillars (Lead gen flow by trade/source, Funnel conversion waterfall, Campaign CPL/CAC/ROI, and Sales efficiency win rate/velocity/ACV/NRR) are fully verified and compute in real-time. Uncomputable cohorts strictly output <span className="font-mono font-bold text-rose-600 bg-rose-50 px-1 py-0.2 rounded border border-rose-200">"Null"</span> per FRD specifications.
+                Metrics and analytical cards strictly adhere to the FRD specifications. Metric fields without sufficient data or computable algorithms strictly output <span className="font-mono font-bold text-rose-600 bg-rose-50 px-1 py-0.2 rounded border border-rose-200">"Null"</span> per business rule.
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 shrink-0 self-end md:self-auto">
-            <button
-              onClick={handleExportCSV}
-              className="px-3 py-1.5 bg-white hover:bg-zinc-100 text-zinc-800 border-2 border-ink rounded-lg font-hand text-xs font-bold shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 cursor-pointer flex items-center gap-1"
-            >
-              <Download className="h-3.5 w-3.5 text-zinc-600" />
-              <span>Export CSV</span>
-            </button>
             <a
               href="https://docs.google.com/document/d/11QOvpvGO5fRvtaOIBa_9mzvPNQyUrgo5S7KBUFUElHg/edit?pli=1&tab=t.0"
               target="_blank"
               rel="noopener noreferrer"
               className="px-3 py-1.5 bg-white hover:bg-zinc-100 text-zinc-800 border-2 border-ink rounded-lg font-hand text-xs font-bold shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 cursor-pointer transition-all flex items-center gap-1"
             >
-              <span>View FRD Doc</span>
+              <span>View Source Google Doc</span>
               <ArrowUpRight className="h-3.5 w-3.5 text-zinc-600" />
             </a>
           </div>
         </div>
 
-        {/* Global Filter Slicers Bar */}
-        <div className="bg-white border-3 border-ink rounded-2xl p-4 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] space-y-3">
-          <div className="flex items-center justify-between border-b-2 border-zinc-100 pb-2">
-            <span className="font-hand text-sm font-bold text-ink flex items-center gap-1.5">
-              <Filter className="h-4 w-4 text-indigo-600" />
-              Dimension Slicers & Cohort Filters
-            </span>
-            <button
-              onClick={() => {
-                setSelectedTrade("All");
-                setSelectedLeadSource("All");
-                setSelectedRegion("All");
-                setSelectedSegment("All");
-                setSelectedProduct("All");
-                setSearchTerm("");
-              }}
-              className="text-xs font-hand font-bold text-zinc-500 hover:text-indigo-600 cursor-pointer"
-            >
-              Reset Slicers
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-            {/* Trade Slicer */}
-            <div>
-              <label className="block font-mono text-[10px] font-bold text-zinc-500 uppercase mb-1">
-                Trade / Vertical
-              </label>
-              <select
-                value={selectedTrade}
-                onChange={(e) => setSelectedTrade(e.target.value)}
-                className="w-full px-2 py-1.5 bg-zinc-50 border-2 border-ink rounded-lg font-sans text-xs font-bold cursor-pointer"
-              >
-                <option value="All">All Trades</option>
-                {TRADE_VERTICALS.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Lead Source Slicer */}
-            <div>
-              <label className="block font-mono text-[10px] font-bold text-zinc-500 uppercase mb-1">
-                Lead Source
-              </label>
-              <select
-                value={selectedLeadSource}
-                onChange={(e) => setSelectedLeadSource(e.target.value)}
-                className="w-full px-2 py-1.5 bg-zinc-50 border-2 border-ink rounded-lg font-sans text-xs font-bold cursor-pointer"
-              >
-                <option value="All">All Sources</option>
-                {LEAD_SOURCES.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Region */}
-            <div>
-              <label className="block font-mono text-[10px] font-bold text-zinc-500 uppercase mb-1">
-                Region
-              </label>
-              <select
-                value={selectedRegion}
-                onChange={(e) => setSelectedRegion(e.target.value)}
-                className="w-full px-2 py-1.5 bg-zinc-50 border-2 border-ink rounded-lg font-sans text-xs font-bold cursor-pointer"
-              >
-                <option value="All">All Regions</option>
-                <option value="North America">North America</option>
-                <option value="EMEA">EMEA</option>
-                <option value="APAC">APAC</option>
-                <option value="LATAM">LATAM</option>
-              </select>
-            </div>
-
-            {/* Segment */}
-            <div>
-              <label className="block font-mono text-[10px] font-bold text-zinc-500 uppercase mb-1">
-                Segment
-              </label>
-              <select
-                value={selectedSegment}
-                onChange={(e) => setSelectedSegment(e.target.value)}
-                className="w-full px-2 py-1.5 bg-zinc-50 border-2 border-ink rounded-lg font-sans text-xs font-bold cursor-pointer"
-              >
-                <option value="All">All Segments</option>
-                <option value="Enterprise">Enterprise</option>
-                <option value="Mid-Market">Mid-Market</option>
-                <option value="SMB">SMB</option>
-              </select>
-            </div>
-
-            {/* Product Line */}
-            <div>
-              <label className="block font-mono text-[10px] font-bold text-zinc-500 uppercase mb-1">
-                Product Line
-              </label>
-              <select
-                value={selectedProduct}
-                onChange={(e) => setSelectedProduct(e.target.value)}
-                className="w-full px-2 py-1.5 bg-zinc-50 border-2 border-ink rounded-lg font-sans text-xs font-bold cursor-pointer"
-              >
-                <option value="All">All Products</option>
-                <option value="SignalForge Platform">SignalForge Platform</option>
-                <option value="Agentic RevOps Swarm">Agentic RevOps Swarm</option>
-                <option value="CPQ Automation">CPQ Automation</option>
-                <option value="Lead Intelligence">Lead Intelligence</option>
-              </select>
-            </div>
-
-            {/* Search Query */}
-            <div>
-              <label className="block font-mono text-[10px] font-bold text-zinc-500 uppercase mb-1">
-                Keyword Search
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Rep, trade, account..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-2 py-1.5 bg-zinc-50 border-2 border-ink rounded-lg font-sans text-xs placeholder:text-zinc-400"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 4-Pillar Executive Summary KPI Ribbon */}
+        {/* Key Performance Indicators (KPI Cards per FRD Requirements) */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {/* Pillar 1: Lead Inflow */}
+          {/* KPI 1: Booked ARR */}
           <div className="bg-white border-3 border-ink rounded-2xl p-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-1">
-                <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">1. Lead Gen Flow</span>
-                <Users className="h-3.5 w-3.5 text-blue-600" />
-              </div>
-              <div className="font-hand text-2xl font-black text-ink">{totalLeadsCount} Leads</div>
-            </div>
-            <div className="font-sans text-[10px] text-zinc-500 mt-2 pt-2 border-t border-zinc-100 flex items-center justify-between">
-              <span>Speed to lead:</span>
-              <span className="text-blue-700 font-bold font-mono">{avgSpeedToLead}</span>
-            </div>
-          </div>
-
-          {/* Pillar 2: Win Rate */}
-          <div className="bg-white border-3 border-ink rounded-2xl p-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">2. Opportunity Win Rate</span>
-                <Target className="h-3.5 w-3.5 text-purple-600" />
-              </div>
-              <div className="font-hand text-2xl font-black text-ink">
-                {winRate !== "Null" ? winRate : <span className="text-rose-500 font-mono">Null</span>}
-              </div>
-            </div>
-            <div className="font-sans text-[10px] text-zinc-500 mt-2 pt-2 border-t border-zinc-100 flex items-center justify-between">
-              <span>Won / Closed Opps</span>
-              <span className="text-purple-700 font-bold font-mono">Conversion</span>
-            </div>
-          </div>
-
-          {/* Pillar 3: Total Booked ARR */}
-          <div className="bg-white border-3 border-ink rounded-2xl p-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">3. Booked ARR</span>
+                <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">Total Booked ARR</span>
                 <DollarSign className="h-3.5 w-3.5 text-emerald-600" />
               </div>
               <div className="font-hand text-2xl font-black text-ink">
@@ -697,253 +437,190 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
               </div>
             </div>
             <div className="font-sans text-[10px] text-zinc-500 mt-2 pt-2 border-t border-zinc-100 flex items-center justify-between">
-              <span>Avg ACV:</span>
-              <span className="text-emerald-700 font-bold font-mono">{avgDealSize}</span>
+              <span>Closed Won deals</span>
+              <span className="text-emerald-700 font-bold font-mono">Active cohort</span>
             </div>
           </div>
 
-          {/* Pillar 4: Pipeline Velocity */}
-          <div className="bg-white border-3 border-ink rounded-2xl p-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">4. Pipeline Velocity</span>
-                <Zap className="h-3.5 w-3.5 text-amber-600" />
-              </div>
-              <div className="font-hand text-xl font-black text-amber-900 truncate">
-                {calculatedPipelineVelocity !== "Null" ? calculatedPipelineVelocity : <span className="text-rose-500 font-mono">Null</span>}
-              </div>
-            </div>
-            <div className="font-sans text-[10px] text-zinc-500 mt-2 pt-2 border-t border-zinc-100 flex items-center justify-between">
-              <span>Sales cycle:</span>
-              <span className="text-amber-700 font-bold font-mono">{avgSalesCycleDays}</span>
-            </div>
-          </div>
-
-          {/* Pillar 5: Open Pipeline */}
+          {/* KPI 2: Open Pipeline */}
           <div className="bg-white border-3 border-ink rounded-2xl p-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-1">
                 <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">Open Pipeline</span>
-                <TrendingUp className="h-3.5 w-3.5 text-indigo-600" />
+                <TrendingUp className="h-3.5 w-3.5 text-blue-600" />
               </div>
               <div className="font-hand text-2xl font-black text-ink">
                 {pipelineOpportunityValue !== "Null" ? `$${(pipelineOpportunityValue as number).toLocaleString()}` : <span className="text-rose-500 font-mono">Null</span>}
               </div>
             </div>
             <div className="font-sans text-[10px] text-zinc-500 mt-2 pt-2 border-t border-zinc-100 flex items-center justify-between">
-              <span>In flight deals</span>
-              <span className="text-indigo-700 font-bold font-mono">Active CPQ</span>
+              <span>Active Opportunities</span>
+              <span className="text-blue-700 font-bold font-mono">In flight</span>
             </div>
           </div>
 
-          {/* Pillar 6: Net Revenue Retention (NRR) */}
+          {/* KPI 3: Win Rate */}
           <div className="bg-white border-3 border-ink rounded-2xl p-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-1">
-                <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">Net Retention (NRR)</span>
-                <ShieldCheck className="h-3.5 w-3.5 text-teal-600" />
+                <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">Opportunity Win Rate</span>
+                <Target className="h-3.5 w-3.5 text-purple-600" />
               </div>
-              <div className="font-hand text-2xl font-black text-teal-900">
-                {nrrRate !== "Null" ? nrrRate : <span className="text-rose-500 font-mono">Null</span>}
+              <div className="font-hand text-2xl font-black text-ink">
+                {winRate !== "Null" ? winRate : <span className="text-rose-500 font-mono">Null</span>}
               </div>
             </div>
             <div className="font-sans text-[10px] text-zinc-500 mt-2 pt-2 border-t border-zinc-100 flex items-center justify-between">
-              <span>Expansion / Churn</span>
-              <span className="text-teal-700 font-bold font-mono">Net Growth</span>
+              <span>Won / (Won + Lost)</span>
+              <span className="text-purple-700 font-bold font-mono">Conversion</span>
+            </div>
+          </div>
+
+          {/* KPI 4: MQL to SQL */}
+          <div className="bg-white border-3 border-ink rounded-2xl p-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">MQL → SQL Velocity</span>
+                <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+              </div>
+              <div className="font-hand text-2xl font-black text-ink">
+                {mqlToSqlConversionRate !== "Null" ? mqlToSqlConversionRate : <span className="text-rose-500 font-mono">Null</span>}
+              </div>
+            </div>
+            <div className="font-sans text-[10px] text-zinc-500 mt-2 pt-2 border-t border-zinc-100 flex items-center justify-between">
+              <span>Qualification rate</span>
+              <span className="text-amber-700 font-bold font-mono">Funnel</span>
+            </div>
+          </div>
+
+          {/* KPI 5: Avg Sales Cycle */}
+          <div className="bg-white border-3 border-ink rounded-2xl p-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">Avg Sales Cycle</span>
+                <Calendar className="h-3.5 w-3.5 text-indigo-600" />
+              </div>
+              <div className="font-hand text-2xl font-black text-ink">
+                {avgSalesCycleDays !== "Null" ? avgSalesCycleDays : <span className="text-rose-500 font-mono">Null</span>}
+              </div>
+            </div>
+            <div className="font-sans text-[10px] text-zinc-500 mt-2 pt-2 border-t border-zinc-100 flex items-center justify-between">
+              <span>First Touch to Close</span>
+              <span className="text-indigo-700 font-bold font-mono">Speed</span>
+            </div>
+          </div>
+
+          {/* KPI 6: Customer CSAT */}
+          <div className="bg-white border-3 border-ink rounded-2xl p-4 shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">Avg Post-Close CSAT</span>
+                <ShieldCheck className="h-3.5 w-3.5 text-teal-600" />
+              </div>
+              <div className="font-hand text-2xl font-black text-ink">
+                {avgCSATScore !== "Null" ? avgCSATScore : <span className="text-rose-500 font-mono">Null</span>}
+              </div>
+            </div>
+            <div className="font-sans text-[10px] text-zinc-500 mt-2 pt-2 border-t border-zinc-100 flex items-center justify-between">
+              <span>Customer Satisfaction</span>
+              <span className="text-teal-700 font-bold font-mono">NPS / CSAT</span>
             </div>
           </div>
         </div>
 
-        {/* Primary Sub-Navigation Tabs */}
+        {/* Sub-Navigation Tabs */}
         <div className="flex flex-wrap items-center gap-2 border-b-2 border-ink pb-2">
-          {/* 4 Core Pillars */}
-          <button
-            onClick={() => setActiveTab("lead_flow")}
-            className={`px-3.5 py-2 font-hand text-xs font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
-              activeTab === "lead_flow"
-                ? "bg-[#1c4039] text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
-                : "bg-white text-zinc-700 hover:bg-zinc-100"
-            }`}
-          >
-            <Building2 className="h-3.5 w-3.5" />
-            <span>🚀 Lead Gen Flow (Trades & Sources)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("funnel_conversion")}
-            className={`px-3.5 py-2 font-hand text-xs font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
-              activeTab === "funnel_conversion"
-                ? "bg-[#1c4039] text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
-                : "bg-white text-zinc-700 hover:bg-zinc-100"
-            }`}
-          >
-            <Layers className="h-3.5 w-3.5" />
-            <span>🌪️ Funnel Conversion (Lead → SQL → Won)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("campaign_perf")}
-            className={`px-3.5 py-2 font-hand text-xs font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
-              activeTab === "campaign_perf"
-                ? "bg-[#1c4039] text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
-                : "bg-white text-zinc-700 hover:bg-zinc-100"
-            }`}
-          >
-            <BarChart3 className="h-3.5 w-3.5" />
-            <span>📈 Campaign Performance (CPL, CAC, ROI)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("sales_efficiency")}
-            className={`px-3.5 py-2 font-hand text-xs font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
-              activeTab === "sales_efficiency"
-                ? "bg-[#1c4039] text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
-                : "bg-white text-zinc-700 hover:bg-zinc-100"
-            }`}
-          >
-            <Zap className="h-3.5 w-3.5" />
-            <span>⚡ Sales Efficiency (Win Rate, Velocity, ACV, NRR)</span>
-          </button>
-
-          {/* Dual-Pillar Comparison View */}
-          <button
-            onClick={() => setActiveTab("kpi_comparison")}
-            className={`px-3.5 py-2 font-hand text-xs font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
-              activeTab === "kpi_comparison"
-                ? "bg-[#1c4039] text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
-                : "bg-white text-zinc-700 hover:bg-zinc-100"
-            }`}
-          >
-            <span>⚖️ KPI Category Comparison (Side-by-Side)</span>
-          </button>
-
-          {/* Diagnostics, Lookup & Tools */}
           <button
             onClick={() => setActiveTab("kpi_scripts")}
-            className={`px-3 py-2 font-hand text-xs font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === "kpi_scripts"
-                ? "bg-teal-900 text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
-                : "bg-white text-zinc-700 hover:bg-zinc-100"
+                ? "bg-[#1c4039] text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
             }`}
           >
-            <Code2 className="h-3.5 w-3.5 text-teal-300" />
-            <span>Metric Lookup & Scripts</span>
-            <span className="px-1.5 py-0.2 bg-teal-800 text-teal-200 text-[10px] rounded font-mono">
-              {KPI_MASTER_DATA.length} KPIs
-            </span>
+            <span>⚡ Metric Lookup & Script Generator</span>
+            <span className="px-1.5 py-0.2 bg-teal-800/80 text-teal-200 text-[10px] rounded font-mono">{KPI_MASTER_DATA.length} KPIs</span>
           </button>
-
           <button
             onClick={() => setActiveTab("kpi_diagnostics")}
-            className={`px-3 py-2 font-hand text-xs font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === "kpi_diagnostics"
                 ? "bg-indigo-900 text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
-                : "bg-white text-zinc-700 hover:bg-zinc-100"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
             }`}
           >
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-300" />
-            <span>157 KPI Diagnostics</span>
+            <span>🔬 KPI Formula Diagnostics</span>
+            <span className="px-1.5 py-0.2 bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] rounded font-mono font-bold">
+              157 Validated
+            </span>
           </button>
-
           <button
             onClick={() => setActiveTab("overview")}
-            className={`px-3 py-2 font-hand text-xs font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
               activeTab === "overview"
                 ? "bg-highlight text-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
-                : "bg-white text-zinc-700 hover:bg-zinc-100"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
             }`}
           >
-            📊 Executive Attribution
+            📊 Executive Analytics & Charts
           </button>
-
+          <button
+            onClick={() => setActiveTab("funnel")}
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
+              activeTab === "funnel"
+                ? "bg-highlight text-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
+            }`}
+          >
+            🌪️ Conversion Funnel Analysis
+          </button>
           <button
             onClick={() => setActiveTab("sql_workbench")}
-            className={`px-3 py-2 font-hand text-xs font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
               activeTab === "sql_workbench"
                 ? "bg-highlight text-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
-                : "bg-white text-zinc-700 hover:bg-zinc-100"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
             }`}
           >
-            💻 SQL Workbench
+            💻 SQL Query Workbench
           </button>
-
           <button
             onClick={() => setActiveTab("data_table")}
-            className={`px-3 py-2 font-hand text-xs font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
               activeTab === "data_table"
                 ? "bg-highlight text-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
-                : "bg-white text-zinc-700 hover:bg-zinc-100"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
             }`}
           >
-            📋 Raw Records ({filteredData.length})
+            📋 Raw Data Records ({filteredData.length})
           </button>
-
           <button
             onClick={() => setActiveTab("frd_specs")}
-            className={`px-3 py-2 font-hand text-xs font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
               activeTab === "frd_specs"
                 ? "bg-highlight text-ink shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
-                : "bg-white text-zinc-700 hover:bg-zinc-100"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
             }`}
           >
-            📑 FRD Specs
+            📑 FRD Functional Specifications
           </button>
         </div>
 
-        {/* Tab 1: Lead Gen Flow (Trades & Sources) */}
-        {activeTab === "lead_flow" && (
-          <div className="w-full">
-            <LeadGenFlowView
-              data={filteredData}
-              onSelectTradeFilter={(trade) => setSelectedTrade(trade)}
-              onSelectSourceFilter={(source) => setSelectedLeadSource(source)}
-            />
-          </div>
-        )}
-
-        {/* Tab 2: Funnel Conversion (Lead -> SQL -> Won) */}
-        {activeTab === "funnel_conversion" && (
-          <div className="w-full">
-            <FunnelConversionView data={filteredData} />
-          </div>
-        )}
-
-        {/* Tab 3: Campaign Performance (CPL, CAC, ROI) */}
-        {activeTab === "campaign_perf" && (
-          <div className="w-full">
-            <CampaignPerformanceView data={filteredData} />
-          </div>
-        )}
-
-        {/* Tab 4: Sales Efficiency (Win Rate, Velocity, ACV, NRR) */}
-        {activeTab === "sales_efficiency" && (
-          <div className="w-full">
-            <SalesEfficiencyView data={filteredData} />
-          </div>
-        )}
-
-        {/* Dual-Pillar Comparison View */}
-        {activeTab === "kpi_comparison" && (
-          <div className="w-full">
-            <KPIComparisonView data={filteredData} />
-          </div>
-        )}
-
-        {/* Tab 5: Metric Lookup & Script Generator */}
+        {/* Tab 0: Metric Lookup & Script Generator */}
         {activeTab === "kpi_scripts" && (
           <div className="w-full">
             <MetricLookupScriptGenerator />
           </div>
         )}
 
-        {/* Tab 6: KPI Formula Diagnostics */}
+        {/* Tab: KPI Formula Diagnostics Tool */}
         {activeTab === "kpi_diagnostics" && (
           <div className="w-full">
             <KPIDiagnosticTool />
           </div>
         )}
 
-        {/* Tab 7: Executive Attribution & Win/Loss */}
+        {/* Tab 1: Executive Analytics & Charts */}
         {activeTab === "overview" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Channel Performance Breakdown */}
@@ -1033,10 +710,99 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
           </div>
         )}
 
-        {/* Tab 8: SQL Query Workbench */}
+        {/* Tab 2: Conversion Funnel Analysis */}
+        {activeTab === "funnel" && (
+          <div className="bg-white border-3 border-ink rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)]">
+            <div className="flex items-center justify-between border-b-2 border-zinc-100 pb-4 mb-6">
+              <div>
+                <h3 className="font-hand text-xl font-bold text-ink">GTM Revenue Waterfall & Stage Conversion</h3>
+                <p className="font-sans text-xs text-zinc-500 mt-0.5">
+                  End-to-end telemetry from raw Marketing Qualified Lead (MQL) through Closed Won booking.
+                </p>
+              </div>
+              <span className="px-2.5 py-1 rounded bg-indigo-50 border border-indigo-200 font-mono text-xs font-bold text-indigo-700">
+                Cohort Conversion
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Stage 1: MQL */}
+              <div className="bg-zinc-50 border-2 border-ink rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">Stage 1</span>
+                    <span className="px-1.5 py-0.5 rounded bg-zinc-200 text-zinc-700 font-mono text-[10px] font-bold">100% Ingress</span>
+                  </div>
+                  <h4 className="font-sans font-extrabold text-base text-zinc-900">MQL Created</h4>
+                  <div className="font-hand text-3xl font-black text-ink mt-2">{filteredData.length}</div>
+                </div>
+                <p className="font-sans text-xs text-zinc-500 mt-3 pt-2 border-t border-zinc-200">
+                  Total marketing inquiries filtered across selected cohorts.
+                </p>
+              </div>
+
+              {/* Stage 2: SQL */}
+              <div className="bg-zinc-50 border-2 border-ink rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">Stage 2</span>
+                    <span className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-mono text-[10px] font-bold">
+                      {mqlToSqlConversionRate} Pass
+                    </span>
+                  </div>
+                  <h4 className="font-sans font-extrabold text-base text-zinc-900">SQL Validated</h4>
+                  <div className="font-hand text-3xl font-black text-ink mt-2">
+                    {filteredData.filter((r) => r.stage !== "MQL").length}
+                  </div>
+                </div>
+                <p className="font-sans text-xs text-zinc-500 mt-3 pt-2 border-t border-zinc-200">
+                  Sales accepted leads meeting BANT & qualification standards.
+                </p>
+              </div>
+
+              {/* Stage 3: Opportunity */}
+              <div className="bg-zinc-50 border-2 border-ink rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-mono text-[10px] font-bold text-zinc-500 uppercase">Stage 3</span>
+                    <span className="px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-mono text-[10px] font-bold">In Flight</span>
+                  </div>
+                  <h4 className="font-sans font-extrabold text-base text-zinc-900">Active Opportunity</h4>
+                  <div className="font-hand text-3xl font-black text-ink mt-2">
+                    {filteredData.filter((r) => r.stage === "Opportunity" || r.stage === "Closed Won" || r.stage === "Closed Lost").length}
+                  </div>
+                </div>
+                <p className="font-sans text-xs text-zinc-500 mt-3 pt-2 border-t border-zinc-200">
+                  Deals in CPQ quoting, legal review, and executive evaluation.
+                </p>
+              </div>
+
+              {/* Stage 4: Closed Won */}
+              <div className="bg-emerald-50 border-2 border-ink rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-mono text-[10px] font-bold text-emerald-700 uppercase">Stage 4</span>
+                    <span className="px-1.5 py-0.5 rounded bg-emerald-200 text-emerald-900 font-mono text-[10px] font-bold">
+                      {winRate} Won
+                    </span>
+                  </div>
+                  <h4 className="font-sans font-extrabold text-base text-emerald-950">Closed Won Booked</h4>
+                  <div className="font-hand text-3xl font-black text-emerald-900 mt-2">
+                    {filteredData.filter((r) => r.stage === "Closed Won").length}
+                  </div>
+                </div>
+                <p className="font-sans text-xs text-emerald-700 mt-3 pt-2 border-t border-emerald-200">
+                  Booked ARR: <strong className="font-mono">${totalARRWon !== "Null" ? (totalARRWon as number).toLocaleString() : "Null"}</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 3: SQL Workbench */}
         {activeTab === "sql_workbench" && (
           <div className="bg-white border-3 border-ink rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-zinc-100 pb-3">
+            <div className="flex items-center justify-between border-b-2 border-zinc-100 pb-3">
               <div>
                 <h3 className="font-hand text-xl font-bold text-ink flex items-center gap-2">
                   <Code2 className="h-5 w-5 text-indigo-600" />
@@ -1069,41 +835,6 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
               </div>
             </div>
 
-            {/* Quick Preset Queries */}
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="font-mono text-xs font-bold text-zinc-500">Query Presets:</span>
-              <button
-                onClick={() => {
-                  setSqlQuery(
-                    "SELECT trade, COUNT(id) as totalLeads, SUM(dealValue) as bookedARR, AVG(speedToLeadMinutes) as avgLatencyMin\nFROM gtm_pipeline_records\nGROUP BY trade\nORDER BY bookedARR DESC;"
-                  );
-                }}
-                className="px-2.5 py-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded border border-zinc-300 font-sans text-xs font-bold cursor-pointer"
-              >
-                1. Leads & Speed by Trade
-              </button>
-              <button
-                onClick={() => {
-                  setSqlQuery(
-                    "SELECT campaignName, SUM(campaignSpend) as totalSpend, COUNT(id) as totalLeads, SUM(dealValue) as sourcedARR\nFROM gtm_pipeline_records\nGROUP BY campaignName\nORDER BY sourcedARR DESC;"
-                  );
-                }}
-                className="px-2.5 py-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded border border-zinc-300 font-sans text-xs font-bold cursor-pointer"
-              >
-                2. Campaign CPL, CAC & ROI
-              </button>
-              <button
-                onClick={() => {
-                  setSqlQuery(
-                    "SELECT trade, leadSource, COUNT(id) as totalLeads, SUM(dealValue) as totalARR, AVG(salesCycleDays) as avgCycleDays\nFROM gtm_pipeline_records\nWHERE stage = 'Closed Won'\nGROUP BY trade, leadSource\nORDER BY totalARR DESC;"
-                  );
-                }}
-                className="px-2.5 py-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded border border-zinc-300 font-sans text-xs font-bold cursor-pointer"
-              >
-                3. Closed Won ARR by Trade/Source
-              </button>
-            </div>
-
             {/* SQL Editor box */}
             <div className="border-2 border-ink rounded-xl overflow-hidden shadow-inner">
               <div className="bg-zinc-900 text-zinc-400 px-3 py-1.5 font-mono text-[11px] flex items-center justify-between border-b border-zinc-800">
@@ -1117,43 +848,42 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
                 value={sqlQuery}
                 onChange={(e) => setSqlQuery(e.target.value)}
                 rows={5}
-                className="w-full bg-[#18181b] text-emerald-400 p-3 font-mono text-xs focus:outline-none resize-y"
+                className="w-full bg-zinc-950 text-emerald-400 font-mono text-xs sm:text-sm p-4 focus:outline-none focus:ring-0 leading-relaxed"
                 spellCheck={false}
               />
             </div>
 
-            {/* Error Display */}
+            {/* Error or Result Output */}
             {sqlError && (
-              <div className="p-3 bg-rose-50 border-2 border-rose-300 rounded-xl text-rose-800 text-xs flex items-center gap-2">
+              <div className="p-3 bg-rose-50 border-2 border-rose-300 rounded-xl text-xs font-mono text-rose-800 flex items-center gap-2">
                 <AlertCircle className="h-4 w-4 text-rose-600 shrink-0" />
-                <span className="font-mono">{sqlError}</span>
+                <span>{sqlError}</span>
               </div>
             )}
 
-            {/* Query Results Table */}
             {sqlResult && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
-                  <span>Returned {sqlResult.rows.length} row(s)</span>
-                  <span className="text-emerald-700 font-bold">Execution: 4ms (In-Memory)</span>
+              <div className="border-2 border-ink rounded-xl overflow-hidden shadow-[2px_2px_0px_0px_rgba(24,24,27,1)]">
+                <div className="bg-zinc-100 px-4 py-2 font-mono text-xs font-bold text-zinc-700 border-b-2 border-ink flex items-center justify-between">
+                  <span>Query Execution Output ({sqlResult.rows.length} rows returned)</span>
+                  <span className="text-emerald-700 font-bold">Status: 200 OK • Execution: 4ms</span>
                 </div>
-                <div className="overflow-x-auto border-2 border-ink rounded-xl">
-                  <table className="w-full text-left text-xs border-collapse">
-                    <thead>
-                      <tr className="bg-zinc-100 border-b-2 border-ink font-mono text-[11px] text-zinc-700">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-zinc-50 border-b border-zinc-200">
+                      <tr>
                         {sqlResult.headers.map((h, i) => (
-                          <th key={i} className="py-2 px-3 border-r border-zinc-200 last:border-r-0">
+                          <th key={i} className="px-4 py-2.5 font-mono font-bold text-zinc-700">
                             {h}
                           </th>
                         ))}
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-zinc-200 font-mono">
-                      {sqlResult.rows.map((row, rIdx) => (
-                        <tr key={rIdx} className="hover:bg-zinc-50">
-                          {row.map((cell, cIdx) => (
-                            <td key={cIdx} className="py-2 px-3 border-r border-zinc-200 last:border-r-0 text-zinc-800">
-                              {cell}
+                    <tbody className="divide-y divide-zinc-200">
+                      {sqlResult.rows.map((r, i) => (
+                        <tr key={i} className="hover:bg-zinc-50">
+                          {r.map((val: any, j: number) => (
+                            <td key={j} className="px-4 py-2 font-sans text-zinc-800">
+                              {val === null || val === undefined ? <span className="font-mono text-rose-500">Null</span> : val}
                             </td>
                           ))}
                         </tr>
@@ -1166,74 +896,68 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
           </div>
         )}
 
-        {/* Tab 9: Raw Data Records */}
+        {/* Tab 4: Raw Data Records */}
         {activeTab === "data_table" && (
           <div className="bg-white border-3 border-ink rounded-2xl p-5 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] space-y-4">
             <div className="flex items-center justify-between border-b-2 border-zinc-100 pb-3">
               <div>
-                <h3 className="font-hand text-xl font-bold text-ink">Filtered Telemetry Dataset</h3>
+                <h3 className="font-hand text-lg font-bold text-ink flex items-center gap-2">
+                  <TableIcon className="h-5 w-5 text-indigo-600" />
+                  Telemetry Master Dataset
+                </h3>
                 <p className="font-sans text-xs text-zinc-500">
-                  Showing {filteredData.length} records matching active filters.
+                  Showing {filteredData.length} records matching current slice parameters. Missing values render as "Null".
                 </p>
               </div>
-              <button
-                onClick={handleExportCSV}
-                className="px-3.5 py-1.5 bg-zinc-900 text-white border-2 border-ink rounded-lg font-hand text-xs font-bold shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 cursor-pointer flex items-center gap-1.5"
-              >
-                <Download className="h-3.5 w-3.5" />
-                <span>Export Dataset (.CSV)</span>
-              </button>
             </div>
 
-            <div className="overflow-x-auto border-2 border-ink rounded-xl max-h-[500px] overflow-y-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead className="sticky top-0 bg-zinc-100 z-10">
-                  <tr className="border-b-2 border-ink font-mono text-[11px] text-zinc-700 uppercase">
-                    <th className="py-2.5 px-3">ID</th>
-                    <th className="py-2.5 px-3">Account Name</th>
-                    <th className="py-2.5 px-3">Trade / Vertical</th>
-                    <th className="py-2.5 px-3">Lead Source</th>
-                    <th className="py-2.5 px-3">Region</th>
-                    <th className="py-2.5 px-3">Stage</th>
-                    <th className="py-2.5 px-3 text-right">ARR</th>
-                    <th className="py-2.5 px-3 text-right">Cycle</th>
-                    <th className="py-2.5 px-3 text-right">Speed</th>
-                    <th className="py-2.5 px-3">Rep</th>
+            <div className="border-2 border-ink rounded-xl overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-zinc-100 border-b-2 border-ink">
+                  <tr>
+                    <th className="px-3 py-2.5 font-mono font-bold text-zinc-800">Record ID</th>
+                    <th className="px-3 py-2.5 font-mono font-bold text-zinc-800">Lead Source</th>
+                    <th className="px-3 py-2.5 font-mono font-bold text-zinc-800">Region</th>
+                    <th className="px-3 py-2.5 font-mono font-bold text-zinc-800">Segment</th>
+                    <th className="px-3 py-2.5 font-mono font-bold text-zinc-800">Stage</th>
+                    <th className="px-3 py-2.5 font-mono font-bold text-zinc-800">Rep</th>
+                    <th className="px-3 py-2.5 font-mono font-bold text-zinc-800">ARR Deal Value</th>
+                    <th className="px-3 py-2.5 font-mono font-bold text-zinc-800">Cycle Days</th>
+                    <th className="px-3 py-2.5 font-mono font-bold text-zinc-800">CSAT Score</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-200">
                   {filteredData.map((row) => (
-                    <tr key={row.id} className="hover:bg-zinc-50 transition-colors">
-                      <td className="py-2 px-3 font-mono font-bold text-zinc-600">{row.id}</td>
-                      <td className="py-2 px-3 font-sans font-bold text-zinc-900">{row.accountName}</td>
-                      <td className="py-2 px-3 font-sans text-zinc-700">{row.trade}</td>
-                      <td className="py-2 px-3 font-sans text-zinc-600">{row.leadSource}</td>
-                      <td className="py-2 px-3 font-sans text-zinc-600">{row.region}</td>
-                      <td className="py-2 px-3">
+                    <tr key={row.id} className="hover:bg-zinc-50">
+                      <td className="px-3 py-2 font-mono font-bold text-zinc-900">{row.id}</td>
+                      <td className="px-3 py-2 font-sans text-zinc-700">{row.leadSource}</td>
+                      <td className="px-3 py-2 font-sans text-zinc-700">{row.region}</td>
+                      <td className="px-3 py-2 font-sans text-zinc-700">{row.segment}</td>
+                      <td className="px-3 py-2">
                         <span
-                          className={`px-2 py-0.5 rounded font-mono text-[10px] font-bold ${
+                          className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${
                             row.stage === "Closed Won"
-                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                              ? "bg-emerald-100 border-emerald-300 text-emerald-800"
                               : row.stage === "Closed Lost"
-                              ? "bg-rose-100 text-rose-800 border border-rose-300"
+                              ? "bg-rose-100 border-rose-300 text-rose-800"
                               : row.stage === "Opportunity"
-                              ? "bg-purple-100 text-purple-800 border border-purple-300"
-                              : "bg-blue-100 text-blue-800 border border-blue-300"
+                              ? "bg-blue-100 border-blue-300 text-blue-800"
+                              : "bg-zinc-100 border-zinc-300 text-zinc-700"
                           }`}
                         >
                           {row.stage}
                         </span>
                       </td>
-                      <td className="py-2 px-3 text-right font-mono font-bold text-emerald-700">
-                        {row.dealValue ? `$${row.dealValue.toLocaleString()}` : <span className="text-zinc-400 font-normal">Null</span>}
+                      <td className="px-3 py-2 font-sans text-zinc-800">{row.assignedRep}</td>
+                      <td className="px-3 py-2 font-mono font-bold text-zinc-900">
+                        {row.dealValue !== null ? `$${row.dealValue.toLocaleString()}` : <span className="text-rose-500 font-bold">Null</span>}
                       </td>
-                      <td className="py-2 px-3 text-right font-mono text-zinc-700">
-                        {row.salesCycleDays ? `${row.salesCycleDays}d` : <span className="text-zinc-400">Null</span>}
+                      <td className="px-3 py-2 font-mono text-zinc-700">
+                        {row.salesCycleDays !== null ? `${row.salesCycleDays} days` : <span className="text-rose-500 font-bold">Null</span>}
                       </td>
-                      <td className="py-2 px-3 text-right font-mono text-zinc-700">
-                        {row.speedToLeadMinutes}m
+                      <td className="px-3 py-2 font-mono text-zinc-700">
+                        {row.csatScore !== null ? `${row.csatScore} / 5` : <span className="text-rose-500 font-bold">Null</span>}
                       </td>
-                      <td className="py-2 px-3 font-sans text-zinc-800">{row.assignedRep}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1242,83 +966,72 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
           </div>
         )}
 
-        {/* Tab 10: FRD Functional Specifications */}
+        {/* Tab 5: FRD Functional Specifications */}
         {activeTab === "frd_specs" && (
-          <div className="bg-white border-3 border-ink rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] space-y-6">
-            <div className="border-b-2 border-zinc-100 pb-4">
-              <h3 className="font-hand text-2xl font-bold text-ink">
-                FRD Functional Requirements Document Specifications
-              </h3>
-              <p className="font-sans text-xs text-zinc-500 mt-1">
-                Source Document: <code className="font-mono text-zinc-800 font-bold">11QOvpvGO5fRvtaOIBa_9mzvPNQyUrgo5S7KBUFUElHg</code>
-              </p>
+          <div className="bg-white border-3 border-ink rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] space-y-5">
+            <div className="flex items-center justify-between border-b-2 border-zinc-100 pb-3">
+              <div>
+                <h3 className="font-hand text-xl font-bold text-ink flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-amber-600" />
+                  FRD Requirements Document Reference
+                </h3>
+                <p className="font-sans text-xs text-zinc-500 mt-0.5">
+                  Specification guidelines governing dashboard calculations, metric fallbacks, and user interaction design.
+                </p>
+              </div>
+
+              <a
+                href="https://docs.google.com/document/d/11QOvpvGO5fRvtaOIBa_9mzvPNQyUrgo5S7KBUFUElHg/edit?pli=1&tab=t.0"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-1.5 bg-amber-400 hover:bg-amber-500 text-zinc-950 border-2 border-ink rounded-lg font-hand text-xs font-bold shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 cursor-pointer flex items-center gap-1.5"
+              >
+                <span>Open Google Doc</span>
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
             </div>
 
-            {/* Pillar Specifications */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-4 bg-zinc-50 border-2 border-ink rounded-xl space-y-2">
-                <h4 className="font-hand text-base font-bold text-ink flex items-center gap-1.5">
-                  <Building2 className="h-4 w-4 text-blue-600" />
-                  1. Lead Gen Flow Specifications
-                </h4>
-                <ul className="text-xs text-zinc-700 space-y-1 list-disc list-inside">
-                  <li><strong>New Leads by Trade:</strong> Total captured leads grouped by Trade / Vertical (HVAC, Electrical, Plumbing, Roofing, General Contracting).</li>
-                  <li><strong>Source Attribution:</strong> Segregation by Inbound, Outbound AI, Partner Referral, Paid Search, and Trade Shows.</li>
-                  <li><strong>Speed to Lead SLA:</strong> Elapsed minutes from creation to first sales touch; target is &le;15 minutes.</li>
-                </ul>
+                <h4 className="font-hand text-base font-bold text-ink">1. Strict Metric Fallback Rule</h4>
+                <p className="font-sans text-xs text-zinc-600 leading-relaxed">
+                  Whenever an analytical calculation, metric card, SQL aggregation, or cohort filter has zero samples, invalid data types, or cannot produce a computed value, the engine must strictly output <strong>"Null"</strong> rather than placeholder zeros, dashes, or NaN.
+                </p>
               </div>
 
               <div className="p-4 bg-zinc-50 border-2 border-ink rounded-xl space-y-2">
-                <h4 className="font-hand text-base font-bold text-ink flex items-center gap-1.5">
-                  <Layers className="h-4 w-4 text-indigo-600" />
-                  2. Funnel Conversion Specifications
-                </h4>
-                <ul className="text-xs text-zinc-700 space-y-1 list-disc list-inside">
-                  <li><strong>5-Stage Progression:</strong> Lead Ingress &rarr; MQL Qualified &rarr; SQL Accepted &rarr; Active Opportunity &rarr; Closed Won Booked.</li>
-                  <li><strong>Pass-Through Rate:</strong> Strict stage-to-stage transition % with drop-off isolation.</li>
-                  <li><strong>Cycle Velocity:</strong> Measures average dwell days in each stage prior to conversion.</li>
-                </ul>
+                <h4 className="font-hand text-base font-bold text-ink">2. Open Dashboard Navigation Linkage</h4>
+                <p className="font-sans text-xs text-zinc-600 leading-relaxed">
+                  Users clicking on the <em>Open Dashboard</em> button on the Let's Chat page launchpad are routed directly to this functional dashboard and analytics workbench.
+                </p>
               </div>
 
               <div className="p-4 bg-zinc-50 border-2 border-ink rounded-xl space-y-2">
-                <h4 className="font-hand text-base font-bold text-ink flex items-center gap-1.5">
-                  <BarChart3 className="h-4 w-4 text-emerald-600" />
-                  3. Campaign Performance Specifications
-                </h4>
-                <ul className="text-xs text-zinc-700 space-y-1 list-disc list-inside">
-                  <li><strong>Cost Per Lead (CPL):</strong> <code>Total Spend / Total Leads Acquired</code></li>
-                  <li><strong>Customer Acquisition Cost (CAC):</strong> <code>Total Spend / Closed Won Customer Logos</code></li>
-                  <li><strong>Campaign Net ROI %:</strong> <code>((Attributed Sourced ARR - Spend) / Spend) * 100</code></li>
-                  <li><strong>CAC Payback Period:</strong> Number of operating months to recover fully-loaded acquisition costs.</li>
-                </ul>
+                <h4 className="font-hand text-base font-bold text-ink">3. Cohort Slicers & Dimension Filtering</h4>
+                <p className="font-sans text-xs text-zinc-600 leading-relaxed">
+                  Real-time dynamic re-computation across Geographic Region, Customer Segment, Acquisition Channel, and Product Line dimensions with instant KPI recalculation.
+                </p>
               </div>
 
               <div className="p-4 bg-zinc-50 border-2 border-ink rounded-xl space-y-2">
-                <h4 className="font-hand text-base font-bold text-ink flex items-center gap-1.5">
-                  <Zap className="h-4 w-4 text-amber-600" />
-                  4. Sales Efficiency Specifications
-                </h4>
-                <ul className="text-xs text-zinc-700 space-y-1 list-disc list-inside">
-                  <li><strong>Opportunity Win Rate:</strong> <code>Closed Won / (Closed Won + Closed Lost)</code></li>
-                  <li><strong>Pipeline Velocity ($/day):</strong> <code>(# Open Opps &times; Win Rate % &times; ACV) / Sales Cycle Days</code></li>
-                  <li><strong>Annual Contract Value (ACV):</strong> <code>Sum(Booked ARR) / Closed Won Deals</code></li>
-                  <li><strong>Net Revenue Retention (NRR):</strong> <code>((Starting ARR + Expansion - Contraction - Churn) / Starting ARR) * 100</code></li>
-                </ul>
+                <h4 className="font-hand text-base font-bold text-ink">4. SQL Query Workbench</h4>
+                <p className="font-sans text-xs text-zinc-600 leading-relaxed">
+                  Interactive SQL syntax execution allowing analysts to test custom queries, inspect result schemas, and copy sanitized queries to the clipboard.
+                </p>
               </div>
             </div>
 
-            {/* Null Output Rule */}
-            <div className="p-4 bg-rose-50 border-2 border-rose-300 rounded-xl space-y-1 text-xs text-rose-900">
-              <strong className="flex items-center gap-1.5 text-rose-950 font-bold">
-                <AlertCircle className="h-4 w-4 text-rose-700" />
-                Mandatory "Null" Value Fallback Constraint
-              </strong>
-              <p>
-                Per Section 4.2 of the FRD, any calculation where denominator is zero, dataset has 0 samples, or external finance PO records are absent MUST output the explicit string value <span className="font-mono font-bold">"Null"</span> instead of "NaN", "0%", or "$0".
-              </p>
-            </div>
+            {frdContent && (
+              <div className="mt-4 p-4 bg-amber-50/50 border-2 border-amber-200 rounded-xl space-y-2">
+                <h4 className="font-mono text-xs font-bold text-amber-900 uppercase">Live Document Text Snippet</h4>
+                <pre className="font-mono text-xs text-zinc-700 max-h-48 overflow-y-auto whitespace-pre-wrap bg-white p-3 border border-amber-200 rounded-lg">
+                  {frdContent}
+                </pre>
+              </div>
+            )}
           </div>
         )}
+
       </main>
     </div>
   );
