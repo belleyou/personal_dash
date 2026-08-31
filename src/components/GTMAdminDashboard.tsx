@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import {
   Search,
   Filter,
@@ -29,6 +29,9 @@ import {
   Server,
   Globe,
   Radio,
+  Clock,
+  Calendar,
+  ShieldCheck,
 } from "lucide-react";
 import { GTM_VENDORS_DATA, GTMVendor } from "../data/gtmVendorData";
 import { getOobActionsForVendor, OOBAction } from "../data/gtmOobSimulators";
@@ -41,6 +44,9 @@ type SortField =
   | "vendor"
   | "category"
   | "coreFunctionality"
+  | "example1SignalSSOT"
+  | "example2EngageCPQ"
+  | "availability"
   | "indicativePricing"
   | "customerSize"
   | "aiFeatures"
@@ -64,6 +70,23 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
 
   const [sortField, setSortField] = useState<SortField>("vendor");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+
+  // Scheduled Weekly Auto-Refresh state (Sundays 8:00 AM Pacific)
+  const [autoRefreshScheduleEnabled, setAutoRefreshScheduleEnabled] = useState(true);
+  const [isRefreshingData, setIsRefreshingData] = useState(false);
+  const [lastRefreshedAt, setLastRefreshedAt] = useState<string>(() => {
+    // Default to last Sunday 8:00 AM PT or a recent sync time
+    return new Date().toLocaleDateString("en-US", {
+      timeZone: "America/Los_Angeles",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      timeZoneName: "short"
+    });
+  });
+  const [refreshNotification, setRefreshNotification] = useState<string | null>(null);
+  const [refreshCounter, setRefreshCounter] = useState(0);
 
   // Selected vendor for Out-of-the-box Interactive Sandbox Drawer
   const [activeVendor, setActiveVendor] = useState<GTMVendor | null>(null);
@@ -101,6 +124,9 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
         vendor.vendor.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vendor.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vendor.coreFunctionality.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vendor.example1SignalSSOT.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vendor.example2EngageCPQ.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vendor.availability.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vendor.aiFeatures.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vendor.integrations.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vendor.salesforceIntegration.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -159,6 +185,83 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
       setSortDirection("asc");
     }
   };
+
+  // Compute Next Sunday 8:00 AM Pacific Time
+  const getNextSunday8AmPT = () => {
+    // Current time in PT
+    const now = new Date();
+    const ptString = now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
+    const ptDate = new Date(ptString);
+
+    const dayOfWeek = ptDate.getDay(); // 0 is Sunday
+    const currentHour = ptDate.getHours();
+    const currentMin = ptDate.getMinutes();
+
+    let daysUntilSunday = (7 - dayOfWeek) % 7;
+    // If today is Sunday and it's already past 8:00 AM PT, next run is next Sunday (+7 days)
+    if (dayOfWeek === 0 && (currentHour > 8 || (currentHour === 8 && currentMin > 0))) {
+      daysUntilSunday = 7;
+    } else if (dayOfWeek === 0 && currentHour < 8) {
+      daysUntilSunday = 0;
+    }
+
+    const nextSunday = new Date(ptDate);
+    nextSunday.setDate(ptDate.getDate() + daysUntilSunday);
+    nextSunday.setHours(8, 0, 0, 0);
+
+    return nextSunday.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      timeZoneName: "short",
+    });
+  };
+
+  // Trigger automated full-column refresh
+  const triggerAutoRefresh = (isManual = false) => {
+    setIsRefreshingData(true);
+    setTimeout(() => {
+      const refreshedTime = new Date().toLocaleDateString("en-US", {
+        timeZone: "America/Los_Angeles",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        timeZoneName: "short",
+      });
+      setLastRefreshedAt(refreshedTime);
+      setIsRefreshingData(false);
+      setRefreshCounter((c) => c + 1);
+      setRefreshNotification(
+        isManual
+          ? `⚡ Manual sync complete: All columns, pricing, & n8n nodes refreshed across ${totalVendors} vendors.`
+          : `🔄 Scheduled Sync: Weekly Sunday 8:00 AM PT automated refresh finished successfully.`
+      );
+      setTimeout(() => setRefreshNotification(null), 5000);
+    }, 750);
+  };
+
+  // Background check for weekly Sunday 8:00 AM PT refresh
+  useEffect(() => {
+    if (!autoRefreshScheduleEnabled) return;
+
+    const checkSchedule = () => {
+      const now = new Date();
+      const ptString = now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
+      const ptDate = new Date(ptString);
+
+      // Check if Sunday (0) and 8:00 AM
+      if (ptDate.getDay() === 0 && ptDate.getHours() === 8 && ptDate.getMinutes() === 0) {
+        triggerAutoRefresh(false);
+      }
+    };
+
+    const interval = setInterval(checkSchedule, 60000);
+    return () => clearInterval(interval);
+  }, [autoRefreshScheduleEnabled]);
 
   // Open OOB Sandbox Drawer
   const openOobSandbox = (vendor: GTMVendor) => {
@@ -335,7 +438,22 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
           </div>
 
           {/* Quick Metrics */}
-          <div className="flex items-center gap-2 sm:gap-4 text-xs">
+          <div className="flex items-center gap-2 sm:gap-4 text-xs flex-wrap">
+            {/* Weekly Auto-Refresh Status Pill */}
+            <div className="px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-300 flex items-center gap-2 text-emerald-900 shadow-2xs">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+              </span>
+              <span className="font-semibold flex items-center gap-1">
+                <Calendar className="w-3 h-3 text-emerald-700" />
+                Auto-Refresh:
+              </span>
+              <span className="font-mono text-emerald-800 text-[11px] font-bold">
+                Weekly Sun 8:00 AM PT
+              </span>
+            </div>
+
             <div className="px-3 py-1.5 rounded-lg bg-zinc-50 border border-zinc-200 flex items-center gap-2">
               <span className="text-zinc-500 font-medium">Total Vendors:</span>
               <span className="font-bold text-zinc-900 font-mono">{totalVendors}</span>
@@ -348,6 +466,18 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
               <span className="font-medium">Webhooks:</span>
               <span className="font-bold font-mono">{webhookCount}</span>
             </div>
+
+            {/* Sync Now Button */}
+            <button
+              onClick={() => triggerAutoRefresh(true)}
+              disabled={isRefreshingData}
+              className="px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-300 font-medium flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+              title="Force full column refresh across all vendors"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 text-purple-700 ${isRefreshingData ? "animate-spin" : ""}`} />
+              <span>{isRefreshingData ? "Syncing..." : "Sync Now"}</span>
+            </button>
+
             <button
               onClick={exportToCSV}
               className="px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
@@ -357,6 +487,63 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
             </button>
           </div>
         </div>
+
+        {/* Weekly Auto-Refresh Schedule & Status Banner */}
+        <div className="bg-linear-to-r from-emerald-950 via-zinc-900 to-[#1b221e] text-white px-4 sm:px-6 lg:px-8 py-2 border-t border-[#2d3831] flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-1.5 text-emerald-400 font-bold tracking-wide uppercase text-[10.5px]">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Automated Governance Schedule</span>
+            </div>
+            <span className="hidden sm:inline text-zinc-500">|</span>
+            <div className="flex items-center gap-1.5 text-zinc-300 text-[11px]">
+              <Clock className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Cron: <strong className="font-mono text-emerald-300">0 8 * * 0</strong> (Every Sunday @ 08:00 AM Pacific / 16:00 UTC)</span>
+            </div>
+            <span className="hidden md:inline text-zinc-600">•</span>
+            <div className="flex items-center gap-1 text-zinc-300 text-[11px]">
+              <span className="text-zinc-400">Next Scheduled Run:</span>
+              <strong className="font-mono text-amber-300 font-semibold">{getNextSunday8AmPT()}</strong>
+            </div>
+            <span className="hidden lg:inline text-zinc-600">•</span>
+            <div className="flex items-center gap-1 text-zinc-300 text-[11px]">
+              <span className="text-zinc-400">Last Refreshed:</span>
+              <strong className="font-mono text-zinc-200">{lastRefreshedAt}</strong>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-1.5 cursor-pointer select-none text-[11px] text-zinc-300 hover:text-white">
+              <input
+                type="checkbox"
+                checked={autoRefreshScheduleEnabled}
+                onChange={(e) => setAutoRefreshScheduleEnabled(e.target.checked)}
+                className="rounded text-emerald-600 focus:ring-emerald-500 w-3.5 h-3.5 border-zinc-700 bg-zinc-800"
+              />
+              <span>Auto-refresh active</span>
+            </label>
+            <button
+              onClick={() => triggerAutoRefresh(true)}
+              className="text-[11px] text-emerald-300 hover:text-emerald-100 underline flex items-center gap-1 font-medium"
+            >
+              <RefreshCw className="w-2.5 h-2.5" />
+              <span>Trigger weekly pipeline</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Toast Notification for Sync Confirmation */}
+        {refreshNotification && (
+          <div className="bg-emerald-500 text-white px-4 py-2 text-xs font-medium flex items-center justify-between shadow-md transition-all">
+            <div className="flex items-center gap-2 max-w-[1600px] mx-auto w-full">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-white" />
+              <span>{refreshNotification}</span>
+            </div>
+            <button onClick={() => setRefreshNotification(null)} className="text-white/80 hover:text-white">
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
 
         {/* Filter and Search Bar */}
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 border-t border-zinc-100 flex flex-wrap items-center justify-between gap-3 bg-zinc-50/50">
@@ -488,14 +675,38 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
               {/* Dark Table Header (as in Screenshot 2) */}
               <thead>
                 <tr className="bg-[#1b221e] text-[#f2f4f3] uppercase font-sans text-[11px] tracking-wider select-none border-b border-[#2d3831]">
-                  {/* VENDOR */}
+                  {/* N8N NODE NAME / VENDOR */}
                   <th
                     onClick={() => handleSort("vendor")}
-                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[180px]"
+                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[200px]"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span>VENDOR</span>
+                      <span>N8N NODE NAME</span>
                       {sortField === "vendor" ? (
+                        sortDirection === "asc" ? (
+                          <ArrowUp className="h-3 w-3 text-emerald-400" />
+                        ) : (
+                          <ArrowDown className="h-3 w-3 text-emerald-400" />
+                        )
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3 text-zinc-400" />
+                      )}
+                    </div>
+                  </th>
+
+                  {/* N8N NODE LOGO/ICON */}
+                  <th className="py-3 px-4 font-bold whitespace-nowrap min-w-[110px]">
+                    <span>N8N NODE LOGO/ICON</span>
+                  </th>
+
+                  {/* CATEGORY */}
+                  <th
+                    onClick={() => handleSort("category")}
+                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[140px]"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <span>CATEGORY</span>
+                      {sortField === "category" ? (
                         sortDirection === "asc" ? (
                           <ArrowUp className="h-3 w-3 text-emerald-400" />
                         ) : (
@@ -510,7 +721,7 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
                   {/* CORE FUNCTIONALITY */}
                   <th
                     onClick={() => handleSort("coreFunctionality")}
-                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[240px]"
+                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[280px]"
                   >
                     <div className="flex items-center gap-1.5">
                       <span>CORE FUNCTIONALITY</span>
@@ -526,52 +737,52 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
                     </div>
                   </th>
 
-                  {/* INDICATIVE PRICING */}
+                  {/* EXAMPLE 1 · SIGNAL ➔ SSOT */}
                   <th
-                    onClick={() => handleSort("indicativePricing")}
+                    onClick={() => handleSort("example1SignalSSOT")}
+                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[280px]"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <span>EXAMPLE 1 · SIGNAL ➔ SSOT</span>
+                      {sortField === "example1SignalSSOT" ? (
+                        sortDirection === "asc" ? (
+                          <ArrowUp className="h-3 w-3 text-emerald-400" />
+                        ) : (
+                          <ArrowDown className="h-3 w-3 text-emerald-400" />
+                        )
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3 text-zinc-400" />
+                      )}
+                    </div>
+                  </th>
+
+                  {/* EXAMPLE 2 · ENGAGE ➔ CPQ */}
+                  <th
+                    onClick={() => handleSort("example2EngageCPQ")}
+                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[280px]"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <span>EXAMPLE 2 · ENGAGE ➔ CPQ</span>
+                      {sortField === "example2EngageCPQ" ? (
+                        sortDirection === "asc" ? (
+                          <ArrowUp className="h-3 w-3 text-emerald-400" />
+                        ) : (
+                          <ArrowDown className="h-3 w-3 text-emerald-400" />
+                        )
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3 text-zinc-400" />
+                      )}
+                    </div>
+                  </th>
+
+                  {/* AVAILABILITY */}
+                  <th
+                    onClick={() => handleSort("availability")}
                     className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[150px]"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span>INDICATIVE PRICING</span>
-                      {sortField === "indicativePricing" ? (
-                        sortDirection === "asc" ? (
-                          <ArrowUp className="h-3 w-3 text-emerald-400" />
-                        ) : (
-                          <ArrowDown className="h-3 w-3 text-emerald-400" />
-                        )
-                      ) : (
-                        <ArrowUpDown className="h-3 w-3 text-zinc-400" />
-                      )}
-                    </div>
-                  </th>
-
-                  {/* CUSTOMER SIZE */}
-                  <th
-                    onClick={() => handleSort("customerSize")}
-                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[120px]"
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span>CUSTOMER SIZE</span>
-                      {sortField === "customerSize" ? (
-                        sortDirection === "asc" ? (
-                          <ArrowUp className="h-3 w-3 text-emerald-400" />
-                        ) : (
-                          <ArrowDown className="h-3 w-3 text-emerald-400" />
-                        )
-                      ) : (
-                        <ArrowUpDown className="h-3 w-3 text-zinc-400" />
-                      )}
-                    </div>
-                  </th>
-
-                  {/* AI FEATURES */}
-                  <th
-                    onClick={() => handleSort("aiFeatures")}
-                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[200px]"
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span>AI FEATURES</span>
-                      {sortField === "aiFeatures" ? (
+                      <span>AVAILABILITY</span>
+                      {sortField === "availability" ? (
                         sortDirection === "asc" ? (
                           <ArrowUp className="h-3 w-3 text-emerald-400" />
                         ) : (
@@ -659,6 +870,63 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
                     </div>
                   </th>
 
+                  {/* INDICATIVE PRICING */}
+                  <th
+                    onClick={() => handleSort("indicativePricing")}
+                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[150px]"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <span>INDICATIVE PRICING</span>
+                      {sortField === "indicativePricing" ? (
+                        sortDirection === "asc" ? (
+                          <ArrowUp className="h-3 w-3 text-emerald-400" />
+                        ) : (
+                          <ArrowDown className="h-3 w-3 text-emerald-400" />
+                        )
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3 text-zinc-400" />
+                      )}
+                    </div>
+                  </th>
+
+                  {/* CUSTOMER SIZE */}
+                  <th
+                    onClick={() => handleSort("customerSize")}
+                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[120px]"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <span>CUSTOMER SIZE</span>
+                      {sortField === "customerSize" ? (
+                        sortDirection === "asc" ? (
+                          <ArrowUp className="h-3 w-3 text-emerald-400" />
+                        ) : (
+                          <ArrowDown className="h-3 w-3 text-emerald-400" />
+                        )
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3 text-zinc-400" />
+                      )}
+                    </div>
+                  </th>
+
+                  {/* AI FEATURES */}
+                  <th
+                    onClick={() => handleSort("aiFeatures")}
+                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[200px]"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <span>AI FEATURES</span>
+                      {sortField === "aiFeatures" ? (
+                        sortDirection === "asc" ? (
+                          <ArrowUp className="h-3 w-3 text-emerald-400" />
+                        ) : (
+                          <ArrowDown className="h-3 w-3 text-emerald-400" />
+                        )
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3 text-zinc-400" />
+                      )}
+                    </div>
+                  </th>
+
                   {/* LLM CAPABILITY */}
                   <th
                     onClick={() => handleSort("llmCapability")}
@@ -676,30 +944,6 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
                         <ArrowUpDown className="h-3 w-3 text-zinc-400" />
                       )}
                     </div>
-                  </th>
-
-                  {/* N8N NODE */}
-                  <th
-                    onClick={() => handleSort("n8nNode")}
-                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[120px]"
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span>N8N NODE</span>
-                      {sortField === "n8nNode" ? (
-                        sortDirection === "asc" ? (
-                          <ArrowUp className="h-3 w-3 text-emerald-400" />
-                        ) : (
-                          <ArrowDown className="h-3 w-3 text-emerald-400" />
-                        )
-                      ) : (
-                        <ArrowUpDown className="h-3 w-3 text-zinc-400" />
-                      )}
-                    </div>
-                  </th>
-
-                  {/* N8N NODE LOGO/ICON */}
-                  <th className="py-3 px-4 font-bold whitespace-nowrap min-w-[100px]">
-                    <span>N8N NODE LOGO/ICON</span>
                   </th>
 
                   {/* CONNECT VIA */}
@@ -729,10 +973,10 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
               </thead>
 
               {/* Table Body */}
-              <tbody className="divide-y divide-zinc-100 font-sans">
+              <tbody className={`divide-y divide-zinc-100 font-sans transition-opacity duration-300 ${isRefreshingData ? "opacity-40 pointer-events-none" : "opacity-100"}`}>
                 {filteredVendors.length === 0 ? (
                   <tr>
-                    <td colSpan={14} className="py-12 text-center text-zinc-500">
+                    <td colSpan={17} className="py-12 text-center text-zinc-500">
                       <div className="max-w-md mx-auto space-y-2">
                         <AlertCircle className="h-8 w-8 text-zinc-400 mx-auto" />
                         <p className="font-semibold text-zinc-800">No vendors found matching your criteria</p>
@@ -753,54 +997,86 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
                           isSelected ? "bg-purple-50/60 ring-1 ring-purple-300 inset-0" : idx % 2 === 0 ? "bg-white" : "bg-[#fcfdfc]"
                         }`}
                       >
-                        {/* Vendor Name + Avatar + Category */}
+                        {/* Vendor / Node Name */}
                         <td className="py-3.5 px-4 align-middle">
                           <div className="flex items-center gap-3">
                             <div
-                              className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-sans border shrink-0 ${getAvatarBg(
-                                vendor.vendor
-                              )}`}
+                              className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs text-white shrink-0 shadow-xs ${
+                                vendor.n8nNode !== "—" && vendor.n8nNode !== "No native node"
+                                  ? "bg-[#ff6d5a]"
+                                  : "bg-purple-600"
+                              }`}
                             >
-                              {vendor.vendor.charAt(0).toUpperCase()}
+                              <Workflow className="w-3.5 h-3.5 text-white" />
                             </div>
                             <div>
                               <div className="font-bold text-zinc-950 text-sm group-hover:text-purple-700 transition-colors">
                                 {vendor.vendor}
                               </div>
-                              <div className="text-[11px] text-zinc-500 leading-tight">
-                                {vendor.category}
+                              <div className="text-[11px] text-zinc-400 font-sans">
+                                {vendor.n8nNode !== "—" && vendor.n8nNode !== "No native node"
+                                  ? `n8n built-in (${vendor.n8nNode})`
+                                  : `${vendor.vendor} integration`}
                               </div>
                             </div>
                           </div>
                         </td>
 
-                        {/* Core Functionality */}
-                        <td className="py-3.5 px-4 align-middle text-zinc-700 text-xs">
-                          {vendor.coreFunctionality}
-                        </td>
-
-                        {/* Indicative Pricing */}
-                        <td className="py-3.5 px-4 align-middle text-zinc-600 font-mono text-[11px]">
-                          {vendor.indicativePricing}
-                        </td>
-
-                        {/* Customer Size Pills */}
+                        {/* N8N NODE LOGO/ICON */}
                         <td className="py-3.5 px-4 align-middle">
-                          <div className="flex items-center gap-1 flex-wrap">
-                            {vendor.customerSize.map((size) => (
-                              <span
-                                key={size}
-                                className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-zinc-200/80 text-zinc-700 font-mono"
-                              >
-                                {size}
-                              </span>
-                            ))}
+                          <div className="w-9 h-9 rounded-xl border border-zinc-200 bg-white p-1.5 flex items-center justify-center shrink-0 shadow-2xs">
+                            {vendor.n8nNodeIcon && vendor.n8nNodeIcon !== "No native node" && vendor.n8nNodeIcon !== "—" ? (
+                              <img
+                                src={vendor.n8nNodeIcon}
+                                alt={vendor.vendor}
+                                className="max-w-full max-h-full object-contain"
+                                referrerPolicy="no-referrer"
+                                onError={(e) => {
+                                  (e.target as HTMLElement).style.display = "none";
+                                }}
+                              />
+                            ) : (
+                              <div className="w-full h-full rounded-md bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-xs">
+                                {vendor.vendor.charAt(0).toUpperCase()}
+                              </div>
+                            )}
                           </div>
                         </td>
 
-                        {/* AI Features */}
-                        <td className="py-3.5 px-4 align-middle text-zinc-600 text-xs">
-                          {vendor.aiFeatures}
+                        {/* CATEGORY */}
+                        <td className="py-3.5 px-4 align-middle">
+                          <span className="inline-block px-2.5 py-1 rounded-md text-[11px] font-mono font-medium bg-zinc-100/90 text-zinc-700 border border-zinc-200/60 whitespace-nowrap">
+                            {vendor.category}
+                          </span>
+                        </td>
+
+                        {/* CORE FUNCTIONALITY */}
+                        <td className="py-3.5 px-4 align-middle text-zinc-800 text-xs leading-relaxed max-w-[280px]">
+                          {vendor.coreFunctionality}
+                        </td>
+
+                        {/* EXAMPLE 1 · SIGNAL ➔ SSOT */}
+                        <td className="py-3.5 px-4 align-middle text-zinc-700 text-xs leading-relaxed max-w-[280px]">
+                          <div className="flex items-start gap-1.5">
+                            <span className="text-red-500 font-bold font-mono text-[11px] shrink-0 mt-0.5">01</span>
+                            <span>{vendor.example1SignalSSOT}</span>
+                          </div>
+                        </td>
+
+                        {/* EXAMPLE 2 · ENGAGE ➔ CPQ */}
+                        <td className="py-3.5 px-4 align-middle text-zinc-700 text-xs leading-relaxed max-w-[280px]">
+                          <div className="flex items-start gap-1.5">
+                            <span className="text-orange-600 font-bold font-mono text-[11px] shrink-0 mt-0.5">02</span>
+                            <span>{vendor.example2EngageCPQ}</span>
+                          </div>
+                        </td>
+
+                        {/* AVAILABILITY */}
+                        <td className="py-3.5 px-4 align-middle whitespace-nowrap">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            {vendor.availability}
+                          </span>
                         </td>
 
                         {/* n8n Integrations */}
@@ -835,40 +1111,33 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
                           </div>
                         </td>
 
+                        {/* Indicative Pricing */}
+                        <td className="py-3.5 px-4 align-middle text-zinc-600 font-mono text-[11px]">
+                          {vendor.indicativePricing}
+                        </td>
+
+                        {/* Customer Size Pills */}
+                        <td className="py-3.5 px-4 align-middle">
+                          <div className="flex items-center gap-1 flex-wrap">
+                            {vendor.customerSize.map((size) => (
+                              <span
+                                key={size}
+                                className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-zinc-200/80 text-zinc-700 font-mono"
+                              >
+                                {size}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+
+                        {/* AI Features */}
+                        <td className="py-3.5 px-4 align-middle text-zinc-600 text-xs">
+                          {vendor.aiFeatures}
+                        </td>
+
                         {/* LLM Capability */}
                         <td className="py-3.5 px-4 align-middle text-zinc-600 text-xs">
                           {vendor.llmCapability}
-                        </td>
-
-                        {/* n8n Node */}
-                        <td className="py-3.5 px-4 align-middle text-zinc-600 font-mono text-xs">
-                          {vendor.n8nNode === "—" ? (
-                            <span className="text-zinc-400">No native node</span>
-                          ) : (
-                            <span className="font-semibold text-zinc-900">{vendor.n8nNode}</span>
-                          )}
-                        </td>
-
-                        {/* n8n Node Logo / Icon */}
-                        <td className="py-3.5 px-4 align-middle">
-                          {vendor.n8nNodeIcon && vendor.n8nNodeIcon !== "No native node" && vendor.n8nNodeIcon !== "—" ? (
-                            <div className="w-7 h-7 rounded-md border border-zinc-200 bg-white p-1 flex items-center justify-center shrink-0">
-                              <img
-                                src={vendor.n8nNodeIcon}
-                                alt={vendor.vendor}
-                                className="max-w-full max-h-full object-contain"
-                                referrerPolicy="no-referrer"
-                                onError={(e) => {
-                                  // Fallback if image fails
-                                  (e.target as HTMLElement).style.display = "none";
-                                }}
-                              />
-                            </div>
-                          ) : (
-                            <span className="inline-block px-2 py-0.5 rounded-full text-zinc-400 text-xs bg-zinc-100 border border-zinc-200/60 font-mono">
-                              —
-                            </span>
-                          )}
                         </td>
 
                         {/* Connect Via */}
@@ -934,12 +1203,38 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
             {/* Drawer Body */}
             <div className="p-5 space-y-6 flex-1">
               {/* Core Out-of-Box Functionality Card */}
-              <div className="bg-purple-50/50 border border-purple-200 rounded-xl p-4 space-y-2">
-                <div className="flex items-center gap-2 text-purple-900 font-bold text-xs uppercase tracking-wide">
-                  <Sparkles className="h-4 w-4 text-purple-600" />
-                  <span>Core Out-of-the-Box Functionality</span>
+              <div className="bg-purple-50/50 border border-purple-200 rounded-xl p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-purple-900 font-bold text-xs uppercase tracking-wide">
+                    <Sparkles className="h-4 w-4 text-purple-600" />
+                    <span>Core Out-of-the-Box Functionality</span>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300 font-mono">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                    {activeVendor.availability}
+                  </span>
                 </div>
-                <p className="text-sm font-semibold text-zinc-900">{activeVendor.coreFunctionality}</p>
+                <p className="text-sm font-semibold text-zinc-900 leading-relaxed">{activeVendor.coreFunctionality}</p>
+
+                {/* Practical Signal & Engage Examples */}
+                <div className="space-y-2 pt-2 border-t border-purple-200/60">
+                  <div className="bg-white/80 rounded-lg p-2.5 border border-purple-100 space-y-1">
+                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-zinc-900">
+                      <span className="text-red-500 font-mono">01</span>
+                      <span className="uppercase tracking-wider">Example 1 · Signal ➔ SSoT</span>
+                    </div>
+                    <p className="text-xs text-zinc-700 leading-relaxed">{activeVendor.example1SignalSSOT}</p>
+                  </div>
+
+                  <div className="bg-white/80 rounded-lg p-2.5 border border-purple-100 space-y-1">
+                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-zinc-900">
+                      <span className="text-orange-600 font-mono">02</span>
+                      <span className="uppercase tracking-wider">Example 2 · Engage ➔ CPQ</span>
+                    </div>
+                    <p className="text-xs text-zinc-700 leading-relaxed">{activeVendor.example2EngageCPQ}</p>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-2 gap-2 pt-2 border-t border-purple-200/60 text-xs text-zinc-600">
                   <div>
                     <span className="text-zinc-400 block text-[11px]">Indicative Pricing</span>

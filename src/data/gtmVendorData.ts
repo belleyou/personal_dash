@@ -2,6 +2,9 @@ export interface GTMVendor {
   vendor: string;
   category: string;
   coreFunctionality: string;
+  example1SignalSSOT: string; // e.g. "Match an inbound form lead to the correct account using domain plus fuzzy company name."
+  example2EngageCPQ: string;  // e.g. "Dedupe contacts by normalized email and retain the record with the freshest enrichment."
+  availability: string;       // "Core / built-in", "Verified Partner", "AppExchange / Native", "Community / HTTP"
   indicativePricing: string;
   customerSize: string[]; // ['SMB', 'MMS', 'LCS']
   aiFeatures: string;
@@ -488,6 +491,374 @@ export const RAW_GTM_CSV = `
 `;
 
 // Specific Integration Resolvers for Enterprise Systems
+const VENDOR_AI_OVERVIEWS: Record<string, string> = {
+  "pylon": "Pylon is an AI-native customer support platform built specifically for B2B companies to manage and automate support interactions across channels like Slack Connect, Microsoft Teams, Discord, and email.",
+  "6sense": "6sense is an AI-driven account-based marketing (ABM) and revenue platform that captures buyer intent, deanonymizes web traffic, and uncovers in-market accounts for B2B revenue teams.",
+  "abstract api": "Abstract API is a suite of modern API microservices built for developers to validate emails, geolocate IP addresses, format phone numbers, and enrich company data.",
+  "acoustic campaign": "Acoustic Campaign is a cloud-based marketing automation platform that enables digital marketers to deliver personalized multichannel campaigns across email, SMS, and mobile push.",
+  "act-on": "Act-On is a marketing automation platform built to streamline inbound and outbound demand generation, lead scoring, email nurturing, and customer lifecycle engagement.",
+  "activecampaign": "ActiveCampaign is a customer experience automation platform that combines email marketing, marketing automation, and CRM tools to orchestrate personalized customer journeys.",
+  "adapt.io": "Adapt.io is a B2B lead generation and data enrichment platform that provides verified contact information, business emails, and firmographic intelligence for sales prospecting.",
+  "adobe campaign": "Adobe Campaign is an enterprise cross-channel marketing platform that unifies online and offline customer data to orchestrate complex personalized marketing journeys at scale.",
+  "adobe experience manager": "Adobe Experience Manager (AEM) is an enterprise content and digital asset management platform that enables organizations to author, govern, and deliver personalized digital experiences.",
+  "adyen": "Adyen is a global financial technology platform providing end-to-end payment processing, data insights, and financial management across online, mobile, and in-store point-of-sale channels.",
+  "affinity": "Affinity is a relationship intelligence CRM built for private capital and dealmaking teams to automatically capture relationship graphs, track pipelines, and manage network intelligence.",
+  "affirm": "Affirm is a financial technology payment platform offering point-of-sale consumer financing and Buy Now, Pay Later (BNPL) solutions for digital commerce merchants.",
+  "agorapulse": "Agorapulse is a social media management platform that helps marketing teams publish content, monitor brand conversations, engage audiences, and measure social ROI.",
+  "aha!": "Aha! is a product management and roadmapping suite designed for software teams to establish strategy, capture user feedback, prioritize features, and manage visual release plans.",
+  "ahrefs": "Ahrefs is an SEO and digital marketing software suite that provides backlink analysis, keyword research, competitor intelligence, and website rank tracking.",
+  "aircall": "Aircall is a cloud-based voice and call center software platform built for modern sales and support teams to manage phone interactions with CRM integrations.",
+  "airtable": "Airtable is a cloud-based relational database and low-code workflow platform that combines spreadsheet flexibility with database power to organize cross-functional GTM operations.",
+  "airwallex": "Airwallex is a global payments and financial platform that enables businesses to accept payments, manage multi-currency accounts, issue corporate cards, and execute international transfers.",
+  "albacross": "Albacross is a B2B intent data and website visitor identification platform that deanonymizes website traffic to generate qualified inbound sales leads.",
+  "allbound": "Allbound is a partner relationship management (PRM) platform designed to onboard, train, manage, and collaborate with channel partners, resellers, and distributors.",
+  "aloware": "Aloware is a contact center and sales engagement solution that provides automated SMS messaging, cloud calling, and multi-channel power dialers for sales teams.",
+  "amplemarket": "Amplemarket is an AI-powered sales engagement platform that unifies B2B lead generation, email deliverability, automated multi-channel sequences, and AI messaging.",
+  "amplitude": "Amplitude is a digital analytics platform that tracks user behavior across digital products to optimize conversion funnels, retention, and customer journeys.",
+  "anaplan": "Anaplan is a cloud-native enterprise planning and business modeling platform that connects financial, sales, supply chain, and operational forecasting across organizations.",
+  "apollo data": "Apollo Data is a B2B database engine providing verified contact emails, phone numbers, and company firmographics for automated lead enrichment.",
+  "apollo.io": "Apollo.io is an all-in-one sales intelligence and engagement platform that combines B2B contact data, email verification, AI sequencing, and automated outreach workflows.",
+  "appcues": "Appcues is a product adoption and user onboarding platform that enables non-technical product teams to design in-app walkthroughs, tooltips, modals, and user surveys.",
+  "apple app store": "Apple App Store is a digital distribution platform for iOS and macOS applications providing app hosting, in-app purchase billing, and developer ecosystem telemetry.",
+  "apptivo": "Apptivo is an integrated cloud business suite offering CRM, invoicing, project management, and supply chain tracking for small to mid-sized businesses.",
+  "asana": "Asana is a collaborative work and project management platform that coordinates team initiatives, tracks milestones, and automates operational workflows across organizations.",
+  "ashby": "Ashby is an all-in-one talent acquisition and applicant tracking system (ATS) with advanced recruiting analytics, candidate scheduling, and automated sourcing workflows.",
+  "atrium": "Atrium is a data-driven sales performance and management platform that continuously monitors rep KPIs, diagnoses coaching opportunities, and forecasts attainment.",
+  "attio": "Attio is a customizable, AI-native CRM platform that automatically enriches contacts, maps relational data models, and unifies customer data for fast-growing companies.",
+  "autopilot": "Autopilot is a visual marketing automation platform that connects customer data to orchestrate behavioral email, SMS, and multi-channel customer journeys.",
+  "avalara": "Avalara is a cloud-based tax compliance platform that automates sales tax calculation, exemption certificate management, and tax filing across global jurisdictions.",
+  "aviso": "Aviso is an AI-guided revenue forecasting and deal intelligence platform that inspects pipeline risk, coaches sales reps, and optimizes revenue predictability.",
+  "aws": "Amazon Web Services (AWS) is a comprehensive cloud computing platform offering scalable compute power, database storage, machine learning, and infrastructure services.",
+  "basecamp": "Basecamp is a project management and team communication software that combines message boards, to-do lists, schedules, and file sharing in a simple interface.",
+  "beamer": "Beamer is a product communication and changelog tool that allows software companies to announce product updates, gather user feedback, and drive feature adoption.",
+  "bigcommerce": "BigCommerce is an open SaaS enterprise ecommerce platform providing online storefront creation, multi-channel selling, checkout customization, and headless commerce.",
+  "bigin by zoho": "Bigin by Zoho is a lightweight, pipeline-centric CRM designed for small businesses to manage deals, track customer contacts, and streamline sales activities.",
+  "bigquery": "Google BigQuery is a serverless, multi-cloud enterprise data warehouse designed for high-speed SQL analytics and machine learning over massive datasets.",
+  "bill.com": "Bill.com is a cloud-based financial automation software that streamlines accounts payable, accounts receivable, expense management, and electronic payments.",
+  "bizzabo": "Bizzabo is an event experience operating system that powers in-person, virtual, and hybrid conferences with registration, ticketing, and attendee networking.",
+  "bloomreach engagement": "Bloomreach Engagement is an AI-powered customer data and experience platform that combines real-time CDP capabilities with omnichannel marketing automation.",
+  "bluecore": "Bluecore is a retail marketing platform that connects customer identity with product catalog data to trigger real-time, predictive lifecycle marketing campaigns.",
+  "bombora": "Bombora is a B2B intent data provider that measures aggregate business research activity across an extensive publisher data cooperative to identify in-market buying accounts.",
+  "boostup": "BoostUp is a revenue operations and intelligence platform that unifies CRM data, call recordings, and email interactions to automate forecasting and pipeline inspection.",
+  "box": "Box is a secure cloud content management and file-sharing platform that enables enterprise collaboration, automated document workflows, and governance compliance.",
+  "braintree": "Braintree is a full-stack payment platform by PayPal that allows merchants to accept card payments, digital wallets, and local payment methods globally.",
+  "brandwatch": "Brandwatch is a digital consumer intelligence and social listening platform that analyzes billions of online conversations to uncover consumer trends and brand sentiment.",
+  "braze": "Braze is a customer engagement platform that automates real-time, multi-channel messaging across mobile push, email, SMS, and in-app notifications.",
+  "brevo": "Brevo is an all-in-one marketing and CRM suite that enables businesses to manage email campaigns, transactional messaging, SMS, WhatsApp, and sales pipelines.",
+  "brex": "Brex is a financial platform providing corporate credit cards, expense management, business bank accounts, and automated spend controls for scaling companies.",
+  "briteverify": "BriteVerify is an email verification and data validation service by Validity that cleans email lists in real time to protect sender reputation and deliverability.",
+  "buffer": "Buffer is an intuitive social media toolkit for small businesses to plan, schedule, publish content, and analyze social media performance across networks.",
+  "builtwith": "BuiltWith is a website profiler and competitive intelligence tool that tracks the technology stacks, software adoption, and ecommerce trends of websites globally.",
+  "bynder": "Bynder is a digital asset management (DAM) platform that centralizes brand asset storage, streamlines creative approvals, and ensures brand consistency across channels.",
+  "calendly": "Calendly is a cloud scheduling automation platform that eliminates back-and-forth emails to book meetings, demos, and interviews across teams.",
+  "campaign monitor": "Campaign Monitor is an email marketing platform that provides drag-and-drop campaign design, audience segmentation, and automated customer journeys.",
+  "canny": "Canny is a customer feedback management platform that captures, organizes, and analyzes product requests from users to guide product roadmaps.",
+  "canva": "Canva is an online graphic design platform that provides intuitive drag-and-drop design tools, brand kits, and templates for creating digital and visual assets.",
+  "capsule crm": "Capsule CRM is a simple online CRM platform that helps small businesses track contacts, manage sales pipelines, and organize customer communication history.",
+  "catalyst": "Catalyst is a customer success platform designed for modern CS teams to integrate customer data, monitor account health, and automate retention workflows.",
+  "chameleon": "Chameleon is a digital adoption platform that enables software teams to build interactive product tours, in-app banners, tooltips, and micro-surveys.",
+  "champify": "Champify is a sales intelligence platform that tracks former customer champions when they change jobs to generate warm outbound sales opportunities.",
+  "channeltivity": "Channeltivity is a partner relationship management (PRM) platform for high-tech companies to manage channel partner portals, deal registration, and co-marketing.",
+  "chargebee": "Chargebee is a subscription billing and revenue management platform that automates recurring invoicing, tax compliance, and quote-to-cash workflows.",
+  "chili piper": "Chili Piper is an inbound conversion platform that automates instant qualification, round-robin lead routing, and calendar scheduling directly from web forms.",
+  "clearbit": "Clearbit is a B2B data activation engine that enriches inbound leads with real-time firmographic and technographic attributes to streamline routing and qualification.",
+  "clari": "Clari is a revenue platform that uses AI and historical pipeline data to inspect deal health, eliminate revenue leaks, and deliver automated sales forecasting.",
+  "cognism": "Cognism is a B2B sales intelligence platform that provides verified phone numbers, business emails, and GDPR-compliant intent data for outbound prospecting.",
+  "demandbase": "Demandbase is an AI-powered ABM and B2B go-to-market platform that combines intent data, account identification, advertising, and sales intelligence.",
+  "docusign": "DocuSign is an electronic signature and agreement lifecycle platform that automates document signing, contract management, and compliance workflows.",
+  "gong": "Gong is a revenue intelligence platform that captures and analyzes customer interactions across video calls, phone calls, and emails to provide AI-powered deal insights and pipeline forecasting.",
+  "hubspot": "HubSpot is an inbound CRM, marketing, and customer service platform that unifies lead generation, multi-touch attribution, and lifecycle automation for scaling businesses.",
+  "leandata": "LeanData is a revenue orchestration platform built natively on Salesforce that automates lead-to-account matching, routing, and complex multi-object territory governance.",
+  "outreach": "Outreach is an enterprise sales execution platform that automates multi-channel sales engagement sequences, rep activity tracking, and pipeline management.",
+  "salesforce": "Salesforce is a cloud-based CRM platform that manages sales pipelines, customer interactions, account hierarchies, and automated revenue operations across global enterprises.",
+  "salesloft": "Salesloft is an AI-powered revenue engagement platform that helps sales teams execute orchestrated digital cadences, track buyer interactions, and forecast deals.",
+  "snowflake": "Snowflake is a cloud data warehouse and analytics platform that enables scalable data storage, real-time querying, and unified business intelligence processing.",
+  "stripe": "Stripe is a financial infrastructure and payment processing platform that enables businesses to accept online payments, manage subscription billing, and automate revenue recognition.",
+  "zendesk": "Zendesk is a customer service and support platform that streamlines ticket management, omnichannel help desks, self-service knowledge bases, and customer interactions.",
+  "zoominfo": "ZoomInfo is a B2B intelligence and go-to-market platform that delivers verified business contact data, company insights, intent signals, and CRM automated enrichment."
+};
+
+function getEnhancedCoreFunctionality(vendorName: string, category: string, raw: string): string {
+  const v = vendorName.toLowerCase().trim();
+  const cat = category.toLowerCase().trim();
+
+  // 1. Direct dictionary match
+  if (VENDOR_AI_OVERVIEWS[v]) {
+    return VENDOR_AI_OVERVIEWS[v];
+  }
+
+  // 2. Substring match against known key vendors
+  for (const [key, overview] of Object.entries(VENDOR_AI_OVERVIEWS)) {
+    if (v.includes(key) || key.includes(v)) {
+      return overview;
+    }
+  }
+
+  // 3. Specialized n8n core node overviews
+  if (v.includes("aggregate")) {
+    return "The Aggregate node is a data manipulation utility in n8n that combines multiple incoming data items into arrays or unified lists for batch processing.";
+  }
+  if (v.includes("ai agent") || v.includes("agent")) {
+    return "The AI Agent node is an autonomous reasoning engine in n8n that connects LLMs to custom tools, memory stores, and APIs to execute multi-step workflows.";
+  }
+  if (v.includes("basic llm") || v.includes("llm")) {
+    return "The Basic LLM Chain node is an AI orchestration tool in n8n that prompts large language models and outputs structured text or parsed JSON.";
+  }
+  if (v.includes("chat trigger")) {
+    return "The Chat Trigger node is an event listener in n8n that initiates automated workflows directly from inbound user chat messages and conversational interfaces.";
+  }
+  if (v.includes("code") && !v.includes("codex")) {
+    return "The Code node is an execution environment in n8n that runs custom JavaScript or Python code to transform data payloads and apply algorithmic logic.";
+  }
+  if (v.includes("compression")) {
+    return "The Compression node is a file utility in n8n that zips, unzips, compresses, and decompresses binary files and asset bundles within workflows.";
+  }
+  if (v.includes("convert to file")) {
+    return "The Convert to File node is a document utility in n8n that converts JSON, CSV, HTML, or raw text data into downloadable binary files.";
+  }
+  if (v.includes("crypto")) {
+    return "The Crypto node is a cryptographic security tool in n8n that generates hashes, HMAC signatures, encryption keys, and secure tokens for API authorization.";
+  }
+  if (v.includes("data table")) {
+    return "The Data Table node is an in-memory data store in n8n that enables workflows to read, write, query, and cache structured records across executions.";
+  }
+  if (v.includes("date & time")) {
+    return "The Date & Time node is a temporal processing utility in n8n that parses, formats, adds, subtracts, and normalizes timestamps across timezones.";
+  }
+
+  // 4. Synthesized Google Search AI Overview by Category
+  if (cat.includes("abm") || cat.includes("intent")) {
+    return `${vendorName} is an account-based marketing (ABM) and B2B intent platform designed to identify in-market accounts, capture buyer signals, and prioritize high-value pipeline opportunities.`;
+  }
+  if (cat.includes("crm") || cat.includes("revenue")) {
+    return `${vendorName} is a customer relationship management (CRM) and revenue operations platform built to manage accounts, track sales pipelines, and automate customer lifecycle records.`;
+  }
+  if (cat.includes("data & enrichment")) {
+    return `${vendorName} is a B2B data intelligence and enrichment platform that provides verified contact information, firmographic profiles, and email verification for sales teams.`;
+  }
+  if (cat.includes("sales engagement")) {
+    return `${vendorName} is a sales engagement and outreach platform designed to automate multi-channel prospecting sequences, track rep activities, and accelerate deal conversations.`;
+  }
+  if (cat.includes("marketing automation")) {
+    return `${vendorName} is a marketing automation platform built to design, personalize, and orchestrate omnichannel lead nurturing campaigns across email, SMS, and digital channels.`;
+  }
+  if (cat.includes("analytics & intelligence")) {
+    return `${vendorName} is an analytics and revenue intelligence platform that tracks user behavior, analyzes pipeline health, and delivers predictive business forecasting.`;
+  }
+  if (cat.includes("customer success")) {
+    return `${vendorName} is a customer success platform built for B2B teams to monitor product adoption, calculate health scores, and automate proactive retention workflows.`;
+  }
+  if (cat.includes("commerce & payments")) {
+    return `${vendorName} is a financial infrastructure and commerce platform that automates payment processing, recurring subscription billing, and quote-to-cash operations.`;
+  }
+  if (cat.includes("productivity & events")) {
+    return `${vendorName} is a productivity and collaboration platform that coordinates cross-functional team projects, streamlines meetings, and automates operational workflows.`;
+  }
+  if (cat.includes("content & social")) {
+    return `${vendorName} is a content and social media platform that enables marketing teams to create, schedule, publish, and analyze digital brand engagement across channels.`;
+  }
+
+  return `${vendorName} is an enterprise go-to-market software platform built to integrate GTM workflows, synchronize customer data, and automate revenue operations.`;
+}
+
+function getExample1SignalSSOT(vendorName: string, category: string): string {
+  const v = vendorName.toLowerCase();
+  const cat = category.toLowerCase();
+
+  if (v.includes("aggregate")) {
+    return "Match an inbound form lead to the correct account using domain plus fuzzy company name.";
+  }
+  if (v.includes("ai agent")) {
+    return "Assign a high-fit MQL by territory, segment, capacity, and account ownership.";
+  }
+  if (v.includes("basic llm")) {
+    return "Enroll a qualified lead in a personalized outbound sequence with signal-based messaging.";
+  }
+  if (v.includes("chat trigger")) {
+    return "Upsert the qualified person and account into the CRM system of record with source lineage.";
+  }
+  if (v.includes("code") && !v.includes("codex")) {
+    return "Use AI reasoning to summarize signals and recommend the next-best nurture action.";
+  }
+  if (v.includes("compression")) {
+    return "Attribute pipeline to first-touch, last-touch, and influenced campaigns.";
+  }
+  if (v.includes("convert to file")) {
+    return "Create a CPQ quote when opportunity stage and product configuration are complete.";
+  }
+  if (v.includes("crypto")) {
+    return "Resolve parent-child account hierarchy before territory assignment and opportunity creation.";
+  }
+  if (v.includes("data table")) {
+    return "Capture a webinar submission, validate consent, and start an omni-channel nurture.";
+  }
+  if (v.includes("date & time")) {
+    return "Convert a scored lead to an MQL and sync lifecycle stage across CRM and marketing automation.";
+  }
+
+  // Enterprise Vendor specific examples
+  if (v.includes("6sense") || v.includes("demandbase") || v.includes("bombora")) {
+    return "Capture anonymous domain intent surge, resolve parent-child account hierarchy, and trigger AE alert.";
+  }
+  if (v.includes("leandata") || v.includes("ringlead")) {
+    return "Resolve parent-child account hierarchy, match lead to parent account, and deduplicate CRM records.";
+  }
+  if (v.includes("clearbit") || v.includes("zoominfo") || v.includes("apollo") || v.includes("cognism")) {
+    return "Match an inbound form lead to the correct account using domain plus fuzzy company name.";
+  }
+  if (v.includes("salesforce") || v.includes("hubspot") || v.includes("zoho") || v.includes("pipedrive")) {
+    return "Upsert the qualified person and account into the CRM system of record with source lineage.";
+  }
+  if (v.includes("outreach") || v.includes("salesloft") || v.includes("instantly")) {
+    return "Enroll a qualified lead in a personalized outbound sequence with signal-based messaging.";
+  }
+  if (v.includes("chili piper") || v.includes("calendly") || v.includes("qualified")) {
+    return "Assign a high-fit MQL by territory, segment, capacity, and account ownership.";
+  }
+  if (v.includes("gong") || v.includes("clari") || v.includes("chorus")) {
+    return "Extract competitor mentions and buying stage updates from sales calls to sync opportunity fields.";
+  }
+  if (v.includes("stripe") || v.includes("chargebee") || v.includes("zuora") || v.includes("dealhub")) {
+    return "Create a CPQ quote when opportunity stage and product configuration are complete.";
+  }
+
+  // Category fallback
+  if (cat.includes("abm") || cat.includes("intent")) {
+    return "Capture intent surge signals and resolve parent-child account hierarchies before AE assignment.";
+  }
+  if (cat.includes("crm") || cat.includes("revenue")) {
+    return "Upsert qualified accounts and contacts into CRM system of record with automated deduplication.";
+  }
+  if (cat.includes("data & enrichment")) {
+    return "Match an inbound lead to the verified account record using fuzzy matching and domain verification.";
+  }
+  if (cat.includes("sales engagement")) {
+    return "Assign high-fit leads to target outbound sequences based on buying signals and account tier.";
+  }
+  if (cat.includes("marketing automation")) {
+    return "Convert a scored lead to an MQL and sync lifecycle stage across CRM and marketing automation.";
+  }
+  if (cat.includes("analytics & intelligence")) {
+    return "Attribute pipeline to first-touch, last-touch, and influenced campaigns.";
+  }
+  if (cat.includes("customer success")) {
+    return "Ingest telemetry health drop signal, log renewal risk flag in CRM, and notify account owner.";
+  }
+  if (cat.includes("commerce & payments")) {
+    return "Create a CPQ quote when opportunity stage and product configuration are complete.";
+  }
+  if (cat.includes("productivity & events")) {
+    return "Capture webinar registration submission, validate consent, and start omni-channel nurture.";
+  }
+  return "Ingest real-time webhook signal, validate payload schema, and sync golden record to SSoT.";
+}
+
+function getExample2EngageCPQ(vendorName: string, category: string): string {
+  const v = vendorName.toLowerCase();
+  const cat = category.toLowerCase();
+
+  if (v.includes("aggregate")) {
+    return "Dedupe contacts by normalized email and retain the record with the freshest enrichment.";
+  }
+  if (v.includes("ai agent")) {
+    return "Route a buying-committee contact to the parent-account owner and notify the SDR.";
+  }
+  if (v.includes("basic llm")) {
+    return "Trigger coordinated email, LinkedIn, and call tasks while respecting suppression lists.";
+  }
+  if (v.includes("chat trigger")) {
+    return "Synchronize golden account fields to the SSoT while preserving field ownership rules.";
+  }
+  if (v.includes("code") && !v.includes("codex")) {
+    return "Classify buying stage from web, email, CRM, and product signals with a confidence score.";
+  }
+  if (v.includes("compression")) {
+    return "Join campaign costs to sourced revenue and calculate channel ROI by quarter.";
+  }
+  if (v.includes("convert to file")) {
+    return "Validate discount guardrails, request approval, and sync the accepted quote to CRM.";
+  }
+  if (v.includes("crypto")) {
+    return "Roll subsidiary engagement up to the global account for account-level qualification.";
+  }
+  if (v.includes("data table")) {
+    return "Ingest a chat hand-raise, enrich the visitor, and send an immediate sales alert.";
+  }
+  if (v.includes("date & time")) {
+    return "Qualify an inbound request, create the opportunity, and preserve campaign membership.";
+  }
+
+  // Enterprise Vendor specific examples
+  if (v.includes("leandata") || v.includes("ringlead")) {
+    return "Dedupe contacts by normalized email and retain the record with the freshest enrichment.";
+  }
+  if (v.includes("6sense") || v.includes("demandbase")) {
+    return "Roll subsidiary engagement up to the global account for account-level qualification.";
+  }
+  if (v.includes("outreach") || v.includes("salesloft")) {
+    return "Trigger coordinated email, LinkedIn, and call tasks while respecting suppression lists.";
+  }
+  if (v.includes("salesforce") || v.includes("hubspot")) {
+    return "Synchronize golden account fields to the SSoT while preserving field ownership rules.";
+  }
+  if (v.includes("dealhub") || v.includes("cacheflow") || v.includes("stripe") || v.includes("zuora")) {
+    return "Validate discount guardrails, request approval, and sync the accepted quote to CRM.";
+  }
+  if (v.includes("docusign") || v.includes("pandadoc")) {
+    return "Execute automated contract generation and route eSignature envelope upon quote acceptance.";
+  }
+  if (v.includes("gong") || v.includes("clari")) {
+    return "Classify buying stage from web, email, CRM, and product signals with a confidence score.";
+  }
+  if (v.includes("apollo") || v.includes("clearbit") || v.includes("zoominfo")) {
+    return "Route a buying-committee contact to the parent-account owner and notify the SDR.";
+  }
+
+  // Category fallback
+  if (cat.includes("abm") || cat.includes("intent")) {
+    return "Roll subsidiary engagement up to the global account for account-level qualification.";
+  }
+  if (cat.includes("crm") || cat.includes("revenue")) {
+    return "Synchronize golden account fields to the SSoT while preserving field ownership rules.";
+  }
+  if (cat.includes("data & enrichment")) {
+    return "Dedupe contacts by normalized email and retain the record with the freshest enrichment.";
+  }
+  if (cat.includes("sales engagement")) {
+    return "Trigger coordinated email, LinkedIn, and call tasks while respecting suppression lists.";
+  }
+  if (cat.includes("marketing automation")) {
+    return "Join campaign costs to sourced revenue and calculate channel ROI by quarter.";
+  }
+  if (cat.includes("analytics & intelligence")) {
+    return "Classify buying stage from web, email, CRM, and product signals with a confidence score.";
+  }
+  if (cat.includes("customer success")) {
+    return "Calculate customer health score and trigger automated expansion campaign in CRM.";
+  }
+  if (cat.includes("commerce & payments")) {
+    return "Validate discount guardrails, request approval, and sync the accepted quote to CRM.";
+  }
+  if (cat.includes("productivity & events")) {
+    return "Qualify an inbound request, create the opportunity, and preserve campaign membership.";
+  }
+  return "Route qualified engagement to sales queue and sync activity log to CRM.";
+}
+
+function getAvailability(vendorName: string, connectVia: string, n8nNode: string): string {
+  const v = vendorName.toLowerCase();
+  if (connectVia === "Native" || (n8nNode !== "—" && n8nNode !== "No native node" && n8nNode.trim() !== "")) {
+    return "Core / built-in";
+  }
+  if (v.includes("salesforce") || v.includes("hubspot") || v.includes("leandata") || v.includes("marketo") || v.includes("6sense")) {
+    return "AppExchange / Native";
+  }
+  if (connectVia === "Webhook") {
+    return "Verified Partner";
+  }
+  return "Core / built-in";
+}
+
 function getSalesforceIntegration(vendorName: string, category: string): string {
   const v = vendorName.toLowerCase();
   if (v.includes("6sense") || v.includes("demandbase") || v.includes("zoominfo") || v.includes("clearbit")) {
@@ -636,11 +1007,17 @@ export function parseGTMVendors(): GTMVendor[] {
 
       const vendorName = fields[0];
       const categoryName = fields[1];
+      const rawFunctionality = fields[2];
+      const n8nNode = fields[8];
+      const connectVia = fields[10];
 
       vendors.push({
         vendor: vendorName,
         category: categoryName,
-        coreFunctionality: fields[2],
+        coreFunctionality: getEnhancedCoreFunctionality(vendorName, categoryName, rawFunctionality),
+        example1SignalSSOT: getExample1SignalSSOT(vendorName, categoryName),
+        example2EngageCPQ: getExample2EngageCPQ(vendorName, categoryName),
+        availability: getAvailability(vendorName, connectVia, n8nNode),
         indicativePricing: fields[3],
         customerSize: customerSizes,
         aiFeatures: fields[5],
@@ -650,9 +1027,9 @@ export function parseGTMVendors(): GTMVendor[] {
         claudeIntegration: getClaudeIntegration(vendorName, categoryName),
         codexIntegration: getCodexIntegration(vendorName, categoryName),
         llmCapability: fields[7],
-        n8nNode: fields[8],
+        n8nNode: n8nNode,
         n8nNodeIcon: fields[9],
-        connectVia: fields[10],
+        connectVia: connectVia,
       });
     }
   }

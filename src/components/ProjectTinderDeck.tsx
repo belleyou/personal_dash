@@ -30,7 +30,8 @@ import {
   ChevronRight,
   Bookmark,
   Award,
-  Zap
+  Zap,
+  Briefcase
 } from "lucide-react";
 import { Project } from "../types";
 import {
@@ -44,7 +45,7 @@ import {
 export interface TinderCardItem {
   id: string;
   title: string;
-  category: "Star Case Study" | "AI GTM & Workflows" | "Core GTM Systems" | "System Evaluation" | "Data Modeling" | "Revenue Growth Ops";
+  category: "Star Case Study" | "AI GTM & Workflows" | "Core GTM Systems" | "System Evaluation" | "Data Modeling" | "Revenue Growth Ops" | "PM Responsibility";
   categoryColor: string;
   categoryBg: string;
   icon: any;
@@ -62,6 +63,28 @@ export interface TinderCardItem {
 
 // Master list of all cards for the Project Card Deck
 export const MASTER_DECK: TinderCardItem[] = [
+  {
+    id: "pm_responsibility",
+    title: "GTM PM: BRD & SSoT to Multi-Channel AI Reactivation",
+    category: "PM Responsibility",
+    categoryColor: "text-blue-900",
+    categoryBg: "bg-blue-100 border-blue-300",
+    icon: Briefcase,
+    problem: "A GTM Product Manager, I interview/connect/discover/document BRD/Pain point => define SSoT => translate a complex automation into a results-driven business outcome with data models/data mapping/data system access creation and governance.",
+    solution: "Present solution: Identify the inactive, higher-potential leads (SDR-vetted but stale/Lead Scoring/Filtering) and implement an intelligent, personalized, and fully automated reactivation system.",
+    impact: "I prioritized and built a unified, multi-channel GTM automation using n8n to connect Salesforce, AI-driven personalization via OpenAI, and automated Gmail outreach with response-driven logic.",
+    tools: ["BRD / Pain Point Discovery", "SSoT Definition", "Data Models & Mapping", "Data Governance & Access", "n8n Orchestration", "Salesforce CRM", "OpenAI Personalization", "Gmail Outreach API"],
+    aiUse: "n8n Multi-Channel Orchestration + OpenAI Personalization + Response-Driven Logic",
+    targetTab: "inactive_leads",
+    isSpecialCaseStudy: true,
+    highlightBadge: "💼 GTM Product Manager Responsibility",
+    stats: [
+      { label: "PM Discovery", value: "BRD ➔ SSoT" },
+      { label: "Data Ops", value: "Model & Access" },
+      { label: "Lead Filter", value: "SDR-Vetted Stale" },
+      { label: "Execution", value: "n8n + AI + Gmail" }
+    ]
+  },
   {
     id: "gong_revenue_agent",
     title: "Gong Revenue Intelligence Agent",
@@ -441,6 +464,10 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
               id: "liked",
               label: `❤️ Liked (${likedProjects.length})`,
               highlight: likedProjects.length > 0
+            },
+            {
+              id: "PM Responsibility",
+              label: `💼 PM Responsibility (${MASTER_DECK.filter(c => c.category === "PM Responsibility").length})`
             }
           ].map((cat) => (
             <button
