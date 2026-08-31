@@ -703,3 +703,185 @@ export const CAMPAIGN_SUMMARIES: CampaignSummary[] = [
     paybackMonths: 4.1
   }
 ];
+
+export interface HistoricalFunnelPoint {
+  period: string;
+  shortPeriod: string;
+  quarter: string;
+  leadsIngress: number;
+  mqls: number;
+  sqls: number;
+  opportunities: number;
+  closedWon: number;
+  closedLost: number;
+  leadToWonPct: number;
+  sqlToWonPct: number;
+  mqlToSqlPct: number;
+  sqlToOppPct: number;
+  oppToWonPct: number;
+  bookedArr: number;
+  avgSalesCycleDays: number;
+  speedToLeadMin: number;
+  milestone?: string;
+}
+
+export const HISTORICAL_FUNNEL_TRENDS: HistoricalFunnelPoint[] = [
+  {
+    period: "January 2026",
+    shortPeriod: "Jan 26",
+    quarter: "Q1 2026",
+    leadsIngress: 1280,
+    mqls: 740,
+    sqls: 310,
+    opportunities: 155,
+    closedWon: 48,
+    closedLost: 107,
+    leadToWonPct: 3.75,
+    sqlToWonPct: 15.48,
+    mqlToSqlPct: 41.89,
+    sqlToOppPct: 50.0,
+    oppToWonPct: 30.97,
+    bookedArr: 1850000,
+    avgSalesCycleDays: 58,
+    speedToLeadMin: 42.5,
+    milestone: "Baseline manual SDR workflows & standard webforms"
+  },
+  {
+    period: "February 2026",
+    shortPeriod: "Feb 26",
+    quarter: "Q1 2026",
+    leadsIngress: 1420,
+    mqls: 860,
+    sqls: 380,
+    opportunities: 190,
+    closedWon: 64,
+    closedLost: 126,
+    leadToWonPct: 4.51,
+    sqlToWonPct: 16.84,
+    mqlToSqlPct: 44.19,
+    sqlToOppPct: 50.0,
+    oppToWonPct: 33.68,
+    bookedArr: 2480000,
+    avgSalesCycleDays: 54,
+    speedToLeadMin: 36.2
+  },
+  {
+    period: "March 2026",
+    shortPeriod: "Mar 26",
+    quarter: "Q1 2026",
+    leadsIngress: 1650,
+    mqls: 1020,
+    sqls: 480,
+    opportunities: 240,
+    closedWon: 88,
+    closedLost: 152,
+    leadToWonPct: 5.33,
+    sqlToWonPct: 18.33,
+    mqlToSqlPct: 47.06,
+    sqlToOppPct: 50.0,
+    oppToWonPct: 36.67,
+    bookedArr: 3720000,
+    avgSalesCycleDays: 49,
+    speedToLeadMin: 28.4,
+    milestone: "Introduced Automated ICP Domain Matching & Enrichment"
+  },
+  {
+    period: "April 2026",
+    shortPeriod: "Apr 26",
+    quarter: "Q2 2026",
+    leadsIngress: 1840,
+    mqls: 1190,
+    sqls: 590,
+    opportunities: 305,
+    closedWon: 122,
+    closedLost: 183,
+    leadToWonPct: 6.63,
+    sqlToWonPct: 20.68,
+    mqlToSqlPct: 49.58,
+    sqlToOppPct: 51.69,
+    oppToWonPct: 40.0,
+    bookedArr: 5140000,
+    avgSalesCycleDays: 45,
+    speedToLeadMin: 21.0
+  },
+  {
+    period: "May 2026",
+    shortPeriod: "May 26",
+    quarter: "Q2 2026",
+    leadsIngress: 2150,
+    mqls: 1440,
+    sqls: 760,
+    opportunities: 395,
+    closedWon: 168,
+    closedLost: 227,
+    leadToWonPct: 7.81,
+    sqlToWonPct: 22.11,
+    mqlToSqlPct: 52.78,
+    sqlToOppPct: 51.97,
+    oppToWonPct: 42.53,
+    bookedArr: 7360000,
+    avgSalesCycleDays: 41,
+    speedToLeadMin: 14.8,
+    milestone: "Launched Lemlist Multi-Channel AI Sequences & Lemwarm"
+  },
+  {
+    period: "June 2026",
+    shortPeriod: "Jun 26",
+    quarter: "Q2 2026",
+    leadsIngress: 2480,
+    mqls: 1720,
+    sqls: 950,
+    opportunities: 510,
+    closedWon: 226,
+    closedLost: 284,
+    leadToWonPct: 9.11,
+    sqlToWonPct: 23.79,
+    mqlToSqlPct: 55.23,
+    sqlToOppPct: 53.68,
+    oppToWonPct: 44.31,
+    bookedArr: 9820000,
+    avgSalesCycleDays: 37,
+    speedToLeadMin: 11.2
+  },
+  {
+    period: "July 2026",
+    shortPeriod: "Jul 26",
+    quarter: "Q3 2026",
+    leadsIngress: 2890,
+    mqls: 2080,
+    sqls: 1210,
+    opportunities: 670,
+    closedWon: 314,
+    closedLost: 356,
+    leadToWonPct: 10.87,
+    sqlToWonPct: 25.95,
+    mqlToSqlPct: 58.17,
+    sqlToOppPct: 55.37,
+    oppToWonPct: 46.87,
+    bookedArr: 14200000,
+    avgSalesCycleDays: 33,
+    speedToLeadMin: 7.8,
+    milestone: "Activated Lucid Architecture Sync & Instant CPQ Flows"
+  },
+  {
+    period: "August 2026",
+    shortPeriod: "Aug 26",
+    quarter: "Q3 2026",
+    leadsIngress: 3240,
+    mqls: 2410,
+    sqls: 1460,
+    opportunities: 830,
+    closedWon: 412,
+    closedLost: 418,
+    leadToWonPct: 12.72,
+    sqlToWonPct: 28.22,
+    mqlToSqlPct: 60.58,
+    sqlToOppPct: 56.85,
+    oppToWonPct: 49.64,
+    bookedArr: 18950000,
+    avgSalesCycleDays: 29,
+    speedToLeadMin: 5.4,
+    milestone: "Autonomous Real-Time RevOps Routing & SSoT Synchronization"
+  }
+];
+

@@ -254,7 +254,7 @@ export const RAW_GTM_CSV = `
 "Leadspace","Data & enrichment","Find, verify and enrich company and contact data","Free credits–custom","SMB | MMS","AI research, matching and enrichment","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
 "LeadSquared","CRM & revenue","Manage accounts, contacts, pipeline and forecasting","Free–$25+/user/mo","SMB | MMS","Lead scoring, summaries, next-best action","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
 "LeanData","CRM & revenue","Manage accounts, contacts, pipeline and forecasting","Free–$25+/user/mo","SMB | MMS","Lead scoring, summaries, next-best action","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
-"Lemlist","Sales engagement","Automate prospecting, sequences, calls and rep activity","$49–$150+/user/mo","SMB | MMS","AI email, call coaching, prospect research","API, webhooks and partner connectors","Built-in / assisted","—","No native node","HTTP Request"
+"Lemlist","Sales engagement","Automate cold outreach, warm up inboxes, and execute multi-channel sequences","$59–$159+/user/mo","SMB | MMS | LCS","AI icebreakers, dynamic liquid syntax, email warmup scoring, auto-personalization","Broad ecosystem + REST API & Webhooks","Built-in / assisted","Lemlist REST API","https://api.iconify.design/simple-icons/maildotru.svg?color=%236366f1","HTTP Request"
 "Less Annoying CRM","CRM & revenue","Manage accounts, contacts, pipeline and forecasting","Free–$25+/user/mo","SMB | MMS | LCS","Lead scoring, summaries, next-best action","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
 "LINE","Productivity & events","Coordinate work, meetings, forms and events","Free–$30+/user/mo","SMB | MMS | LCS","Assistants, summaries and workflow generation","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
 "Linear","Productivity & events","Coordinate work, meetings, forms and events","Free–$30+/user/mo","SMB | MMS","Assistants, summaries and workflow generation","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
@@ -570,6 +570,7 @@ const VENDOR_AI_OVERVIEWS: Record<string, string> = {
   "gong": "Gong is a revenue intelligence platform that captures and analyzes customer interactions across video calls, phone calls, and emails to provide AI-powered deal insights and pipeline forecasting.",
   "hubspot": "HubSpot is an inbound CRM, marketing, and customer service platform that unifies lead generation, multi-touch attribution, and lifecycle automation for scaling businesses.",
   "leandata": "LeanData is a revenue orchestration platform built natively on Salesforce that automates lead-to-account matching, routing, and complex multi-object territory governance.",
+  "lemlist": "Lemlist is an AI-powered sales engagement and cold outreach platform featuring automated multi-channel sequences, email deliverability warmup (Lemwarm), dynamic image personalization, and bi-directional CRM integration.",
   "lucidchart": "Lucidchart is an intelligent diagramming and visual collaboration platform that enables teams to map business processes, system architectures, data flows, and organization charts in real time.",
   "lucid": "Lucidchart is an intelligent diagramming and visual collaboration platform that enables teams to map business processes, system architectures, data flows, and organization charts in real time.",
   "outreach": "Outreach is an enterprise sales execution platform that automates multi-channel sales engagement sequences, rep activity tracking, and pipeline management.",
@@ -712,7 +713,7 @@ function getExample1SignalSSOT(vendorName: string, category: string): string {
   if (v.includes("salesforce") || v.includes("hubspot") || v.includes("zoho") || v.includes("pipedrive")) {
     return "Upsert the qualified person and account into the CRM system of record with source lineage.";
   }
-  if (v.includes("outreach") || v.includes("salesloft") || v.includes("instantly")) {
+  if (v.includes("outreach") || v.includes("salesloft") || v.includes("instantly") || v.includes("lemlist")) {
     return "Enroll a qualified lead in a personalized outbound sequence with signal-based messaging.";
   }
   if (v.includes("chili piper") || v.includes("calendly") || v.includes("qualified")) {
@@ -801,7 +802,7 @@ function getExample2EngageCPQ(vendorName: string, category: string): string {
   if (v.includes("6sense") || v.includes("demandbase")) {
     return "Roll subsidiary engagement up to the global account for account-level qualification.";
   }
-  if (v.includes("outreach") || v.includes("salesloft")) {
+  if (v.includes("outreach") || v.includes("salesloft") || v.includes("lemlist")) {
     return "Trigger coordinated email, LinkedIn, and call tasks while respecting suppression lists.";
   }
   if (v.includes("salesforce") || v.includes("hubspot")) {

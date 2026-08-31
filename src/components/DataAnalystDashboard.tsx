@@ -43,6 +43,7 @@ import { LeadGenFlowView } from "./LeadGenFlowView";
 import { FunnelConversionView } from "./FunnelConversionView";
 import { CampaignPerformanceView } from "./CampaignPerformanceView";
 import { SalesEfficiencyView } from "./SalesEfficiencyView";
+import { KPIComparisonView } from "./KPIComparisonView";
 import { KPI_MASTER_DATA } from "../data/kpiMasterData";
 import {
   GTM_MASTER_DATASET,
@@ -64,6 +65,7 @@ export type DashboardTab =
   | "funnel_conversion"
   | "campaign_perf"
   | "sales_efficiency"
+  | "kpi_comparison"
   | "kpi_scripts"
   | "kpi_diagnostics"
   | "overview"
@@ -803,6 +805,18 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
             <span>⚡ Sales Efficiency (Win Rate, Velocity, ACV, NRR)</span>
           </button>
 
+          {/* Dual-Pillar Comparison View */}
+          <button
+            onClick={() => setActiveTab("kpi_comparison")}
+            className={`px-3.5 py-2 font-hand text-xs font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
+              activeTab === "kpi_comparison"
+                ? "bg-[#1c4039] text-white shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
+                : "bg-white text-zinc-700 hover:bg-zinc-100"
+            }`}
+          >
+            <span>⚖️ KPI Category Comparison (Side-by-Side)</span>
+          </button>
+
           {/* Diagnostics, Lookup & Tools */}
           <button
             onClick={() => setActiveTab("kpi_scripts")}
@@ -905,6 +919,13 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
         {activeTab === "sales_efficiency" && (
           <div className="w-full">
             <SalesEfficiencyView data={filteredData} />
+          </div>
+        )}
+
+        {/* Dual-Pillar Comparison View */}
+        {activeTab === "kpi_comparison" && (
+          <div className="w-full">
+            <KPIComparisonView data={filteredData} />
           </div>
         )}
 

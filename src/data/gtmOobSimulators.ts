@@ -97,6 +97,114 @@ export function getOobActionsForVendor(vendor: GTMVendor): OOBAction[] {
     ];
   }
 
+  if (vName.toLowerCase().includes("lemlist")) {
+    return [
+      {
+        id: "lemlist_launch_campaign",
+        name: "Launch Multi-Channel Cold Outreach Campaign with AI Liquid Syntax",
+        description: "Enrolls targeted ICP contacts into dynamic multi-channel email, LinkedIn, and phone cadences with automated AI personalization.",
+        method: "POST",
+        endpoint: `/api/v2/campaigns/enlist-prospects`,
+        defaultParams: {
+          campaignName: "Commercial Mechanical & HVAC Outbound Q3",
+          leadsCount: 85,
+          personalizationType: "AI Liquid Icebreaker + Website Snippet",
+          dailySendLimit: 120,
+          channels: ["Email", "LinkedIn Visit", "LinkedIn Connect"],
+          lemwarmEnabled: true,
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 154,
+          statusCode: 200,
+          result: {
+            campaignId: "cam_lemlist_99182a",
+            campaignName: params.campaignName || "Commercial Mechanical & HVAC Outbound Q3",
+            enrolledLeads: params.leadsCount || 85,
+            firstStepScheduled: new Date(Date.now() + 15 * 60000).toISOString(),
+            lemwarmScore: "98/100 (Optimal Deliverability)",
+            variablesMapped: ["{{firstName}}", "{{companyName}}", "{{tradeVertical}}", "{{recentExpansionSignal}}"],
+            expectedOpenRateBenchmark: "68.4%",
+            expectedReplyRateBenchmark: "14.2%",
+          },
+          log: [
+            `[${v.vendor}] Authenticating Lemlist REST API key with bearer token...`,
+            `[${v.vendor}] Validating ${params.leadsCount || 85} email addresses against Lemwarm sender reputation filters...`,
+            `[${v.vendor}] Compiling AI Liquid syntax templates and dynamic variables...`,
+            `[${v.vendor}] Cadence initialized. First batch queued for staggered sending.`,
+          ],
+        }),
+      },
+      {
+        id: "lemlist_warmup_deliverability",
+        name: "Run Lemwarm Automated Inbox Deliverability & Spam Score Check",
+        description: "Monitors sender reputation, DNS health (SPF, DKIM, DMARC), and automated warmup inbox exchanges.",
+        method: "GET",
+        endpoint: `/api/v2/lemwarm/status`,
+        defaultParams: {
+          inboxEmail: "alex.hunter@signalforge.io",
+          domain: "signalforge.io",
+          targetWarmupEmailsPerDay: 40,
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 112,
+          statusCode: 200,
+          result: {
+            inbox: params.inboxEmail || "alex.hunter@signalforge.io",
+            domain: params.domain || "signalforge.io",
+            healthScore: 99,
+            dnsStatus: {
+              spf: "PASS (Valid record found)",
+              dkim: "PASS (2048-bit RSA verified)",
+              dmarc: "PASS (p=reject strict alignment)",
+              mx: "PASS (Google Workspace Enterprise)",
+            },
+            lemwarmDailyExchanges: 38,
+            spamFolderLandingRate: "0.4%",
+            deliverabilityStatus: "Elite (Safe to send cold sequences)",
+          },
+          log: [
+            `[${v.vendor}] Querying Lemwarm telemetry engine for domain ${params.domain || "signalforge.io"}...`,
+            `[${v.vendor}] Verifying SPF, DKIM, and DMARC DNS TXT record propagation...`,
+            `[${v.vendor}] Deliverability health score: 99/100. Status verified.`,
+          ],
+        }),
+      },
+      {
+        id: "lemlist_sync_salesforce",
+        name: "Bi-directional Activity Sync (Opens, Clicks, Replies to Salesforce)",
+        description: "Streams prospect engagement events directly into Salesforce Task & Opportunity records with Lead-to-Account routing.",
+        method: "POST",
+        endpoint: `/api/v2/integrations/salesforce/stream-activities`,
+        defaultParams: {
+          salesforceOrgId: "00D80000000abcd",
+          syncEvents: ["Email Sent", "Email Opened", "Link Clicked", "Positive Reply Received", "Meeting Booked"],
+          autoConvertLeadOnMeeting: true,
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 145,
+          statusCode: 200,
+          result: {
+            syncedActivitiesLast24h: 312,
+            matchedSalesforceLeads: 240,
+            matchedSalesforceContacts: 72,
+            autoConvertedLeads: 8,
+            createdOpportunities: 8,
+            pipelineInfluencedArr: "$345,000",
+            syncLatencySeconds: 1.4,
+          },
+          log: [
+            `[${v.vendor}] Connecting to Salesforce REST API via OAuth 2.0 Webhook pipeline...`,
+            `[${v.vendor}] Syncing 312 engagement signals to Lead and Contact Timeline objects...`,
+            `[${v.vendor}] Successfully created 8 Opportunity records for positive replies.`,
+          ],
+        }),
+      },
+    ];
+  }
+
   // Specific tailored actions based on vendor category and name
   if (cat.includes("abm") || cat.includes("intent")) {
     return [
