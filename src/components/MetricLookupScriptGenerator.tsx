@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { KPI_MASTER_DATA, KPIRecord, generateLanguageScripts } from "../data/kpiMasterData";
 import { searchKpisSemantically, SEMANTIC_INTENT_PRESETS, SemanticSearchResult } from "../utils/kpiSemanticSearch";
+import { KPIVisualizationPreview } from "./KPIVisualizationPreview";
 
 export type ScriptLanguage =
   | "Google Sheets"
@@ -61,7 +62,23 @@ export const MetricLookupScriptGenerator: React.FC = () => {
   // Selected Active KPI
   const [activeKpi, setActiveKpi] = useState<KPIRecord>(KPI_MASTER_DATA[10]); // Win rate overall by default (matches 'rate')
   const [activeLanguage, setActiveLanguage] = useState<ScriptLanguage>("SOQL");
+  const [generatorViewTab, setGeneratorViewTab] = useState<"scripts" | "visualization">("scripts");
+  const [modalKpi, setModalKpi] = useState<KPIRecord | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
+
+  const visualizerSectionRef = React.useRef<HTMLDivElement>(null);
+
+  const handleOpenChartPreview = (kpiToView?: KPIRecord) => {
+    const targetKpi = kpiToView || activeKpi;
+    setActiveKpi(targetKpi);
+    setGeneratorViewTab("visualization");
+    setModalKpi(targetKpi);
+    
+    // Smoothly scroll to visualizer section if on page
+    setTimeout(() => {
+      visualizerSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
 
   // Dynamic filter options extracted from dataset
   const metricOptions = useMemo(() => {
@@ -530,68 +547,103 @@ export const MetricLookupScriptGenerator: React.FC = () => {
             </button>
           </div>
 
-          {/* Language Selection Buttons (Stacked Pills matching screenshot) */}
-          <div className="space-y-1.5 pt-2">
-            {SCRIPT_LANGUAGES.map((lang) => {
-              const isSelected = activeLanguage === lang;
-              return (
-                <button
-                  key={lang}
-                  onClick={() => setActiveLanguage(lang)}
-                  className={`w-full py-2 px-4 rounded-full text-xs font-bold text-center transition-all cursor-pointer select-none border ${
-                    isSelected
-                      ? "bg-[#1c4039] text-white border-[#1c4039] shadow-sm font-semibold"
-                      : "bg-white hover:bg-zinc-100 text-zinc-800 border-zinc-300 shadow-xs"
-                  }`}
-                >
-                  {lang}
-                </button>
-              );
-            })}
+          {/* View Mode Switcher Tabs: Scripts vs Best Visualization Chart Preview */}
+          <div ref={visualizerSectionRef} className="flex items-center gap-2 p-1 bg-zinc-200/80 rounded-xl border border-zinc-300">
+            <button
+              onClick={() => setGeneratorViewTab("scripts")}
+              className={`flex-1 py-2 px-3 rounded-lg text-xs font-extrabold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                generatorViewTab === "scripts"
+                  ? "bg-[#1c4039] text-white shadow-sm"
+                  : "text-zinc-700 hover:text-zinc-950 hover:bg-zinc-100/60"
+              }`}
+            >
+              <Code2 className="w-4 h-4" />
+              <span>Execution Scripts (8 Languages)</span>
+            </button>
+            <button
+              onClick={() => setGeneratorViewTab("visualization")}
+              className={`flex-1 py-2 px-3 rounded-lg text-xs font-extrabold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                generatorViewTab === "visualization"
+                  ? "bg-[#1c4039] text-white shadow-sm"
+                  : "text-zinc-700 hover:text-zinc-950 hover:bg-zinc-100/60"
+              }`}
+            >
+              <Sparkles className="w-4 h-4 text-amber-300" />
+              <span>Best Visualization Chart</span>
+            </button>
           </div>
 
-          {/* Terminal / Code Output View */}
-          <div className="relative rounded-xl overflow-hidden border border-zinc-800 bg-[#090e17] text-zinc-100 shadow-inner">
-            <div className="flex items-center justify-between px-4 py-2 bg-[#121926] border-b border-zinc-800 text-xs">
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-                </div>
-                <span className="font-mono text-[11px] text-zinc-400 font-medium ml-2">
-                  {activeLanguage} Script • {activeKpi.id} ({activeKpi.metric.slice(0, 32)}...)
-                </span>
+          {generatorViewTab === "scripts" ? (
+            <div className="space-y-4">
+              {/* Language Selection Buttons (Stacked Pills matching screenshot) */}
+              <div className="space-y-1.5 pt-1">
+                {SCRIPT_LANGUAGES.map((lang) => {
+                  const isSelected = activeLanguage === lang;
+                  return (
+                    <button
+                      key={lang}
+                      onClick={() => setActiveLanguage(lang)}
+                      className={`w-full py-2 px-4 rounded-full text-xs font-bold text-center transition-all cursor-pointer select-none border ${
+                        isSelected
+                          ? "bg-[#1c4039] text-white border-[#1c4039] shadow-sm font-semibold"
+                          : "bg-white hover:bg-zinc-100 text-zinc-800 border-zinc-300 shadow-xs"
+                      }`}
+                    >
+                      {lang}
+                    </button>
+                  );
+                })}
               </div>
-              <button
-                onClick={handleCopy}
-                className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded text-[11px] font-mono transition-colors cursor-pointer"
-                title="Copy script to clipboard"
-              >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copied ? "Copied" : "Copy"}</span>
-              </button>
-            </div>
 
-            <div className="p-4 overflow-x-auto max-h-80 min-h-[160px] font-mono text-xs leading-relaxed select-text">
-              {currentScript === "Null" ? (
-                <div className="text-zinc-300 font-mono py-2">
-                  Null
+              {/* Terminal / Code Output View */}
+              <div className="relative rounded-xl overflow-hidden border border-zinc-800 bg-[#090e17] text-zinc-100 shadow-inner">
+                <div className="flex items-center justify-between px-4 py-2 bg-[#121926] border-b border-zinc-800 text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                    </div>
+                    <span className="font-mono text-[11px] text-zinc-400 font-medium ml-2">
+                      {activeLanguage} Script • {activeKpi.id} ({activeKpi.metric.slice(0, 32)}...)
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleCopy}
+                    className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded text-[11px] font-mono transition-colors cursor-pointer"
+                    title="Copy script to clipboard"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copied ? "Copied" : "Copy"}</span>
+                  </button>
                 </div>
-              ) : (
-                <pre className="text-emerald-400 whitespace-pre font-mono">
-                  {currentScript}
-                </pre>
-              )}
-            </div>
-          </div>
 
-          {/* Formula Contract Notice Footer */}
-          <div className="text-[11px] text-zinc-600 leading-relaxed font-sans pt-1 border-t border-zinc-200">
-            <span className="font-bold text-zinc-800">Formula contract:</span> Spreadsheet formulas use populated named ranges;{" "}
-            <span className="font-mono font-semibold text-zinc-800">DIMENSION_KEY</span> must represent the same combined dimensions shown in SQL.{" "}
-            <span className="font-mono font-semibold text-zinc-800">Null</span> means exact parity is not available.
-          </div>
+                <div className="p-4 overflow-x-auto max-h-80 min-h-[160px] font-mono text-xs leading-relaxed select-text">
+                  {currentScript === "Null" ? (
+                    <div className="text-zinc-300 font-mono py-2">
+                      Null
+                    </div>
+                  ) : (
+                    <pre className="text-emerald-400 whitespace-pre font-mono">
+                      {currentScript}
+                    </pre>
+                  )}
+                </div>
+              </div>
+
+              {/* Formula Contract Notice Footer */}
+              <div className="text-[11px] text-zinc-600 leading-relaxed font-sans pt-1 border-t border-zinc-200">
+                <span className="font-bold text-zinc-800">Formula contract:</span> Spreadsheet formulas use populated named ranges;{" "}
+                <span className="font-mono font-semibold text-zinc-800">DIMENSION_KEY</span> must represent the same combined dimensions shown in SQL.{" "}
+                <span className="font-mono font-semibold text-zinc-800">Null</span> means exact parity is not available.
+              </div>
+            </div>
+          ) : (
+            /* Best Visualization Chart Preview Mode */
+            <div className="space-y-3 pt-1">
+              <KPIVisualizationPreview kpi={activeKpi} />
+            </div>
+          )}
         </div>
 
         {/* Right Column: KPI Master Reference */}
@@ -615,7 +667,7 @@ export const MetricLookupScriptGenerator: React.FC = () => {
               </p>
             </div>
             <div className="text-xs text-teal-700 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200 font-medium">
-              Click any row to load script
+              Click any row to inspect scripts or charts
             </div>
           </div>
 
@@ -634,7 +686,7 @@ export const MetricLookupScriptGenerator: React.FC = () => {
                     OBJECT
                   </th>
                   <th className="py-2.5 px-3 font-extrabold text-zinc-900 uppercase tracking-wider text-[11px] whitespace-nowrap">
-                    DATA SOURCES
+                    CHART & DATA
                   </th>
                 </tr>
               </thead>
@@ -651,7 +703,9 @@ export const MetricLookupScriptGenerator: React.FC = () => {
                     return (
                       <tr
                         key={kpi.id}
-                        onClick={() => setActiveKpi(kpi)}
+                        onClick={() => {
+                          setActiveKpi(kpi);
+                        }}
                         className={`cursor-pointer transition-colors duration-150 ${
                           isSelected
                             ? "bg-teal-100/70 hover:bg-teal-100 text-zinc-900 font-medium"
@@ -711,9 +765,26 @@ export const MetricLookupScriptGenerator: React.FC = () => {
                           </span>
                         </td>
 
-                        {/* Data Sources */}
-                        <td className="py-2 px-3 align-top text-zinc-600 text-[11px]">
-                          {kpi.dataSources}
+                        {/* Chart & Quick Action */}
+                        <td className="py-2 px-3 align-top">
+                          <div className="space-y-1">
+                            <span className="inline-block text-[11px] text-zinc-600">
+                              {kpi.bestVisualization}
+                            </span>
+                            <div>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleOpenChartPreview(kpi);
+                                }}
+                                className="px-2 py-1 text-[10px] font-bold bg-[#1c4039] hover:bg-[#15312c] text-white rounded transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
+                                title={`View example ${kpi.bestVisualization} for ${kpi.metric}`}
+                              >
+                                <Sparkles className="w-3 h-3 text-amber-300" />
+                                <span>View Chart</span>
+                              </button>
+                            </div>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -743,8 +814,17 @@ export const MetricLookupScriptGenerator: React.FC = () => {
                 <div>
                   <span className="font-semibold text-zinc-800">Dimensions:</span> {activeKpi.dimensions}
                 </div>
-                <div>
-                  <span className="font-semibold text-zinc-800">Best Visualization:</span> {activeKpi.bestVisualization}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="font-semibold text-zinc-800">Best Visualization:</span> {activeKpi.bestVisualization}
+                  </div>
+                  <button
+                    onClick={() => handleOpenChartPreview(activeKpi)}
+                    className="px-2.5 py-1 text-xs font-bold bg-teal-800 hover:bg-teal-900 text-white rounded-md transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                    <span>View Example Chart</span>
+                  </button>
                 </div>
               </div>
               <p className="text-zinc-500 italic text-[11px] border-t border-zinc-100 pt-1.5">
@@ -759,6 +839,75 @@ export const MetricLookupScriptGenerator: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Full-Fidelity Interactive KPI Chart Modal Dialog */}
+      {modalKpi && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+          onClick={() => setModalKpi(null)}
+        >
+          <div
+            className="bg-white border-2 border-zinc-300 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto p-4 sm:p-6 space-y-4 relative animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-start justify-between border-b border-zinc-200 pb-3 gap-3">
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#1c4039] text-white uppercase tracking-wider">
+                    {modalKpi.bestVisualization}
+                  </span>
+                  <span className="text-xs font-mono text-zinc-500 font-bold">
+                    {modalKpi.id} • {modalKpi.function}
+                  </span>
+                  <span className="text-[11px] px-2 py-0.5 rounded bg-zinc-100 text-zinc-700 font-mono">
+                    {modalKpi.type}
+                  </span>
+                </div>
+                <h3 className="text-xl font-extrabold text-zinc-900 mt-1 leading-snug">
+                  {modalKpi.metric}
+                </h3>
+              </div>
+              <button
+                onClick={() => setModalKpi(null)}
+                className="p-2 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors cursor-pointer shrink-0"
+                title="Close Chart Modal (Esc)"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Render Preview Chart */}
+            <KPIVisualizationPreview kpi={modalKpi} />
+
+            {/* Modal Footer Controls */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-zinc-200 text-xs">
+              <div className="text-zinc-600 text-[11px] max-w-md">
+                <span className="font-bold text-zinc-800">Analysis Purpose:</span> {modalKpi.analysisPurpose}
+              </div>
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button
+                  onClick={() => {
+                    setActiveKpi(modalKpi);
+                    setGeneratorViewTab("scripts");
+                    setModalKpi(null);
+                  }}
+                  className="px-3.5 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-bold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer text-xs"
+                >
+                  <Code2 className="w-4 h-4" />
+                  <span>Inspect Code Scripts</span>
+                </button>
+                <button
+                  onClick={() => setModalKpi(null)}
+                  className="px-5 py-2 bg-[#1c4039] hover:bg-[#15312c] text-white font-bold rounded-lg shadow-sm transition-colors cursor-pointer text-xs"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
