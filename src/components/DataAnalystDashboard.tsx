@@ -39,6 +39,7 @@ import { ChannelAndSlaSection } from "./ChannelAndSlaSection";
 import { FunnelWaterfallSection } from "./FunnelWaterfallSection";
 import { CampaignEconomicsLedgerSection } from "./CampaignEconomicsLedgerSection";
 import { SalesVelocitySimulatorSection } from "./SalesVelocitySimulatorSection";
+import { ModernRevOpsFunnelEqualsTable } from "./ModernRevOpsFunnelEqualsTable";
 import { KPI_MASTER_DATA } from "../data/kpiMasterData";
 import { googleSignIn, logout, getAccessToken, auth } from "../lib/googleAuth";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
@@ -102,6 +103,7 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
   const [activeTab, setActiveTab] = useState<
     | "kpi_scripts"
     | "kpi_diagnostics"
+    | "equals_funnel"
     | "trade_breakdown"
     | "channel_sla"
     | "funnel_waterfall"
@@ -573,6 +575,19 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
             </span>
           </button>
           <button
+            onClick={() => setActiveTab("equals_funnel")}
+            className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer flex items-center gap-1.5 ${
+              activeTab === "equals_funnel"
+                ? "bg-amber-400 text-zinc-950 shadow-[2px_2px_0px_0px_rgba(24,24,27,1)] translate-y-[-1px]"
+                : "bg-white text-zinc-600 hover:bg-zinc-100"
+            }`}
+          >
+            <span>📐 Equals 5-Layer Funnel Tracker</span>
+            <span className="px-1.5 py-0.2 bg-purple-100 text-purple-900 border border-purple-300 text-[10px] rounded font-mono font-bold">
+              5 Layers
+            </span>
+          </button>
+          <button
             onClick={() => setActiveTab("trade_breakdown")}
             className={`px-4 py-2 font-hand text-sm font-bold rounded-lg border-2 border-ink transition-all cursor-pointer ${
               activeTab === "trade_breakdown"
@@ -675,6 +690,13 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
         {activeTab === "kpi_diagnostics" && (
           <div className="w-full">
             <KPIDiagnosticTool />
+          </div>
+        )}
+
+        {/* Tab: Equals RevOps Funnel Tracker */}
+        {activeTab === "equals_funnel" && (
+          <div className="w-full">
+            <ModernRevOpsFunnelEqualsTable />
           </div>
         )}
 
@@ -1124,6 +1146,22 @@ export const DataAnalystDashboard: React.FC<DataAnalystDashboardProps> = ({ onBa
             )}
           </div>
         )}
+
+        {/* Permanent Bottom Table: Modernized RevOps Revenue Funnel Architecture (Equals & KPI Master Tracker) */}
+        <div id="equals-funnel-tracker" className="w-full pt-8 border-t-3 border-ink space-y-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+              <span className="font-mono text-xs font-bold text-zinc-700 uppercase tracking-wider">
+                Full-Stack Architecture Reference · Modernized RevOps Funnel Layers Tracker
+              </span>
+            </div>
+            <span className="text-xs text-zinc-500 font-mono">
+              HubSpot + Commonroom + Clay + SSoT Core + Sales Hub + Closed-Loop Deals
+            </span>
+          </div>
+          <ModernRevOpsFunnelEqualsTable />
+        </div>
 
       </main>
     </div>
