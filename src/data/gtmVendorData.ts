@@ -1,7 +1,134 @@
+export interface MatchedGTMStage {
+  stageId: number; // 1 to 9
+  stageName: string;
+  shortLabel: string;
+  badgeLabel: string;
+  matchedDetails: string;
+  costArgumentNote?: string;
+  colorClass: string;
+}
+
+export const GTM_9_LIFECYCLE_STAGES: {
+  id: number;
+  title: string;
+  shortLabel: string;
+  subtitle: string;
+  description: string;
+  badge: string;
+  costArgument?: string;
+  colorClass: string;
+  borderClass: string;
+  iconBg: string;
+}[] = [
+  {
+    id: 1,
+    title: "1. Ingestion & Intent",
+    shortLabel: "Ingestion & Intent",
+    subtitle: "Capture Lead Intent Ingestion / Intent Signal / Nurturing / Omni Channel / Web Submission",
+    description: "Captures top-of-funnel inbound web submissions, deanonymizes visitor IP intent surges, and ingests multi-channel buyer touchpoints across web, chat, and event webhooks.",
+    badge: "1. Ingestion & Intent",
+    colorClass: "bg-indigo-100 text-indigo-900 border-indigo-300",
+    borderClass: "border-indigo-300",
+    iconBg: "bg-indigo-600 text-white",
+  },
+  {
+    id: 2,
+    title: "2. Data Hygiene & Orchestration",
+    shortLabel: "Data Hygiene (Dedupe First)",
+    subtitle: "Matching Existing Account and Contact & Preventing duplicates and low-quality leads (Deduplicate the data first)",
+    description: "Matches existing accounts/contacts, normalizes domains, and deduplicates records BEFORE triggering paid enrichment. The Cost Argument: Enrichment vendors (ZoomInfo, Clearbit, Apollo) charge per API call/credit; enriching before deduplicating wastes budget on records you'll delete or merge. The Data Integrity Risk: Prevents overwriting valid CRM golden data.",
+    badge: "2. Data Hygiene & Dedupe",
+    costArgument: "The Cost Argument (API Enrichment Limits): Enrichment vendors (like ZoomInfo, Clearbit, or Apollo) charge per API call or per credit. If you enrich before deduplicating, you waste money enriching a record you might immediately delete, merge, or reject because it already exists in your CRM. Overwriting Existing Data (The Data Integrity Risk): Deduplication prevents overwriting established golden records.",
+    colorClass: "bg-amber-100 text-amber-900 border-amber-300",
+    borderClass: "border-amber-300",
+    iconBg: "bg-amber-600 text-white",
+  },
+  {
+    id: 3,
+    title: "3. Leads Score/Waterfall Validate/Lead Enrich",
+    shortLabel: "Score & Waterfall Enrich",
+    subtitle: "Leads Score / Waterfall Validate / Lead Enrich",
+    description: "Applies tiered waterfall enrichment across multiple data providers (post-deduplication) and calculates behavioral/demographic fit scores for prioritized sales routing.",
+    badge: "3. Score & Waterfall Enrich",
+    colorClass: "bg-emerald-100 text-emerald-900 border-emerald-300",
+    borderClass: "border-emerald-300",
+    iconBg: "bg-emerald-600 text-white",
+  },
+  {
+    id: 4,
+    title: "4. Identity Resolution",
+    shortLabel: "Identity Resolution (SSoT)",
+    subtitle: "SSoT (Single Source of Truth) / AI Reasoning / Account Hierarchy",
+    description: "Establishes unified Golden Records in CRM SSoT, builds parent-subsidiary account hierarchies, and applies LLM reasoning for deep buying committee context.",
+    badge: "4. Identity Resolution: SSoT",
+    colorClass: "bg-purple-100 text-purple-900 border-purple-300",
+    borderClass: "border-purple-300",
+    iconBg: "bg-purple-600 text-white",
+  },
+  {
+    id: 5,
+    title: "5. Routing & Initial Outreach",
+    shortLabel: "Routing & Initial Outreach",
+    subtitle: "Lead Assignment & Automate Initial Outreach (via HubSpot/Salesloft/Outreach)",
+    description: "Instantly routes inbound leads to assigned territory/account owners and auto-triggers personalized Day-0 sequence cadences in HubSpot, Salesloft, or Outreach.",
+    badge: "5. Routing & Auto-Outreach",
+    colorClass: "bg-blue-100 text-blue-900 border-blue-300",
+    borderClass: "border-blue-300",
+    iconBg: "bg-blue-600 text-white",
+  },
+  {
+    id: 6,
+    title: "6. Handshake & Qualification",
+    shortLabel: "Handshake & MQL Qualify",
+    subtitle: "MQL convert / Qualify / Sync / build Account Hierarchy",
+    description: "Governs marketing-to-sales handshake, validates SLA qualification criteria, converts MQLs to validated Opportunities, and syncs multi-tier account trees.",
+    badge: "6. Handshake & MQL Convert",
+    colorClass: "bg-rose-100 text-rose-900 border-rose-300",
+    borderClass: "border-rose-300",
+    iconBg: "bg-rose-600 text-white",
+  },
+  {
+    id: 7,
+    title: "7. Assignment / MQL Convert / Sync",
+    shortLabel: "Assignment & CRM Sync",
+    subtitle: "Assignment / MQL Convert / Sync across CRM and RevOps layers",
+    description: "Enforces round-robin rep assignment, automated MQL-to-Contact/Opp conversion, and bi-directional field synchronization across CRM, CPQ, and billing systems.",
+    badge: "7. Assignment / MQL Sync",
+    colorClass: "bg-teal-100 text-teal-900 border-teal-300",
+    borderClass: "border-teal-300",
+    iconBg: "bg-teal-600 text-white",
+  },
+  {
+    id: 8,
+    title: "8. Marketing Attribution ROI in HubSpot Campaign",
+    shortLabel: "HubSpot Marketing Attribution",
+    subtitle: "Marketing Attribution ROI in HubSpot Campaign & Multi-touch revenue tracking",
+    description: "Joins campaign spend with sourced pipeline and won revenue to calculate first-touch, multi-touch, and influenced pipeline ROI inside HubSpot and Salesforce campaigns.",
+    badge: "8. Marketing Attribution ROI",
+    colorClass: "bg-cyan-100 text-cyan-900 border-cyan-300",
+    borderClass: "border-cyan-300",
+    iconBg: "bg-cyan-600 text-white",
+  },
+  {
+    id: 9,
+    title: "9. Automate follow up outreach/engagements",
+    shortLabel: "Automated Follow-up",
+    subtitle: "Automate follow up outreach / engagements & cadence nurture",
+    description: "Orchestrates automated follow-up sequences, meeting reminders, lifecycle re-engagement cadences, and post-demo outreach across email, SMS, and LinkedIn.",
+    badge: "9. Automate Follow-up",
+    colorClass: "bg-violet-100 text-violet-900 border-violet-300",
+    borderClass: "border-violet-300",
+    iconBg: "bg-violet-600 text-white",
+  },
+];
+
 export interface GTMVendor {
   vendor: string;
   category: string;
   coreFunctionality: string;
+  matchedGTMStages: number[];
+  matchedFunctionalities: MatchedGTMStage[];
+  dedupeCostArgumentApplies?: boolean;
   example1SignalSSOT: string; // e.g. "Match an inbound form lead to the correct account using domain plus fuzzy company name."
   example2EngageCPQ: string;  // e.g. "Dedupe contacts by normalized email and retain the record with the freshest enrichment."
   availability: string;       // "Core / built-in", "Verified Partner", "AppExchange / Native", "Community / HTTP"
@@ -582,87 +709,341 @@ const VENDOR_AI_OVERVIEWS: Record<string, string> = {
   "zoominfo": "ZoomInfo is a B2B intelligence and go-to-market platform that delivers verified business contact data, company insights, intent signals, and CRM automated enrichment."
 };
 
+export function getMatchedGTMStages(vendorName: string, category: string): MatchedGTMStage[] {
+  const v = vendorName.toLowerCase().trim();
+  const cat = category.toLowerCase().trim();
+  const matchedIds = new Set<number>();
+
+  // 1. Ingestion & Intent
+  if (
+    cat.includes("abm") ||
+    cat.includes("intent") ||
+    cat.includes("marketing automation") ||
+    cat.includes("productivity & events") ||
+    cat.includes("content & social") ||
+    v.includes("6sense") ||
+    v.includes("demandbase") ||
+    v.includes("bombora") ||
+    v.includes("albacross") ||
+    v.includes("factors") ||
+    v.includes("leadfeeder") ||
+    v.includes("dealfront") ||
+    v.includes("g2") ||
+    v.includes("clearbit") ||
+    v.includes("calendly") ||
+    v.includes("chili piper") ||
+    v.includes("jotform") ||
+    v.includes("typeform") ||
+    v.includes("form") ||
+    v.includes("chat trigger") ||
+    v.includes("webhook") ||
+    v.includes("intercom") ||
+    v.includes("drift") ||
+    v.includes("qualified")
+  ) {
+    matchedIds.add(1);
+  }
+
+  // 2. Data Hygiene & Orchestration (Deduplicate First)
+  if (
+    cat.includes("data & enrichment") ||
+    cat.includes("crm & revenue") ||
+    v.includes("leandata") ||
+    v.includes("ringlead") ||
+    v.includes("openprise") ||
+    v.includes("demandtools") ||
+    v.includes("aggregate") ||
+    v.includes("code") ||
+    v.includes("salesforce") ||
+    v.includes("hubspot") ||
+    v.includes("zoominfo") ||
+    v.includes("clearbit") ||
+    v.includes("apollo") ||
+    v.includes("cognism") ||
+    v.includes("clay") ||
+    v.includes("briteverify") ||
+    v.includes("kickbox") ||
+    v.includes("dropcontact") ||
+    v.includes("dun & bradstreet") ||
+    v.includes("data axle") ||
+    v.includes("attio")
+  ) {
+    matchedIds.add(2);
+  }
+
+  // 3. Leads Score/Waterfall Validate/Lead Enrich
+  if (
+    cat.includes("data & enrichment") ||
+    cat.includes("abm & intent") ||
+    v.includes("zoominfo") ||
+    v.includes("clearbit") ||
+    v.includes("apollo") ||
+    v.includes("cognism") ||
+    v.includes("clay") ||
+    v.includes("dropcontact") ||
+    v.includes("hunter") ||
+    v.includes("lusha") ||
+    v.includes("datanyze") ||
+    v.includes("lead411") ||
+    v.includes("fullcontact") ||
+    v.includes("abstract api") ||
+    v.includes("briteverify") ||
+    v.includes("kickbox") ||
+    v.includes("adapt") ||
+    v.includes("builtwith") ||
+    v.includes("contactout") ||
+    v.includes("crunchbase") ||
+    v.includes("hg insights") ||
+    v.includes("kaspr") ||
+    v.includes("6sense") ||
+    v.includes("demandbase") ||
+    v.includes("madkudu") ||
+    v.includes("hubspot") ||
+    v.includes("activecampaign")
+  ) {
+    matchedIds.add(3);
+  }
+
+  // 4. Identity Resolution (SSoT / AI Reasoning / Account Hierarchy)
+  if (
+    cat.includes("crm & revenue") ||
+    cat.includes("analytics & intelligence") ||
+    v.includes("salesforce") ||
+    v.includes("hubspot") ||
+    v.includes("dynamics") ||
+    v.includes("zoho") ||
+    v.includes("pipedrive") ||
+    v.includes("copper") ||
+    v.includes("attio") ||
+    v.includes("affinity") ||
+    v.includes("leandata") ||
+    v.includes("ringlead") ||
+    v.includes("snowflake") ||
+    v.includes("bigquery") ||
+    v.includes("databricks") ||
+    v.includes("ai agent") ||
+    v.includes("basic llm") ||
+    v.includes("claude") ||
+    v.includes("codex") ||
+    v.includes("groq") ||
+    v.includes("langchain") ||
+    v.includes("gong") ||
+    v.includes("clari")
+  ) {
+    matchedIds.add(4);
+  }
+
+  // 5. Routing: Lead Assignment & Automate Initial Outreach (via HubSpot/Salesloft/Outreach)
+  if (
+    cat.includes("sales engagement") ||
+    v.includes("leandata") ||
+    v.includes("ringlead") ||
+    v.includes("chili piper") ||
+    v.includes("calendly") ||
+    v.includes("qualified") ||
+    v.includes("drift") ||
+    v.includes("outreach") ||
+    v.includes("salesloft") ||
+    v.includes("lemlist") ||
+    v.includes("apollo") ||
+    v.includes("instantly") ||
+    v.includes("reply.io") ||
+    v.includes("groove") ||
+    v.includes("amplemarket") ||
+    v.includes("klenty") ||
+    v.includes("aircall") ||
+    v.includes("dialpad") ||
+    v.includes("close") ||
+    v.includes("hubspot") ||
+    v.includes("salesforce")
+  ) {
+    matchedIds.add(5);
+  }
+
+  // 6. Handshake: MQL convert/Qualify/Sync/build Account Hierarchy
+  if (
+    cat.includes("marketing automation") ||
+    cat.includes("analytics & intelligence") ||
+    v.includes("salesforce") ||
+    v.includes("hubspot") ||
+    v.includes("marketo") ||
+    v.includes("pardot") ||
+    v.includes("activecampaign") ||
+    v.includes("customer.io") ||
+    v.includes("leandata") ||
+    v.includes("ringlead") ||
+    v.includes("gong") ||
+    v.includes("clari") ||
+    v.includes("chorus") ||
+    v.includes("aviso")
+  ) {
+    matchedIds.add(6);
+  }
+
+  // 7. Assignment / MQL Convert / Sync
+  if (
+    cat.includes("crm & revenue") ||
+    cat.includes("commerce & payments") ||
+    v.includes("salesforce") ||
+    v.includes("hubspot") ||
+    v.includes("leandata") ||
+    v.includes("ringlead") ||
+    v.includes("chili piper") ||
+    v.includes("pipedrive") ||
+    v.includes("zoho") ||
+    v.includes("freshsales") ||
+    v.includes("stripe") ||
+    v.includes("chargebee") ||
+    v.includes("zuora") ||
+    v.includes("dealhub") ||
+    v.includes("pandadoc") ||
+    v.includes("docusign")
+  ) {
+    matchedIds.add(7);
+  }
+
+  // 8. Marketing Attribution ROI in HubSpot Campaign
+  if (
+    cat.includes("analytics & intelligence") ||
+    cat.includes("marketing automation") ||
+    v.includes("hubspot") ||
+    v.includes("salesforce") ||
+    v.includes("google analytics") ||
+    v.includes("google ads") ||
+    v.includes("dreamdata") ||
+    v.includes("factors") ||
+    v.includes("amplitude") ||
+    v.includes("bizible") ||
+    v.includes("fathom") ||
+    v.includes("contentsquare") ||
+    v.includes("domo") ||
+    v.includes("heap") ||
+    v.includes("compression")
+  ) {
+    matchedIds.add(8);
+  }
+
+  // 9. Automate follow up outreach/engagements
+  if (
+    cat.includes("sales engagement") ||
+    cat.includes("marketing automation") ||
+    cat.includes("customer success") ||
+    cat.includes("content & social") ||
+    v.includes("outreach") ||
+    v.includes("salesloft") ||
+    v.includes("lemlist") ||
+    v.includes("apollo") ||
+    v.includes("instantly") ||
+    v.includes("reply.io") ||
+    v.includes("activecampaign") ||
+    v.includes("braze") ||
+    v.includes("customer.io") ||
+    v.includes("brevo") ||
+    v.includes("klaviyo") ||
+    v.includes("gainsight") ||
+    v.includes("churnzero") ||
+    v.includes("catalyst") ||
+    v.includes("intercom") ||
+    v.includes("zendesk") ||
+    v.includes("agorapulse") ||
+    v.includes("buffer") ||
+    v.includes("hootsuite")
+  ) {
+    matchedIds.add(9);
+  }
+
+  // Ensure at least 1 stage is matched
+  if (matchedIds.size === 0) {
+    matchedIds.add(4); // Default to identity resolution / SSoT orchestration
+  }
+
+  return Array.from(matchedIds)
+    .sort((a, b) => a - b)
+    .map((id) => {
+      const stage = GTM_9_LIFECYCLE_STAGES.find((s) => s.id === id)!;
+      return {
+        stageId: stage.id,
+        stageName: stage.title,
+        shortLabel: stage.shortLabel,
+        badgeLabel: stage.badge,
+        matchedDetails: stage.subtitle,
+        costArgumentNote: stage.costArgument,
+        colorClass: stage.colorClass,
+      };
+    });
+}
+
 function getEnhancedCoreFunctionality(vendorName: string, category: string, raw: string): string {
   const v = vendorName.toLowerCase().trim();
   const cat = category.toLowerCase().trim();
+  let baseOverview = "";
 
   // 1. Direct dictionary match
   if (VENDOR_AI_OVERVIEWS[v]) {
-    return VENDOR_AI_OVERVIEWS[v];
-  }
-
-  // 2. Substring match against known key vendors
-  for (const [key, overview] of Object.entries(VENDOR_AI_OVERVIEWS)) {
-    if (v.includes(key) || key.includes(v)) {
-      return overview;
+    baseOverview = VENDOR_AI_OVERVIEWS[v];
+  } else {
+    // 2. Substring match against known key vendors
+    for (const [key, overview] of Object.entries(VENDOR_AI_OVERVIEWS)) {
+      if (v.includes(key) || key.includes(v)) {
+        baseOverview = overview;
+        break;
+      }
     }
   }
 
   // 3. Specialized n8n core node overviews
-  if (v.includes("aggregate")) {
-    return "The Aggregate node is a data manipulation utility in n8n that combines multiple incoming data items into arrays or unified lists for batch processing.";
-  }
-  if (v.includes("ai agent") || v.includes("agent")) {
-    return "The AI Agent node is an autonomous reasoning engine in n8n that connects LLMs to custom tools, memory stores, and APIs to execute multi-step workflows.";
-  }
-  if (v.includes("basic llm") || v.includes("llm")) {
-    return "The Basic LLM Chain node is an AI orchestration tool in n8n that prompts large language models and outputs structured text or parsed JSON.";
-  }
-  if (v.includes("chat trigger")) {
-    return "The Chat Trigger node is an event listener in n8n that initiates automated workflows directly from inbound user chat messages and conversational interfaces.";
-  }
-  if (v.includes("code") && !v.includes("codex")) {
-    return "The Code node is an execution environment in n8n that runs custom JavaScript or Python code to transform data payloads and apply algorithmic logic.";
-  }
-  if (v.includes("compression")) {
-    return "The Compression node is a file utility in n8n that zips, unzips, compresses, and decompresses binary files and asset bundles within workflows.";
-  }
-  if (v.includes("convert to file")) {
-    return "The Convert to File node is a document utility in n8n that converts JSON, CSV, HTML, or raw text data into downloadable binary files.";
-  }
-  if (v.includes("crypto")) {
-    return "The Crypto node is a cryptographic security tool in n8n that generates hashes, HMAC signatures, encryption keys, and secure tokens for API authorization.";
-  }
-  if (v.includes("data table")) {
-    return "The Data Table node is an in-memory data store in n8n that enables workflows to read, write, query, and cache structured records across executions.";
-  }
-  if (v.includes("date & time")) {
-    return "The Date & Time node is a temporal processing utility in n8n that parses, formats, adds, subtracts, and normalizes timestamps across timezones.";
+  if (!baseOverview) {
+    if (v.includes("aggregate")) {
+      baseOverview = "The Aggregate node is a data manipulation utility in n8n that combines multiple incoming data items into arrays or unified lists for batch processing.";
+    } else if (v.includes("ai agent") || v.includes("agent")) {
+      baseOverview = "The AI Agent node is an autonomous reasoning engine in n8n that connects LLMs to custom tools, memory stores, and APIs to execute multi-step workflows.";
+    } else if (v.includes("basic llm") || v.includes("llm")) {
+      baseOverview = "The Basic LLM Chain node is an AI orchestration tool in n8n that prompts large language models and outputs structured text or parsed JSON.";
+    } else if (v.includes("chat trigger")) {
+      baseOverview = "The Chat Trigger node is an event listener in n8n that initiates automated workflows directly from inbound user chat messages and conversational interfaces.";
+    } else if (v.includes("code") && !v.includes("codex")) {
+      baseOverview = "The Code node is an execution environment in n8n that runs custom JavaScript or Python code to transform data payloads and apply algorithmic logic.";
+    } else if (v.includes("compression")) {
+      baseOverview = "The Compression node is a file utility in n8n that zips, unzips, compresses, and decompresses binary files and asset bundles within workflows.";
+    } else if (v.includes("convert to file")) {
+      baseOverview = "The Convert to File node is a document utility in n8n that converts JSON, CSV, HTML, or raw text data into downloadable binary files.";
+    } else if (v.includes("crypto")) {
+      baseOverview = "The Crypto node is a cryptographic security tool in n8n that generates hashes, HMAC signatures, encryption keys, and secure tokens for API authorization.";
+    } else if (v.includes("data table")) {
+      baseOverview = "The Data Table node is an in-memory data store in n8n that enables workflows to read, write, query, and cache structured records across executions.";
+    } else if (v.includes("date & time")) {
+      baseOverview = "The Date & Time node is a temporal processing utility in n8n that parses, formats, adds, subtracts, and normalizes timestamps across timezones.";
+    }
   }
 
   // 4. Synthesized Google Search AI Overview by Category
-  if (cat.includes("abm") || cat.includes("intent")) {
-    return `${vendorName} is an account-based marketing (ABM) and B2B intent platform designed to identify in-market accounts, capture buyer signals, and prioritize high-value pipeline opportunities.`;
-  }
-  if (cat.includes("crm") || cat.includes("revenue")) {
-    return `${vendorName} is a customer relationship management (CRM) and revenue operations platform built to manage accounts, track sales pipelines, and automate customer lifecycle records.`;
-  }
-  if (cat.includes("data & enrichment")) {
-    return `${vendorName} is a B2B data intelligence and enrichment platform that provides verified contact information, firmographic profiles, and email verification for sales teams.`;
-  }
-  if (cat.includes("sales engagement")) {
-    return `${vendorName} is a sales engagement and outreach platform designed to automate multi-channel prospecting sequences, track rep activities, and accelerate deal conversations.`;
-  }
-  if (cat.includes("marketing automation")) {
-    return `${vendorName} is a marketing automation platform built to design, personalize, and orchestrate omnichannel lead nurturing campaigns across email, SMS, and digital channels.`;
-  }
-  if (cat.includes("analytics & intelligence")) {
-    return `${vendorName} is an analytics and revenue intelligence platform that tracks user behavior, analyzes pipeline health, and delivers predictive business forecasting.`;
-  }
-  if (cat.includes("customer success")) {
-    return `${vendorName} is a customer success platform built for B2B teams to monitor product adoption, calculate health scores, and automate proactive retention workflows.`;
-  }
-  if (cat.includes("commerce & payments")) {
-    return `${vendorName} is a financial infrastructure and commerce platform that automates payment processing, recurring subscription billing, and quote-to-cash operations.`;
-  }
-  if (cat.includes("productivity & events")) {
-    return `${vendorName} is a productivity and collaboration platform that coordinates cross-functional team projects, streamlines meetings, and automates operational workflows.`;
-  }
-  if (cat.includes("content & social")) {
-    return `${vendorName} is a content and social media platform that enables marketing teams to create, schedule, publish, and analyze digital brand engagement across channels.`;
+  if (!baseOverview) {
+    if (cat.includes("abm") || cat.includes("intent")) {
+      baseOverview = `${vendorName} is an account-based marketing (ABM) and B2B intent platform designed to identify in-market accounts, capture buyer signals, and prioritize high-value pipeline opportunities.`;
+    } else if (cat.includes("crm") || cat.includes("revenue")) {
+      baseOverview = `${vendorName} is a customer relationship management (CRM) and revenue operations platform built to manage accounts, track sales pipelines, and automate customer lifecycle records.`;
+    } else if (cat.includes("data & enrichment")) {
+      baseOverview = `${vendorName} is a B2B data intelligence and enrichment platform that provides verified contact information, firmographic profiles, and email verification for sales teams.`;
+    } else if (cat.includes("sales engagement")) {
+      baseOverview = `${vendorName} is a sales engagement and outreach platform designed to automate multi-channel prospecting sequences, track rep activities, and accelerate deal conversations.`;
+    } else if (cat.includes("marketing automation")) {
+      baseOverview = `${vendorName} is a marketing automation platform built to design, personalize, and orchestrate omnichannel lead nurturing campaigns across email, SMS, and digital channels.`;
+    } else if (cat.includes("analytics & intelligence")) {
+      baseOverview = `${vendorName} is an analytics and revenue intelligence platform that tracks user behavior, analyzes pipeline health, and delivers predictive business forecasting.`;
+    } else if (cat.includes("customer success")) {
+      baseOverview = `${vendorName} is a customer success platform built for B2B teams to monitor product adoption, calculate health scores, and automate proactive retention workflows.`;
+    } else if (cat.includes("commerce & payments")) {
+      baseOverview = `${vendorName} is a financial infrastructure and commerce platform that automates payment processing, recurring subscription billing, and quote-to-cash operations.`;
+    } else if (cat.includes("productivity & events")) {
+      baseOverview = `${vendorName} is a productivity and collaboration platform that coordinates cross-functional team projects, streamlines meetings, and automates operational workflows.`;
+    } else if (cat.includes("content & social")) {
+      baseOverview = `${vendorName} is a content and social media platform that enables marketing teams to create, schedule, publish, and analyze digital brand engagement across channels.`;
+    } else {
+      baseOverview = `${vendorName} is an enterprise go-to-market software platform built to integrate GTM workflows, synchronize customer data, and automate revenue operations.`;
+    }
   }
 
-  return `${vendorName} is an enterprise go-to-market software platform built to integrate GTM workflows, synchronize customer data, and automate revenue operations.`;
+  return baseOverview;
 }
 
 function getExample1SignalSSOT(vendorName: string, category: string): string {
@@ -1021,10 +1402,26 @@ export function parseGTMVendors(): GTMVendor[] {
       const n8nNode = fields[8];
       const connectVia = fields[10];
 
+      const matchedStages = getMatchedGTMStages(vendorName, categoryName);
+      const matchedStageIds = matchedStages.map((s) => s.stageId);
+      const isEnrichmentOrData =
+        categoryName.toLowerCase().includes("data & enrichment") ||
+        vendorName.toLowerCase().includes("zoominfo") ||
+        vendorName.toLowerCase().includes("clearbit") ||
+        vendorName.toLowerCase().includes("apollo") ||
+        vendorName.toLowerCase().includes("cognism") ||
+        vendorName.toLowerCase().includes("clay") ||
+        vendorName.toLowerCase().includes("lusha") ||
+        vendorName.toLowerCase().includes("leandata") ||
+        vendorName.toLowerCase().includes("ringlead");
+
       vendors.push({
         vendor: vendorName,
         category: categoryName,
         coreFunctionality: getEnhancedCoreFunctionality(vendorName, categoryName, rawFunctionality),
+        matchedGTMStages: matchedStageIds,
+        matchedFunctionalities: matchedStages,
+        dedupeCostArgumentApplies: isEnrichmentOrData,
         example1SignalSSOT: getExample1SignalSSOT(vendorName, categoryName),
         example2EngageCPQ: getExample2EngageCPQ(vendorName, categoryName),
         availability: getAvailability(vendorName, connectVia, n8nNode),

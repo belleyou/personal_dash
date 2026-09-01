@@ -32,8 +32,13 @@ import {
   Clock,
   Calendar,
   ShieldCheck,
+  Info,
+  BookOpen,
+  DollarSign,
+  AlertTriangle,
+  GitBranch,
 } from "lucide-react";
-import { GTM_VENDORS_DATA, GTMVendor } from "../data/gtmVendorData";
+import { GTM_VENDORS_DATA, GTMVendor, GTM_9_LIFECYCLE_STAGES, MatchedGTMStage } from "../data/gtmVendorData";
 import { getOobActionsForVendor, OOBAction } from "../data/gtmOobSimulators";
 
 interface GTMAdminDashboardProps {
@@ -67,6 +72,8 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
   const [selectedConnectVia, setSelectedConnectVia] = useState<string>("all");
   const [selectedCustomerSize, setSelectedCustomerSize] = useState<string>("all");
   const [selectedLLM, setSelectedLLM] = useState<string>("all");
+  const [selectedGTMStage, setSelectedGTMStage] = useState<string>("all");
+  const [showLifecycleGuide, setShowLifecycleGuide] = useState<boolean>(false);
 
   const [sortField, setSortField] = useState<SortField>("vendor");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
@@ -119,11 +126,16 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
   // Filter & sort vendors
   const filteredVendors = useMemo(() => {
     return GTM_VENDORS_DATA.filter((vendor) => {
+      const stageText = vendor.matchedFunctionalities
+        ? vendor.matchedFunctionalities.map((f) => `${f.stageName} ${f.matchedDetails} ${f.badgeLabel}`).join(" ")
+        : "";
+
       const matchesSearch =
         searchTerm.trim() === "" ||
         vendor.vendor.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vendor.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vendor.coreFunctionality.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        stageText.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vendor.example1SignalSSOT.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vendor.example2EngageCPQ.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vendor.availability.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -151,7 +163,11 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
       const matchesLLM =
         selectedLLM === "all" || vendor.llmCapability.toLowerCase() === selectedLLM.toLowerCase();
 
-      return matchesSearch && matchesCat && matchesVendor && matchesConnect && matchesSize && matchesLLM;
+      const matchesGTMStage =
+        selectedGTMStage === "all" ||
+        (vendor.matchedGTMStages && vendor.matchedGTMStages.includes(Number(selectedGTMStage)));
+
+      return matchesSearch && matchesCat && matchesVendor && matchesConnect && matchesSize && matchesLLM && matchesGTMStage;
     }).sort((a, b) => {
       let aVal = a[sortField];
       let bVal = b[sortField];
@@ -173,6 +189,7 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
     selectedConnectVia,
     selectedCustomerSize,
     selectedLLM,
+    selectedGTMStage,
     sortField,
     sortDirection,
   ]);
@@ -315,6 +332,9 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
       "Vendor",
       "Category",
       "Core Functionality",
+      "Matched GTM Lifecycle Stages",
+      "Matched GTM Capabilities",
+      "Deduplicate First Rule",
       "Indicative Pricing",
       "Customer Size",
       "AI Features",
@@ -328,22 +348,35 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
       "Connect Via",
     ];
 
-    const rows = filteredVendors.map((v) => [
-      `"${v.vendor.replace(/"/g, '""')}"`,
-      `"${v.category.replace(/"/g, '""')}"`,
-      `"${v.coreFunctionality.replace(/"/g, '""')}"`,
-      `"${v.indicativePricing.replace(/"/g, '""')}"`,
-      `"${v.customerSize.join(" | ")}"`,
-      `"${v.aiFeatures.replace(/"/g, '""')}"`,
-      `"${v.integrations.replace(/"/g, '""')}"`,
-      `"${v.salesforceIntegration.replace(/"/g, '""')}"`,
-      `"${v.claudeIntegration.replace(/"/g, '""')}"`,
-      `"${v.codexIntegration.replace(/"/g, '""')}"`,
-      `"${v.llmCapability.replace(/"/g, '""')}"`,
-      `"${v.n8nNode.replace(/"/g, '""')}"`,
-      `"${v.n8nNodeIcon.replace(/"/g, '""')}"`,
-      `"${v.connectVia.replace(/"/g, '""')}"`,
-    ]);
+    const rows = filteredVendors.map((v) => {
+      const stagesStr = v.matchedGTMStages ? v.matchedGTMStages.map((s) => `Stage ${s}`).join("; ") : "";
+      const funcsStr = v.matchedFunctionalities
+        ? v.matchedFunctionalities.map((f) => `[${f.stageName}]: ${f.matchedDetails}`).join(" | ")
+        : "";
+      const dedupeRuleStr = v.dedupeCostArgumentApplies
+        ? "APPLIES: Deduplicate before API enrichment to avoid wasting credits and CRM overwrite."
+        : "Standard";
+
+      return [
+        `"${v.vendor.replace(/"/g, '""')}"`,
+        `"${v.category.replace(/"/g, '""')}"`,
+        `"${v.coreFunctionality.replace(/"/g, '""')}"`,
+        `"${stagesStr.replace(/"/g, '""')}"`,
+        `"${funcsStr.replace(/"/g, '""')}"`,
+        `"${dedupeRuleStr.replace(/"/g, '""')}"`,
+        `"${v.indicativePricing.replace(/"/g, '""')}"`,
+        `"${v.customerSize.join(" | ")}"`,
+        `"${v.aiFeatures.replace(/"/g, '""')}"`,
+        `"${v.integrations.replace(/"/g, '""')}"`,
+        `"${v.salesforceIntegration.replace(/"/g, '""')}"`,
+        `"${v.claudeIntegration.replace(/"/g, '""')}"`,
+        `"${v.codexIntegration.replace(/"/g, '""')}"`,
+        `"${v.llmCapability.replace(/"/g, '""')}"`,
+        `"${v.n8nNode.replace(/"/g, '""')}"`,
+        `"${v.n8nNodeIcon.replace(/"/g, '""')}"`,
+        `"${v.connectVia.replace(/"/g, '""')}"`,
+      ];
+    });
 
     const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -633,11 +666,49 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
               </select>
             </div>
 
+            {/* GTM 9-Stage Lifecycle Filter */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-purple-700 font-bold flex items-center gap-1">
+                <Layers className="w-3.5 h-3.5" />
+                GTM Stage:
+              </span>
+              <select
+                value={selectedGTMStage}
+                onChange={(e) => setSelectedGTMStage(e.target.value)}
+                className="bg-purple-50 border border-purple-300 rounded-md px-2 py-1 text-xs text-purple-950 font-semibold focus:outline-none focus:ring-1 focus:ring-purple-500 max-w-[200px] truncate"
+              >
+                <option value="all">All 9 Stages</option>
+                {GTM_9_LIFECYCLE_STAGES.map((stg) => (
+                  <option key={stg.id} value={stg.id.toString()}>
+                    {stg.id}. {stg.shortLabel}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* RevOps 9-Stage Reference Guide Button */}
+            <button
+              onClick={() => setShowLifecycleGuide((prev) => !prev)}
+              className={`px-2.5 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
+                showLifecycleGuide
+                  ? "bg-purple-700 text-white border-purple-700 shadow-xs"
+                  : "bg-white text-purple-700 border-purple-300 hover:bg-purple-50"
+              }`}
+              title="Toggle RevOps 9-Stage Architecture & Deduplicate First Guide"
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>9-Stage RevOps Guide</span>
+              <span className="text-[10px] bg-purple-200/50 text-purple-900 px-1.5 py-0.2 rounded font-mono font-bold">
+                {showLifecycleGuide ? "Hide" : "View"}
+              </span>
+            </button>
+
             {/* Reset Filters */}
             {(selectedCategory !== "all" ||
               selectedVendor !== "all" ||
               selectedConnectVia !== "all" ||
               selectedCustomerSize !== "all" ||
+              selectedGTMStage !== "all" ||
               searchTerm !== "") && (
               <button
                 onClick={() => {
@@ -645,6 +716,7 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
                   setSelectedVendor("all");
                   setSelectedConnectVia("all");
                   setSelectedCustomerSize("all");
+                  setSelectedGTMStage("all");
                   setSearchTerm("");
                 }}
                 className="text-xs text-purple-600 hover:text-purple-800 font-semibold px-2 py-1 underline cursor-pointer"
@@ -657,14 +729,126 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
       </div>
 
       {/* Main Table Container */}
-      <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 flex flex-col">
-        <div className="text-xs text-zinc-500 mb-2 flex items-center justify-between">
-          <span>
-            Showing <strong className="text-zinc-900 font-mono">{filteredVendors.length}</strong> of{" "}
-            <span className="font-mono">{totalVendors}</span> vendors
-          </span>
+      <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 flex flex-col space-y-4">
+        {/* RevOps 9-Stage Architecture & Deduplication Cost Reference Banner (Collapsible) */}
+        {showLifecycleGuide && (
+          <div className="bg-white border-2 border-purple-200 rounded-xl p-5 shadow-sm space-y-4 animate-fade-in">
+            <div className="flex items-center justify-between border-b border-purple-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center font-bold">
+                  <Workflow className="w-4 h-4" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-bold text-zinc-900 flex items-center gap-2">
+                    <span>RevOps GTM 9-Stage Data Flow & Lead Orchestration Reference</span>
+                    <span className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">
+                      Standard Operating Architecture
+                    </span>
+                  </h2>
+                  <p className="text-xs text-zinc-500">
+                    Industry standard pipeline flow mapped to matched tool functionalities across the GTM directory.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowLifecycleGuide(false)}
+                className="text-zinc-400 hover:text-zinc-600 p-1 rounded-lg hover:bg-zinc-100 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Crucial Data Hygiene & Cost Optimization Callout */}
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-2">
+              <div className="flex items-center gap-2 text-amber-900 font-bold text-xs uppercase tracking-wider">
+                <AlertTriangle className="w-4 h-4 text-amber-600" />
+                <span>Critical RevOps Rule: Deduplicate The Data First (Stage 2)</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-amber-950">
+                <div className="bg-white/80 border border-amber-200/80 rounded-lg p-3 space-y-1">
+                  <div className="font-bold flex items-center gap-1.5 text-amber-900">
+                    <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>The Cost Argument (API Enrichment Limits)</span>
+                  </div>
+                  <p className="text-zinc-700 leading-relaxed">
+                    Enrichment vendors (like ZoomInfo, Clearbit, or Apollo) charge per API call or per credit. If you enrich before deduplicating, you waste money enriching a record you might immediately delete, merge, or reject because it already exists in your CRM.
+                  </p>
+                </div>
+                <div className="bg-white/80 border border-amber-200/80 rounded-lg p-3 space-y-1">
+                  <div className="font-bold flex items-center gap-1.5 text-amber-900">
+                    <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+                    <span>Overwriting Existing Data (The Data Integrity Risk)</span>
+                  </div>
+                  <p className="text-zinc-700 leading-relaxed">
+                    Enriching blindly without deduplication risks overwriting clean, SDR-verified account notes, custom fields, and account ownership with stale third-party scraped payloads.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 9 Stages Interactive Visual Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3">
+              {GTM_9_LIFECYCLE_STAGES.map((stage) => {
+                const isSelected = selectedGTMStage === stage.id.toString();
+                const matchedCount = GTM_VENDORS_DATA.filter((v) =>
+                  v.matchedGTMStages?.includes(stage.id)
+                ).length;
+
+                return (
+                  <div
+                    key={stage.id}
+                    onClick={() =>
+                      setSelectedGTMStage(isSelected ? "all" : stage.id.toString())
+                    }
+                    className={`p-3.5 rounded-xl border transition-all cursor-pointer space-y-2 text-left ${
+                      isSelected
+                        ? "bg-purple-50/80 border-purple-500 ring-2 ring-purple-400 shadow-xs"
+                        : "bg-zinc-50/70 border-zinc-200 hover:border-zinc-300 hover:bg-white"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-zinc-200/70 text-zinc-800">
+                        Stage {stage.id}
+                      </span>
+                      <span className="text-[11px] font-semibold text-purple-700 bg-purple-100/60 px-2 py-0.5 rounded-full">
+                        {matchedCount} vendors
+                      </span>
+                    </div>
+                    <div className="font-bold text-xs text-zinc-900">{stage.title}</div>
+                    <p className="text-[11.5px] text-zinc-600 leading-relaxed line-clamp-3">
+                      {stage.description}
+                    </p>
+                    <div className="text-[10px] text-purple-600 font-bold uppercase tracking-wider pt-1 border-t border-zinc-200/60 flex items-center justify-between">
+                      <span>{isSelected ? "Active Filter (Click to Reset)" : "Filter by this Stage"}</span>
+                      <ChevronRight className="w-3 h-3" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <div className="text-xs text-zinc-500 flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <span>
+              Showing <strong className="text-zinc-900 font-mono">{filteredVendors.length}</strong> of{" "}
+              <span className="font-mono">{totalVendors}</span> vendors
+            </span>
+            {selectedGTMStage !== "all" && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-purple-100 text-purple-800 text-[11px] font-semibold">
+                <span>Filtering: Stage {selectedGTMStage} ({GTM_9_LIFECYCLE_STAGES.find((s) => s.id.toString() === selectedGTMStage)?.shortLabel})</span>
+                <button
+                  onClick={() => setSelectedGTMStage("all")}
+                  className="hover:text-purple-950 font-bold ml-1"
+                >
+                  ×
+                </button>
+              </span>
+            )}
+          </div>
           <span className="text-zinc-400 italic">
-            Click on any vendor row or the &quot;⚡ Test OOB&quot; button to execute its out-of-the-box functional workflow.
+            Click on any vendor row or &quot;⚡ Test OOB&quot; to execute its out-of-the-box functional workflow.
           </span>
         </div>
 
@@ -721,10 +905,10 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
                   {/* CORE FUNCTIONALITY */}
                   <th
                     onClick={() => handleSort("coreFunctionality")}
-                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[280px]"
+                    className="py-3 px-4 font-bold cursor-pointer hover:bg-[#252f2a] transition-colors whitespace-nowrap min-w-[340px]"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span>CORE FUNCTIONALITY</span>
+                      <span>CORE FUNCTIONALITY & GTM STAGES</span>
                       {sortField === "coreFunctionality" ? (
                         sortDirection === "asc" ? (
                           <ArrowUp className="h-3 w-3 text-emerald-400" />
@@ -1050,9 +1234,45 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
                           </span>
                         </td>
 
-                        {/* CORE FUNCTIONALITY */}
-                        <td className="py-3.5 px-4 align-middle text-zinc-800 text-xs leading-relaxed max-w-[280px]">
-                          {vendor.coreFunctionality}
+                        {/* CORE FUNCTIONALITY & MATCHED GTM STAGES */}
+                        <td className="py-3.5 px-4 align-middle text-zinc-800 text-xs leading-relaxed max-w-[380px] min-w-[320px]">
+                          <div className="space-y-2">
+                            <div className="text-zinc-900 leading-relaxed font-normal">
+                              {vendor.coreFunctionality}
+                            </div>
+
+                            {/* Matched GTM Pipeline Stage Badges */}
+                            {vendor.matchedFunctionalities && vendor.matchedFunctionalities.length > 0 && (
+                              <div className="space-y-1.5 pt-1.5 border-t border-zinc-100">
+                                <div className="flex items-center gap-1.5 text-[10.5px] font-bold text-zinc-600 uppercase tracking-wider">
+                                  <Layers className="w-3 h-3 text-purple-600" />
+                                  <span>Matched Lifecycle Stages:</span>
+                                </div>
+                                <div className="flex flex-wrap gap-1">
+                                  {vendor.matchedFunctionalities.map((mf) => (
+                                    <span
+                                      key={mf.stageId}
+                                      title={`Stage ${mf.stageId} (${mf.stageName}): ${mf.matchedDetails}`}
+                                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] font-semibold border font-mono transition-transform hover:scale-105 cursor-help ${mf.colorClass}`}
+                                    >
+                                      <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70"></span>
+                                      <span>{mf.badgeLabel}</span>
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Deduplicate First Cost Optimization Callout */}
+                            {vendor.dedupeCostArgumentApplies && (
+                              <div className="bg-amber-50/90 border border-amber-300 rounded-md p-1.5 text-[10.5px] text-amber-900 flex items-start gap-1.5 shadow-2xs">
+                                <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                                <div>
+                                  <strong className="font-bold">Deduplicate First:</strong> Run match/dedupe before calling paid enrichment credits (ZoomInfo/Clearbit/Apollo) to prevent wasted budget & protect CRM integrity.
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         </td>
 
                         {/* EXAMPLE 1 · SIGNAL ➔ SSOT */}
@@ -1215,6 +1435,39 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
                   </span>
                 </div>
                 <p className="text-sm font-semibold text-zinc-900 leading-relaxed">{activeVendor.coreFunctionality}</p>
+
+                {/* Matched GTM Stages in Drawer */}
+                {activeVendor.matchedFunctionalities && activeVendor.matchedFunctionalities.length > 0 && (
+                  <div className="space-y-1.5 pt-2 border-t border-purple-200/60">
+                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-zinc-700 uppercase tracking-wider">
+                      <Layers className="w-3.5 h-3.5 text-purple-600" />
+                      <span>Matched RevOps Lifecycle Stages</span>
+                    </div>
+                    <div className="space-y-1">
+                      {activeVendor.matchedFunctionalities.map((mf) => (
+                        <div
+                          key={mf.stageId}
+                          className="bg-white/90 rounded-lg p-2 border border-purple-100 flex items-start gap-2 text-xs"
+                        >
+                          <span className={`px-2 py-0.5 rounded text-[10.5px] font-bold font-mono shrink-0 border ${mf.colorClass}`}>
+                            {mf.badgeLabel}
+                          </span>
+                          <span className="text-zinc-700">{mf.matchedDetails}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Deduplicate First Callout if Applicable */}
+                {activeVendor.dedupeCostArgumentApplies && (
+                  <div className="bg-amber-50 border border-amber-300 rounded-lg p-2.5 text-xs text-amber-950 flex items-start gap-2">
+                    <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="font-bold">Deduplicate First Rule:</strong> Deduplicate records before running paid enrichment API queries ({activeVendor.vendor}) to avoid burning API credits on duplicate or stale CRM contacts and prevent overwriting existing CRM data.
+                    </div>
+                  </div>
+                )}
 
                 {/* Practical Signal & Engage Examples */}
                 <div className="space-y-2 pt-2 border-t border-purple-200/60">
