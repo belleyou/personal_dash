@@ -345,17 +345,101 @@ interface ProjectTinderDeckProps {
   onSelectProjectDetail: (tab: TinderCardItem["targetTab"]) => void;
   onCopyLink?: (text: string, label: string) => void;
   copiedLabel?: string | null;
+  likedProjects?: string[];
+  onLikeProject?: (id: string) => void;
 }
+
+const LIKED_PROJECTS_STORAGE_KEY = "gtm_tinder_liked_projects";
+const DECK_INDEX_STORAGE_KEY = "gtm_tinder_card_index";
+const DECK_CATEGORY_STORAGE_KEY = "gtm_tinder_category_filter";
+const DECK_HISTORY_STORAGE_KEY = "gtm_tinder_history";
 
 export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
   onSelectProjectDetail,
   onCopyLink,
-  copiedLabel
+  copiedLabel,
+  likedProjects: propsLikedProjects,
+  onLikeProject
 }) => {
-  const [filterCategory, setFilterCategory] = useState<string>("all");
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [history, setHistory] = useState<number[]>([]);
-  const [likedProjects, setLikedProjects] = useState<string[]>([]);
+  // Load initial filter category from localStorage
+  const [filterCategory, setFilterCategory] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem(DECK_CATEGORY_STORAGE_KEY);
+      if (saved) return saved;
+    } catch {}
+    return "all";
+  });
+
+  // Load initial current card index from localStorage
+  const [currentIndex, setCurrentIndex] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem(DECK_INDEX_STORAGE_KEY);
+      if (saved !== null) {
+        const num = parseInt(saved, 10);
+        if (!isNaN(num) && num >= 0) return num;
+      }
+    } catch {}
+    return 0;
+  });
+
+  // Load navigation history stack from localStorage
+  const [history, setHistory] = useState<number[]>(() => {
+    try {
+      const saved = localStorage.getItem(DECK_HISTORY_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {}
+    return [];
+  });
+
+  // Load liked projects permanently from localStorage
+  const [internalLiked, setInternalLiked] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem(LIKED_PROJECTS_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {
+      console.error("Error loading liked projects", e);
+    }
+    return [];
+  });
+
+  // Combine parent-provided liked items with localStorage to ensure 100% permanence
+  const likedProjects = React.useMemo(() => {
+    const combined = [...(propsLikedProjects || []), ...internalLiked];
+    return Array.from(new Set(combined));
+  }, [propsLikedProjects, internalLiked]);
+
+  // Sync internal liked list back to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(LIKED_PROJECTS_STORAGE_KEY, JSON.stringify(likedProjects));
+    } catch {}
+  }, [likedProjects]);
+
+  // Persist current index and history
+  useEffect(() => {
+    try {
+      localStorage.setItem(DECK_INDEX_STORAGE_KEY, String(currentIndex));
+    } catch {}
+  }, [currentIndex]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(DECK_HISTORY_STORAGE_KEY, JSON.stringify(history));
+    } catch {}
+  }, [history]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(DECK_CATEGORY_STORAGE_KEY, filterCategory);
+    } catch {}
+  }, [filterCategory]);
+
   const [matchedCard, setMatchedCard] = useState<TinderCardItem | null>(null);
   const [swipeDirection, setSwipeDirection] = useState<"left" | "right" | "super" | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState<boolean>(false);
@@ -371,13 +455,19 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
     return MASTER_DECK.filter((c) => c.category === filterCategory);
   }, [filterCategory, likedProjects]);
 
-  // Reset index on filter change
-  useEffect(() => {
+  // Handle explicit category selection
+  const handleSelectCategory = (catId: string) => {
+    setFilterCategory(catId);
     setCurrentIndex(0);
     setHistory([]);
-  }, [filterCategory]);
+    try {
+      localStorage.setItem(DECK_CATEGORY_STORAGE_KEY, catId);
+      localStorage.setItem(DECK_INDEX_STORAGE_KEY, "0");
+      localStorage.setItem(DECK_HISTORY_STORAGE_KEY, JSON.stringify([]));
+    } catch {}
+  };
 
-  const currentCard = activeDeck[currentIndex % activeDeck.length];
+  const currentCard = activeDeck.length > 0 ? activeDeck[currentIndex % activeDeck.length] : MASTER_DECK[0];
 
   // Motion values for top card drag
   const x = useMotionValue(0);
@@ -390,9 +480,17 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
 
     setSwipeDirection(direction);
 
+    // CRITICAL: Once a project is marked as Like, it is stored permanently and NEVER removed
     if (direction === "right" || direction === "super") {
       if (!likedProjects.includes(currentCard.id)) {
-        setLikedProjects((prev) => [...prev, currentCard.id]);
+        const updated = Array.from(new Set([...likedProjects, currentCard.id]));
+        setInternalLiked(updated);
+        try {
+          localStorage.setItem(LIKED_PROJECTS_STORAGE_KEY, JSON.stringify(updated));
+        } catch {}
+        if (onLikeProject) {
+          onLikeProject(currentCard.id);
+        }
       }
       setMatchedCard(currentCard);
     }
@@ -406,11 +504,18 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
     }, 280);
   };
 
+  const canRewind = history.length > 0 || currentIndex > 0;
+
+  // Rewind to previous card - DOES NOT remove any likes
   const handleRewind = () => {
-    if (history.length === 0) return;
-    const prevIdx = history[history.length - 1];
-    setHistory((prev) => prev.slice(0, -1));
-    setCurrentIndex(prevIdx);
+    if (!canRewind) return;
+    if (history.length > 0) {
+      const prevIdx = history[history.length - 1];
+      setHistory((prev) => prev.slice(0, -1));
+      setCurrentIndex(prevIdx);
+    } else if (currentIndex > 0) {
+      setCurrentIndex((prev) => (prev - 1 + activeDeck.length) % activeDeck.length);
+    }
     setSwipeDirection(null);
     x.set(0);
   };
@@ -472,7 +577,7 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
           ].map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setFilterCategory(cat.id)}
+              onClick={() => handleSelectCategory(cat.id)}
               className={`px-3 py-1 rounded-full font-hand text-xs font-bold border-2 transition-all cursor-pointer select-none shrink-0 ${
                 filterCategory === cat.id
                   ? "bg-ink text-white border-ink shadow-[2px_2px_0px_0px_rgba(244,63,94,1)] scale-105"
@@ -582,6 +687,12 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
                         {currentCard.highlightBadge}
                       </span>
                     )}
+                    {likedProjects.includes(currentCard.id) && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-50 border-2 border-rose-300 text-rose-700 font-hand text-xs font-black shadow-xs animate-fade-in">
+                        <Heart className="h-3 w-3 fill-rose-500 text-rose-500" />
+                        <span>Liked ❤️</span>
+                      </span>
+                    )}
                   </div>
 
                   <span className="font-mono text-xs text-zinc-400 font-bold">
@@ -687,11 +798,11 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
 
         {/* Tinder Action Buttons Bar */}
         <div className="flex items-center justify-center gap-3 sm:gap-5 mt-6 z-30">
-          {/* Rewind / Undo Button */}
+          {/* Rewind / Undo Button (Backward) */}
           <button
             onClick={handleRewind}
-            disabled={history.length === 0}
-            title="Rewind previous card"
+            disabled={!canRewind}
+            title="Backward / Rewind to previous card (Liked projects stay saved permanently)"
             className="w-12 h-12 rounded-full bg-white hover:bg-amber-50 text-amber-500 border-3 border-ink flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(24,24,27,1)] transition-all cursor-pointer disabled:opacity-35 disabled:cursor-not-allowed"
           >
             <RotateCcw className="h-5 w-5" />
@@ -700,7 +811,7 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
           {/* Pass / Dislike (Swipe Left) */}
           <button
             onClick={() => handleSwipe("left")}
-            title="Pass card (Swipe Left)"
+            title="Pass card (Swipe Left) — Liked projects stay saved permanently"
             className="w-14 h-14 rounded-full bg-white hover:bg-rose-50 text-rose-600 border-3 border-ink flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(24,24,27,1)] transition-all cursor-pointer group"
           >
             <X className="h-7 w-7 stroke-[3] group-hover:scale-110 transition-transform" />
@@ -719,13 +830,24 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
           </button>
 
           {/* Like / Match (Swipe Right) */}
-          <button
-            onClick={() => handleSwipe("right")}
-            title="Like & Save Match (Swipe Right)"
-            className="w-14 h-14 rounded-full bg-white hover:bg-emerald-50 text-emerald-600 border-3 border-ink flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(24,24,27,1)] transition-all cursor-pointer group"
-          >
-            <Heart className="h-7 w-7 fill-emerald-500 text-emerald-500 group-hover:scale-110 transition-transform" />
-          </button>
+          {(() => {
+            const isAlreadyLiked = currentCard ? likedProjects.includes(currentCard.id) : false;
+            return (
+              <button
+                onClick={() => handleSwipe("right")}
+                title={isAlreadyLiked ? "Marked as Liked (Permanently saved in your collection)" : "Like & Save Match (Swipe Right)"}
+                className={`w-14 h-14 rounded-full border-3 border-ink flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(24,24,27,1)] transition-all cursor-pointer group ${
+                  isAlreadyLiked
+                    ? "bg-rose-50 hover:bg-rose-100 text-rose-600 border-rose-500 ring-2 ring-rose-300"
+                    : "bg-white hover:bg-emerald-50 text-emerald-600"
+                }`}
+              >
+                <Heart className={`h-7 w-7 transition-transform group-hover:scale-110 ${
+                  isAlreadyLiked ? "fill-rose-500 text-rose-500" : "fill-emerald-500 text-emerald-500"
+                }`} />
+              </button>
+            );
+          })()}
 
           {/* Share / Copy Link to Current Card */}
           <button

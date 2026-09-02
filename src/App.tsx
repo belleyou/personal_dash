@@ -294,6 +294,29 @@ export default function App() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // Career experience expansion
   const [activeProjectTab, setActiveProjectTab] = useState<"gong_revenue_agent" | "channel_partner_qtc" | "revops_streamline" | "inactive_leads" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("gong_revenue_agent");
   const [projectDisplayMode, setProjectDisplayMode] = useState<"tinder" | "detail" | "tabs">("tinder");
+  
+  // Permanent Liked Projects State - never lost across backwards navigation or page changes
+  const [likedProjects, setLikedProjects] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem("gtm_tinder_liked_projects");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {}
+    return [];
+  });
+
+  const handleLikeProject = (id: string) => {
+    setLikedProjects((prev) => {
+      if (prev.includes(id)) return prev;
+      const updated = [...prev, id];
+      try {
+        localStorage.setItem("gtm_tinder_liked_projects", JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
   const [certFilter, setCertFilter] = useState<"all" | "salesforce" | "other">("all");
   const [isMusicModalOpen, setIsMusicModalOpen] = useState(false);
   const [isSubmitProjectModalOpen, setIsSubmitProjectModalOpen] = useState(false);
@@ -866,7 +889,8 @@ export default function App() {
               </div>
             </div>
 
-            {projectDisplayMode === "tinder" ? (
+            {/* Project Card Deck: Kept mounted so card index, history stack, and liked projects are preserved when viewing deep dive or clicking backward */}
+            <div className={projectDisplayMode === "tinder" ? "block" : "hidden"}>
               <ProjectTinderDeck
                 onSelectProjectDetail={(tab) => {
                   setActiveProjectTab(tab);
@@ -875,8 +899,12 @@ export default function App() {
                 }}
                 onCopyLink={copyToClipboard}
                 copiedLabel={copiedText}
+                likedProjects={likedProjects}
+                onLikeProject={handleLikeProject}
               />
-            ) : (
+            </div>
+
+            {projectDisplayMode !== "tinder" && (
               <div className="space-y-6">
                 {/* Back to Project card deck helper banner when in detail mode */}
                 {projectDisplayMode === "detail" && (

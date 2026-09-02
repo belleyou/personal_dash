@@ -20,6 +20,132 @@ export function getOobActionsForVendor(vendor: GTMVendor): OOBAction[] {
   const cat = vendor.category.toLowerCase();
   const vName = vendor.vendor;
 
+  if (vName.toLowerCase().includes("beeze")) {
+    return [
+      {
+        id: "beeze_linkedin_intent_capture",
+        name: "Capture LinkedIn Intent Leads from Competitor Post Engagements",
+        description: "Scans competitor LinkedIn posts, influencer threads, and group discussions to deanonymize engaging prospects, score intent, and enrich contact details.",
+        method: "POST",
+        endpoint: `/api/v1/intent/linkedin-scrape-and-enrich`,
+        defaultParams: {
+          targetCompetitorPostUrl: "https://www.linkedin.com/posts/competitor-crm-launch-activity-7128919283",
+          filterJobTitles: ["VP Sales", "Head of RevOps", "Director Demand Gen", "Chief Revenue Officer"],
+          minEmployeeCount: 50,
+          enrichVerifiedEmail: true,
+          sentimentThreshold: "Positive or Inquiring",
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 148,
+          statusCode: 200,
+          result: {
+            scrapedPostUrl: params.targetCompetitorPostUrl || "https://www.linkedin.com/posts/competitor-crm-launch",
+            totalEngagementsAnalyzed: 142,
+            targetLeadsIdentified: 8,
+            topIdentifiedProspects: [
+              {
+                fullName: "Elena Rostova",
+                title: "VP of Revenue Operations",
+                company: "FinScale Dynamics (Series B, 220 FTE)",
+                linkedInProfile: "https://www.linkedin.com/in/elena-rostova-revops",
+                verifiedWorkEmail: "elena.rostova@finscale.io",
+                buyingIntentScore: 94,
+                intentTrigger: "Commented asking about multi-CRM deduplication and API latency on competitor post",
+                waterfallEnrichmentStatus: "Verified (Deliverable)",
+              },
+              {
+                fullName: "Marcus Vance",
+                title: "Director of Sales Development",
+                company: "Aether Cloud Systems (Public, 1,400 FTE)",
+                linkedInProfile: "https://www.linkedin.com/in/marcus-vance-sdr-leader",
+                verifiedWorkEmail: "mvance@aethercloud.com",
+                buyingIntentScore: 89,
+                intentTrigger: "Liked 3 competitor posts discussing outbound cadence deliverability drop",
+                waterfallEnrichmentStatus: "Verified (Deliverable)",
+              },
+            ],
+            pipelineStageRouted: "Stage 1 (Ingestion & Intent) -> Stage 3 (Waterfall Enrich)",
+            status: "8 high-fit leads extracted and staged for 24/7 AI-personalized outreach sequence.",
+          },
+          log: [
+            `[${v.vendor}] Ingesting target LinkedIn post engagement stream from ${params.targetCompetitorPostUrl}...`,
+            `[${v.vendor}] Filtering 142 commenters & likers against job title criteria: ${Array.isArray(params.filterJobTitles) ? params.filterJobTitles.join(", ") : params.filterJobTitles}...`,
+            `[${v.vendor}] Executing multi-provider waterfall verification for work emails and company firmographics...`,
+            `[${v.vendor}] Intent scoring computed: 8 high-intent decision makers verified. Queued for AI sequence.`,
+          ],
+        }),
+      },
+      {
+        id: "beeze_ai_personalized_invitation",
+        name: "Generate 24/7 AI-Personalized LinkedIn Outreach & Icebreaker",
+        description: "Synthesizes prospect recent activities, company news, and ICP pain points to generate high-converting 1-to-1 personalized connection requests and first follow-ups.",
+        method: "POST",
+        endpoint: `/api/v1/outreach/generate-personalized-message`,
+        defaultParams: {
+          prospectName: "Elena Rostova",
+          prospectCompany: "FinScale Dynamics",
+          intentTrigger: "Inquiring about multi-CRM deduplication and API latency",
+          toneOfVoice: "Consultative, Concise, High-Value",
+          includeBookingCta: true,
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 112,
+          statusCode: 200,
+          result: {
+            prospectName: params.prospectName || "Elena Rostova",
+            targetCompany: params.prospectCompany || "FinScale Dynamics",
+            generatedConnectionInvite: `Hi ${params.prospectName ? params.prospectName.split(" ")[0] : "Elena"} — saw your comment regarding multi-CRM deduplication and API latency bottlenecks at ${params.prospectCompany || "FinScale"}. We built a single-source middleware connector that deduplicates cross-system records in <80ms without custom Apex scripts. Would love to share the architecture diagram if you're exploring alternatives!`,
+            characterCount: 282,
+            predictedAcceptanceRate: "62.4%",
+            suggestedFollowUpStep2: `Thanks for connecting, ${params.prospectName ? params.prospectName.split(" ")[0] : "Elena"}! Here is a 2-minute interactive sandbox link illustrating how the deduplication handshake works with Salesforce & HubSpot. Let me know if you'd like our solutions engineer to walk through your exact stack.`,
+            status: "Message generated and scheduled in Beeze 24/7 AI outreach dispatcher queue.",
+          },
+          log: [
+            `[${v.vendor}] Fetching prospect context graph for ${params.prospectName} (${params.prospectCompany})...`,
+            `[${v.vendor}] Contextualizing intent trigger: "${params.intentTrigger}"...`,
+            `[${v.vendor}] LLM generated personalized 282-character invitation compliant with LinkedIn limit (300 chars max).`,
+            `[${v.vendor}] Scheduled message dispatch with human-like randomized delivery window.`,
+          ],
+        }),
+      },
+      {
+        id: "beeze_autonomous_reply_agent",
+        name: "Autonomous 24/7 Reply & Objection Handling + Direct Calendar Booking",
+        description: "Analyzes incoming prospect replies on LinkedIn, classifies sentiment/objections, drafts contextual answers, and autonomously schedules demo meetings directly into CRM.",
+        method: "POST",
+        endpoint: `/api/v1/replies/autonomous-agent-handler`,
+        defaultParams: {
+          incomingProspectReply: "Thanks for reaching out. We currently use LeanData for routing, but our contract is up in 3 months and we're looking for something that handles real-time webhooks faster. How much does Beeze cost for 5 SDRs?",
+          prospectEmail: "elena.rostova@finscale.io",
+          calendarSchedulingLink: "https://cal.com/revops-specialist/gtm-eval",
+          assigneeAE: "Sarah Jenkins (Enterprise AE)",
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 126,
+          statusCode: 200,
+          result: {
+            detectedIntent: "High Buying Intent / Renewal Window / Pricing Inquiry",
+            objectionClassification: "Incumbent Comparison (LeanData) + Contract Timing (3 Months)",
+            sentimentScore: "+0.88 (Highly Favorable)",
+            autonomousAgentResponse: "Glad to hear that, Elena! For 5 SDR seats, Beeze AI ranges from $99–$249/mo per seat with full webhook throughput under 100ms. Because your LeanData renewal is in 3 months, we can set up a parallel sandbox this week so you can test live routing with zero downtime. Would Thursday at 11 AM PT or Friday at 2 PM PT work for a 15-min technical demo? Or feel free to pick a time directly on Sarah's calendar here: https://cal.com/revops-specialist/gtm-eval",
+            actionTaken: "Direct response dispatched via LinkedIn API; Opportunity created in Salesforce; Sales rep Sarah Jenkins notified in Slack (#deals-live).",
+            calendarLinkShared: params.calendarSchedulingLink || "https://cal.com/revops-specialist/gtm-eval",
+            crmSyncStatus: "Opportunity 'FinScale Dynamics - 5 Seat Eval' created (Stage: Demo Scheduled).",
+          },
+          log: [
+            `[${v.vendor}] Ingesting inbound LinkedIn direct message payload from ${params.prospectEmail}...`,
+            `[${v.vendor}] Classifying sentiment (+0.88) and identifying pricing inquiry + LeanData competitor migration intent...`,
+            `[${v.vendor}] Reasoning engine constructed customized technical & pricing response with meeting booking links...`,
+            `[${v.vendor}] Pushed meeting booking event to Salesforce and notified ${params.assigneeAE} via Slack webhook.`,
+          ],
+        }),
+      },
+    ];
+  }
+
   if (vName.toLowerCase().includes("lucid")) {
     return [
       {

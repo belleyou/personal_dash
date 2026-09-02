@@ -196,6 +196,7 @@ export const RAW_GTM_CSV = `
 "AWS","Analytics & intelligence","Analyze buyer activity, calls and revenue performance","Free–custom","SMB | MMS","Conversation AI, forecasting and anomaly detection","API, webhooks and partner connectors","Built-in / assisted","—","No native node","HTTP Request"
 "Basecamp","Productivity & events","Coordinate work, meetings, forms and events","Free–$30+/user/mo","SMB | MMS","Assistants, summaries and workflow generation","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
 "Beamer","Customer success","Onboard, support and retain customers","$20+/seat or custom","SMB | MMS","Health scoring, summaries and support copilots","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
+"Beeze AI","Sales engagement","AI-driven LinkedIn intent capture, 24/7 automated personalized outreach, reply handling, and meeting booking","$99–$299+/mo","SMB | MMS","Intent scoring from social engagement, dynamic AI personalization, autonomous 24/7 objection handling & meeting booking","API, webhooks, LinkedIn, HubSpot & Salesforce","Built-in / assisted","—","No native node","Webhook"
 "BigCommerce","Commerce & payments","Run commerce, billing, subscriptions and finance ops","Usage-based / custom","SMB | MMS | LCS","Fraud, recommendations and finance automation","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
 "Bigin by Zoho","CRM & revenue","Manage accounts, contacts, pipeline and forecasting","Free–$25+/user/mo","SMB | MMS | LCS","Lead scoring, summaries, next-best action","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
 "BigQuery","Analytics & intelligence","Analyze buyer activity, calls and revenue performance","Free–custom","SMB | MMS","Conversation AI, forecasting and anomaly detection","Broad ecosystem + native n8n node","Built-in / assisted","BigQuery","https://n8n.io/nodes/google-bigquery.svg","Native"
@@ -620,6 +621,8 @@ export const RAW_GTM_CSV = `
 
 // Specific Integration Resolvers for Enterprise Systems
 const VENDOR_AI_OVERVIEWS: Record<string, string> = {
+  "beeze ai": "Beeze AI is an autonomous AI-powered sales engagement and LinkedIn outreach platform that tracks competitor post engagements and social buying signals to capture high-intent leads, send hyper-personalized connection messages, autonomously manage replies/objections 24/7, and book meetings directly into sales reps' calendars and CRM systems.",
+  "beeze": "Beeze AI is an autonomous AI-powered sales engagement and LinkedIn outreach platform that tracks competitor post engagements and social buying signals to capture high-intent leads, send hyper-personalized connection messages, autonomously manage replies/objections 24/7, and book meetings directly into sales reps' calendars and CRM systems.",
   "pylon": "Pylon is an AI-native customer support platform built specifically for B2B companies to manage and automate support interactions across channels like Slack Connect, Microsoft Teams, Discord, and email.",
   "6sense": "6sense is an AI-driven account-based marketing (ABM) and revenue platform that captures buyer intent, deanonymizes web traffic, and uncovers in-market accounts for B2B revenue teams.",
   "abstract api": "Abstract API is a suite of modern API microservices built for developers to validate emails, geolocate IP addresses, format phone numbers, and enrich company data.",
@@ -721,6 +724,7 @@ export function getMatchedGTMStages(vendorName: string, category: string): Match
     cat.includes("marketing automation") ||
     cat.includes("productivity & events") ||
     cat.includes("content & social") ||
+    v.includes("beeze") ||
     v.includes("6sense") ||
     v.includes("demandbase") ||
     v.includes("bombora") ||
@@ -775,6 +779,7 @@ export function getMatchedGTMStages(vendorName: string, category: string): Match
   if (
     cat.includes("data & enrichment") ||
     cat.includes("abm & intent") ||
+    v.includes("beeze") ||
     v.includes("zoominfo") ||
     v.includes("clearbit") ||
     v.includes("apollo") ||
@@ -1082,6 +1087,9 @@ function getExample1SignalSSOT(vendorName: string, category: string): string {
   }
 
   // Enterprise Vendor specific examples
+  if (v.includes("beeze")) {
+    return "Capture LinkedIn competitor engagement intent signals, enrich prospect profile, and auto-queue personalized outreach.";
+  }
   if (v.includes("6sense") || v.includes("demandbase") || v.includes("bombora")) {
     return "Capture anonymous domain intent surge, resolve parent-child account hierarchy, and trigger AE alert.";
   }
@@ -1177,6 +1185,9 @@ function getExample2EngageCPQ(vendorName: string, category: string): string {
   }
 
   // Enterprise Vendor specific examples
+  if (v.includes("beeze")) {
+    return "Autonomously handle prospect replies and objection handling on LinkedIn, book demo on sales rep calendar, and log meeting in CRM.";
+  }
   if (v.includes("leandata") || v.includes("ringlead")) {
     return "Dedupe contacts by normalized email and retain the record with the freshest enrichment.";
   }
@@ -1252,6 +1263,9 @@ function getAvailability(vendorName: string, connectVia: string, n8nNode: string
 
 function getSalesforceIntegration(vendorName: string, category: string): string {
   const v = vendorName.toLowerCase();
+  if (v.includes("beeze")) {
+    return "REST API, Bi-directional CRM Sync, Lead Creation & Task Webhooks";
+  }
   if (v.includes("6sense") || v.includes("demandbase") || v.includes("zoominfo") || v.includes("clearbit")) {
     return "AppExchange Managed Package, REST API & Webhooks";
   }
