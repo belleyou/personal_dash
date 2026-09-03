@@ -964,7 +964,7 @@ export default function App() {
                 }`}
               >
                 <Bot className="h-4 w-4 text-emerald-800 animate-pulse" />
-                Channel Partner QTC Automation 🤝 ⭐
+                SaaS CPQ &amp; Order Management 🤝 ⭐
               </a>
               <a
                 href="#projects?tab=inactive_leads"

@@ -109,24 +109,24 @@ export const MASTER_DECK: TinderCardItem[] = [
   },
   {
     id: "channel_partner_qtc",
-    title: "Channel Partner QTC Automation",
+    title: "SaaS CPQ & Order Management Automation",
     category: "Star Case Study",
     categoryColor: "text-emerald-800",
     categoryBg: "bg-emerald-100 border-emerald-300",
     icon: Bot,
-    problem: "Severe indirect channel partner friction: Manual portal workflows, slow approvals (5 business days), slow QTC cycle time (8 days), 24% duplicate lead registrations, and revenue leakage ($145 per deal reg).",
-    solution: "Product Manager E2E Solution: Custom Partner Portal & 4-Agent Intelligent AI Swarm with Slack/Teams self-service hooks, DRICAD governance, automated deduction engine, and pre-filtering layer.",
-    impact: "Deal registration approval time cut from 5 days to < 10 mins (99.6% speedup), QTC cycle time reduced from 8 days to < 24 hrs, partner adoption (MAP) soared from 28% to 82%, duplicate registration dropped from 24% to < 2%, and channel ops cost slashed by 72%.",
-    tools: ["Salesforce Experience Cloud", "Slack & Teams Bots", "AI Agent Swarm", "CPQ / Billing", "ERP Sync", "DRICAD Governance"],
-    aiUse: "4-Agent Swarm: Identify & Dedupe, Discount Validation, Parallel Approval, OM Syncing",
+    problem: "SaaS enterprise hybrid licensing friction: Manual quoting of subscriptions + consumption credits, 5-day Deal Desk approvals, 72-hour manual tenant provisioning delays, 14% metering leakage, and 18% quoting error rates.",
+    solution: "Autonomous Agentforce CPQ & Order Management System with 5 specialized subagents (Subscription Licensing, Consumption Metering, Deal Desk Margin, Cloud Provisioning, and MuleSoft Orders MCP) with instant 15-second tenant deployment.",
+    impact: "QTC cycle time reduced from 8 days to < 12 minutes (98.5% speedup), cloud tenant provisioning cut from 72 hours to 15 seconds, consumption leakage dropped from 14% to 0% drift, and $1.8M ARR protected.",
+    tools: ["Salesforce Agentforce", "MuleSoft Orders MCP", "AWS/GCP Cloud IAM", "Zuora / NetSuite", "Slack Approvals", "Data 360"],
+    aiUse: "5 Autonomous Subagents: Subscription Ramps, Consumption Metering, Deal Desk Floors, Tenant Provisioning, Orders MCP",
     targetTab: "channel_partner_qtc",
     isSpecialCaseStudy: true,
-    highlightBadge: "🔥 STAR Architectural Case Study",
+    highlightBadge: "🔥 STAR Case Study & Subagent Logic",
     stats: [
-      { label: "Deal Approval", value: "< 10 Mins" },
-      { label: "QTC Time", value: "< 24 Hours" },
-      { label: "Partner MAP", value: "82% (+54%)" },
-      { label: "Cost Reduction", value: "72%" }
+      { label: "QTC Cycle", value: "< 12 Mins" },
+      { label: "Cloud Provision", value: "15 Seconds" },
+      { label: "Metering Drift", value: "0% Leakage" },
+      { label: "Deal Desk", value: "< 8 Mins" }
     ]
   },
   {

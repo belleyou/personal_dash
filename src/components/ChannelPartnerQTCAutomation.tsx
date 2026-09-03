@@ -33,6 +33,7 @@ import {
   Cpu,
   RefreshCw
 } from "lucide-react";
+import { SaaSCPQOrderManagementProcess } from "./SaaSCPQOrderManagementProcess";
 
 interface ChannelPartnerQTCAutomationProps {
   onCopyLink?: (text: string, label: string) => void;
@@ -43,7 +44,7 @@ export const ChannelPartnerQTCAutomation: React.FC<ChannelPartnerQTCAutomationPr
   onCopyLink,
   copiedLabel
 }) => {
-  const [activeTab, setActiveTab] = useState<"star_framework" | "kpi_matrix" | "agent_swarm" | "simulator" | "slack_hook">("star_framework");
+  const [activeTab, setActiveTab] = useState<"saas_cpq_logic" | "star_framework" | "kpi_matrix" | "agent_swarm" | "simulator" | "slack_hook">("saas_cpq_logic");
 
   // Simulator state
   const [simPartnerTier, setSimPartnerTier] = useState<"Platinum" | "Gold" | "Silver">("Platinum");
@@ -250,7 +251,8 @@ export const ChannelPartnerQTCAutomation: React.FC<ChannelPartnerQTCAutomationPr
       {/* Sub-Navigation Tabs inside Case Study */}
       <div className="flex flex-wrap items-center gap-2 border-b-2 border-ink pb-2 select-none">
         {[
-          { id: "star_framework", label: "📋 S.T.A.R. Framework", icon: FileCheck2 },
+          { id: "saas_cpq_logic", label: "☁️ SaaS CPQ & Order Logic (Subagents & STAR)", icon: Sparkles },
+          { id: "star_framework", label: "📋 S.T.A.R. Framework (Channel QTC)", icon: FileCheck2 },
           { id: "kpi_matrix", label: "📊 KPI Metrics (Pre / Post)", icon: BarChart3 },
           { id: "agent_swarm", label: "🤖 4-Agent AI Swarm Architecture", icon: Cpu },
           { id: "simulator", label: "⚡ Interactive Deal Reg Simulator", icon: Sliders },
@@ -268,12 +270,17 @@ export const ChannelPartnerQTCAutomation: React.FC<ChannelPartnerQTCAutomationPr
                   : "bg-zinc-100 text-zinc-700 border-zinc-300 hover:bg-zinc-200 hover:border-zinc-400"
               }`}
             >
-              <Icon className={`h-4 w-4 ${isActive ? "text-emerald-400" : "text-zinc-600"}`} />
+              <Icon className={`h-4 w-4 ${isActive ? "text-sky-400" : "text-zinc-600"}`} />
               <span>{tab.label}</span>
             </button>
           );
         })}
       </div>
+
+      {/* TAB 0: SaaS CPQ & Order Management Process (Logic Image, Subagents, STAR & Sandbox) */}
+      {activeTab === "saas_cpq_logic" && (
+        <SaaSCPQOrderManagementProcess onCopyLink={onCopyLink} copiedLabel={copiedLabel} />
+      )}
 
       {/* TAB 1: S.T.A.R. Framework View */}
       {activeTab === "star_framework" && (

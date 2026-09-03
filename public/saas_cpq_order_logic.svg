@@ -1,0 +1,610 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <!-- Background Blueprint Grid Pattern -->
+    <pattern id="blueprintGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#E2E8F0" stroke-width="1" opacity="0.6"/>
+    </pattern>
+    
+    <!-- Gradients -->
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#1E293B" />
+    </linearGradient>
+
+    <linearGradient id="salesforceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC" />
+      <stop offset="100%" stop-color="#F1F5F9" />
+    </linearGradient>
+
+    <linearGradient id="mulesoftGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F0FDF4" />
+      <stop offset="100%" stop-color="#DCFCE7" />
+    </linearGradient>
+
+    <linearGradient id="erpGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FAF5FF" />
+      <stop offset="100%" stop-color="#F3E8FF" />
+    </linearGradient>
+
+    <linearGradient id="subagentGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF" />
+      <stop offset="100%" stop-color="#DBEAFE" />
+    </linearGradient>
+
+    <linearGradient id="subagentGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ECFDF5" />
+      <stop offset="100%" stop-color="#D1FAE5" />
+    </linearGradient>
+
+    <linearGradient id="subagentGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFBEB" />
+      <stop offset="100%" stop-color="#FEF3C7" />
+    </linearGradient>
+
+    <linearGradient id="subagentGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5F3FF" />
+      <stop offset="100%" stop-color="#EDE9FE" />
+    </linearGradient>
+
+    <linearGradient id="pillGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284C7" />
+      <stop offset="100%" stop-color="#0369A1" />
+    </linearGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="cardShadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="4" dy="4" stdDeviation="0" flood-color="#0F172A" flood-opacity="0.9" />
+    </filter>
+    <filter id="softShadow" x="-5%" y="-5%" width="115%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0F172A" flood-opacity="0.08" />
+    </filter>
+
+    <!-- Arrow Marker -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#0F172A" />
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#0284C7" />
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#059669" />
+    </marker>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1920" height="1080" fill="#F8FAFC" />
+  <rect width="1920" height="1080" fill="url(#blueprintGrid)" />
+
+  <!-- TOP HEADER BANNER -->
+  <rect x="40" y="30" width="1840" height="80" rx="16" fill="#FFFFFF" stroke="#0F172A" stroke-width="3" filter="url(#cardShadow)" />
+  
+  <!-- App Title & Badges -->
+  <g transform="translate(65, 52)">
+    <!-- Cloud Icon -->
+    <rect x="0" y="0" width="36" height="36" rx="8" fill="#0284C7" stroke="#0F172A" stroke-width="2" />
+    <path d="M12 24 C 8 24 6 21 8 18 C 8 14 12 13 14 14 C 15 10 21 10 23 13 C 25 11 28 13 28 16 C 30 18 29 24 25 24 Z" fill="#FFFFFF" />
+    
+    <text x="48" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="900" fill="#0F172A">
+      Autonomous SaaS CPQ &amp; Order Management Architecture
+    </text>
+    <text x="660" y="24" font-family="ui-monospace, monospace" font-size="13" font-weight="700" fill="#0284C7">
+      [ MULTI-AGENT SWARM • SUBSCRIPTION &amp; CONSUMPTION PROVISIONING ]
+    </text>
+  </g>
+
+  <!-- Status badges on header right -->
+  <g transform="translate(1420, 52)">
+    <rect x="0" y="2" width="165" height="32" rx="16" fill="#ECFDF5" stroke="#059669" stroke-width="1.5" />
+    <circle cx="16" cy="18" r="5" fill="#10B981" />
+    <text x="30" y="23" font-family="-apple-system, sans-serif" font-size="12" font-weight="800" fill="#065F46">Agentforce Core Active</text>
+
+    <rect x="180" y="2" width="220" height="32" rx="16" fill="#F0F9FF" stroke="#0284C7" stroke-width="1.5" />
+    <circle cx="196" cy="18" r="5" fill="#0284C7" />
+    <text x="210" y="23" font-family="-apple-system, sans-serif" font-size="12" font-weight="800" fill="#0369A1">Model Context Protocol (MCP)</text>
+  </g>
+
+  <!-- LEFT: INITIATION & CHANNELS -->
+  <g id="channelsGroup">
+    <!-- Channel Container -->
+    <rect x="40" y="140" width="220" height="900" rx="18" fill="#FFFFFF" stroke="#0F172A" stroke-width="3" filter="url(#cardShadow)" />
+    
+    <!-- Header -->
+    <rect x="40" y="140" width="220" height="50" rx="18" fill="#0F172A" />
+    <rect x="40" y="160" width="220" height="30" fill="#0F172A" />
+    <text x="150" y="172" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="14" font-weight="800" fill="#FFFFFF">
+      OMNICHANNEL INGRESS
+    </text>
+
+    <!-- Customer Card -->
+    <g transform="translate(60, 215)">
+      <rect width="180" height="110" rx="14" fill="#F8FAFC" stroke="#0F172A" stroke-width="2.5" filter="url(#softShadow)" />
+      <circle cx="40" cy="40" r="18" fill="#0284C7" stroke="#0F172A" stroke-width="2" />
+      <path d="M 33 48 C 33 43 37 40 40 40 C 43 40 47 43 47 48" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
+      <circle cx="40" cy="33" r="5" fill="#FFFFFF" />
+      <text x="68" y="38" font-family="-apple-system, sans-serif" font-size="14" font-weight="800" fill="#0F172A">Customer</text>
+      <text x="68" y="52" font-family="ui-monospace, monospace" font-size="10" font-weight="600" fill="#64748B">SaaS Buyer</text>
+      <text x="20" y="85" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" fill="#475569">Self-Service Portal</text>
+      <text x="20" y="98" font-family="-apple-system, sans-serif" font-size="10" fill="#94A3B8">In-App Tier Upgrade</text>
+    </g>
+
+    <!-- Sales Rep Card -->
+    <g transform="translate(60, 345)">
+      <rect width="180" height="110" rx="14" fill="#F8FAFC" stroke="#0F172A" stroke-width="2.5" filter="url(#softShadow)" />
+      <circle cx="40" cy="40" r="18" fill="#10B981" stroke="#0F172A" stroke-width="2" />
+      <path d="M 32 35 L 48 35 M 40 28 L 40 46" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
+      <text x="68" y="38" font-family="-apple-system, sans-serif" font-size="14" font-weight="800" fill="#0F172A">Sales Rep</text>
+      <text x="68" y="52" font-family="ui-monospace, monospace" font-size="10" font-weight="600" fill="#64748B">AE / Partner</text>
+      <text x="20" y="85" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" fill="#475569">Slack / Teams Bot</text>
+      <text x="20" y="98" font-family="-apple-system, sans-serif" font-size="10" fill="#94A3B8">Interactive CPQ Quoting</text>
+    </g>
+
+    <!-- Channels List -->
+    <g transform="translate(60, 485)">
+      <rect width="180" height="230" rx="14" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5" />
+      <text x="20" y="30" font-family="-apple-system, sans-serif" font-size="12" font-weight="800" fill="#334155">INBOUND HOOKS</text>
+      
+      <g transform="translate(15, 45)">
+        <rect width="150" height="36" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" />
+        <text x="12" y="22" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#0F172A">💬 Slack Slash /cpq</text>
+      </g>
+      <g transform="translate(15, 90)">
+        <rect width="150" height="36" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" />
+        <text x="12" y="22" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#0F172A">🛒 Commerce Cloud</text>
+      </g>
+      <g transform="translate(15, 135)">
+        <rect width="150" height="36" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" />
+        <text x="12" y="22" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#0F172A">🌐 Web Experience Portal</text>
+      </g>
+      <g transform="translate(15, 180)">
+        <rect width="150" height="36" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" />
+        <text x="12" y="22" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#0F172A">📱 Partner Portal API</text>
+      </g>
+    </g>
+
+    <!-- Protocol Tag -->
+    <g transform="translate(60, 740)">
+      <rect width="180" height="270" rx="14" fill="#0F172A" />
+      <text x="20" y="35" font-family="ui-monospace, monospace" font-size="12" font-weight="800" fill="#38BDF8">INPUT PAYLOAD</text>
+      <text x="20" y="65" font-family="ui-monospace, monospace" font-size="11" fill="#94A3B8">• Account ID: ACC-8091</text>
+      <text x="20" y="85" font-family="ui-monospace, monospace" font-size="11" fill="#94A3B8">• Model: Hybrid SaaS</text>
+      <text x="20" y="105" font-family="ui-monospace, monospace" font-size="11" fill="#94A3B8">• Sub Seats: 500 Enterprise</text>
+      <text x="20" y="125" font-family="ui-monospace, monospace" font-size="11" fill="#94A3B8">• Credits: 100K Prepaid</text>
+      <text x="20" y="145" font-family="ui-monospace, monospace" font-size="11" fill="#94A3B8">• Term: 3-Year Ramp</text>
+      <text x="20" y="165" font-family="ui-monospace, monospace" font-size="11" fill="#94A3B8">• Tenant: Multi-Region</text>
+      
+      <rect x="20" y="195" width="140" height="55" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1" />
+      <text x="30" y="217" font-family="ui-monospace, monospace" font-size="10" font-weight="700" fill="#34D399">✓ Intent Detected</text>
+      <text x="30" y="235" font-family="ui-monospace, monospace" font-size="9" fill="#94A3B8">Routing to Agentforce</text>
+    </g>
+  </g>
+
+  <!-- CONNECTOR: Channels to Salesforce -->
+  <path d="M 260 270 L 320 270" fill="none" stroke="#0F172A" stroke-width="3" marker-end="url(#arrow)" />
+  <path d="M 260 400 L 320 400" fill="none" stroke="#0F172A" stroke-width="3" marker-end="url(#arrow)" />
+
+  <!-- CENTER: SALESFORCE AGENTFORCE CONTAINER -->
+  <g id="salesforcePlatformGroup">
+    <rect x="320" y="140" width="850" height="900" rx="18" fill="#FFFFFF" stroke="#0F172A" stroke-width="3" filter="url(#cardShadow)" />
+    
+    <!-- Salesforce Cloud Header -->
+    <rect x="320" y="140" width="850" height="55" rx="18" fill="url(#headerGrad)" />
+    <rect x="320" y="170" width="850" height="25" fill="url(#headerGrad)" />
+    
+    <g transform="translate(345, 155)">
+      <circle cx="15" cy="15" r="14" fill="#0284C7" />
+      <text x="15" y="20" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="900" fill="#FFFFFF">SF</text>
+      <text x="40" y="21" font-family="-apple-system, sans-serif" font-size="17" font-weight="900" fill="#FFFFFF">
+        Salesforce Revenue Cloud &amp; Agentforce
+      </text>
+      <text x="500" y="21" font-family="ui-monospace, monospace" font-size="12" font-weight="700" fill="#38BDF8">
+        AUTONOMOUS CPQ &amp; ORDER ORCHESTRATION
+      </text>
+    </g>
+
+    <!-- Top Master Agent: CPQ & Order Management Agent -->
+    <g transform="translate(350, 215)">
+      <rect width="790" height="150" rx="16" fill="url(#salesforceGrad)" stroke="#0F172A" stroke-width="2.5" filter="url(#softShadow)" />
+      
+      <!-- Agent Badge -->
+      <rect x="25" y="20" width="54" height="54" rx="14" fill="#6366F1" stroke="#0F172A" stroke-width="2" />
+      <!-- Bot Face -->
+      <circle cx="52" cy="47" r="16" fill="#FFFFFF" />
+      <circle cx="46" cy="45" r="3" fill="#0F172A" />
+      <circle cx="58" cy="45" r="3" fill="#0F172A" />
+      <path d="M 46 53 Q 52 57 58 53" fill="none" stroke="#0F172A" stroke-width="2" stroke-linecap="round" />
+      <path d="M 52 25 L 52 31" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" />
+
+      <text x="95" y="42" font-family="-apple-system, sans-serif" font-size="20" font-weight="900" fill="#0F172A">
+        Master CPQ &amp; Order Management Agent
+      </text>
+      <text x="95" y="62" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" fill="#64748B">
+        Autonomous Orchestration • Natural Language Prompting • Multi-Agent Delegator
+      </text>
+
+      <!-- Agent Capabilities Pills -->
+      <g transform="translate(95, 85)">
+        <rect x="0" y="0" width="135" height="28" rx="14" fill="#EEF2FF" stroke="#818CF8" stroke-width="1.5" />
+        <text x="12" y="18" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#4338CA">User Confirmation</text>
+
+        <rect x="145" y="0" width="135" height="28" rx="14" fill="#ECFDF5" stroke="#34D399" stroke-width="1.5" />
+        <text x="14" y="18" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#065F46">Entitlement Check</text>
+
+        <rect x="290" y="0" width="125" height="28" rx="14" fill="#FEF3C7" stroke="#FBBF24" stroke-width="1.5" />
+        <text x="14" y="18" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#92400E">Margin Guardrails</text>
+
+        <rect x="425" y="0" width="115" height="28" rx="14" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5" />
+        <text x="14" y="18" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#334155">Off-Topic Guard</text>
+
+        <rect x="550" y="0" width="125" height="28" rx="14" fill="#FEE2E2" stroke="#F87171" stroke-width="1.5" />
+        <text x="14" y="18" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#991B1B">Exec Escalation</text>
+      </g>
+    </g>
+
+    <!-- Connector: Master Agent to Agent Router -->
+    <path d="M 745 365 L 745 400" fill="none" stroke="#0F172A" stroke-width="3" marker-end="url(#arrow)" />
+
+    <!-- Subagent Router Card -->
+    <g transform="translate(560, 400)">
+      <rect width="370" height="60" rx="14" fill="#0284C7" stroke="#0F172A" stroke-width="2.5" filter="url(#softShadow)" />
+      <text x="185" y="27" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="14" font-weight="900" fill="#FFFFFF">
+        ⚡ # Agent Router (Start Agent)
+      </text>
+      <text x="185" y="47" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" font-weight="600" fill="#E0F2FE">
+        Dynamically dispatches intent to specialized SaaS subagents
+      </text>
+    </g>
+
+    <!-- Fan-out routing paths to Subagents -->
+    <path d="M 745 460 L 745 485" fill="none" stroke="#0F172A" stroke-width="2.5" />
+    <path d="M 445 485 L 1045 485" fill="none" stroke="#0F172A" stroke-width="2.5" />
+    <path d="M 445 485 L 445 520" fill="none" stroke="#0F172A" stroke-width="2.5" marker-end="url(#arrow)" />
+    <path d="M 645 485 L 645 520" fill="none" stroke="#0F172A" stroke-width="2.5" marker-end="url(#arrow)" />
+    <path d="M 845 485 L 845 520" fill="none" stroke="#0F172A" stroke-width="2.5" marker-end="url(#arrow)" />
+    <path d="M 1045 485 L 1045 520" fill="none" stroke="#0F172A" stroke-width="2.5" marker-end="url(#arrow)" />
+
+    <!-- 4 SPECIALIZED SAAS SUBAGENTS GRID -->
+    <!-- Subagent 1: Subscription Licensing Subagent -->
+    <g transform="translate(345, 520)">
+      <rect width="190" height="270" rx="14" fill="url(#subagentGrad1)" stroke="#0F172A" stroke-width="2" filter="url(#softShadow)" />
+      <rect x="0" y="0" width="190" height="42" rx="14" fill="#3B82F6" stroke="#0F172A" stroke-width="2" />
+      <rect x="0" y="20" width="190" height="22" fill="#3B82F6" />
+      <text x="15" y="26" font-family="-apple-system, sans-serif" font-size="12" font-weight="900" fill="#FFFFFF">
+        #1 Subscription Agent
+      </text>
+      <text x="15" y="62" font-family="-apple-system, sans-serif" font-size="11" font-weight="800" fill="#1E3A8A">
+        Licensing &amp; Ramp
+      </text>
+      <text x="15" y="80" font-family="ui-monospace, monospace" font-size="9.5" fill="#3B82F6">subagent.licensing</text>
+      
+      <!-- Responsibilities list -->
+      <g transform="translate(12, 95)" font-family="-apple-system, sans-serif" font-size="10" fill="#1E293B">
+        <text y="15" font-weight="700">• Multi-Year Ramp Terms</text>
+        <text y="35" font-weight="700">• User Seat Tiers (1-1000)</text>
+        <text y="55" font-weight="700">• Co-Terming Add-ons</text>
+        <text y="75" font-weight="700">• Contract Amendments</text>
+        <text y="95" font-weight="700">• Auto-Renewal Indexing</text>
+        <rect x="0" y="115" width="166" height="45" rx="6" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1" />
+        <text x="8" y="132" font-family="ui-monospace, monospace" font-size="9" font-weight="700" fill="#1E40AF">Output: Structured ARR</text>
+        <text x="8" y="147" font-family="ui-monospace, monospace" font-size="8.5" fill="#3B82F6">Line Items + Ramp Schedule</text>
+      </g>
+    </g>
+
+    <!-- Subagent 2: Consumption & Metering Estimator Subagent -->
+    <g transform="translate(550, 520)">
+      <rect width="190" height="270" rx="14" fill="url(#subagentGrad2)" stroke="#0F172A" stroke-width="2" filter="url(#softShadow)" />
+      <rect x="0" y="0" width="190" height="42" rx="14" fill="#10B981" stroke="#0F172A" stroke-width="2" />
+      <rect x="0" y="20" width="190" height="22" fill="#10B981" />
+      <text x="15" y="26" font-family="-apple-system, sans-serif" font-size="12" font-weight="900" fill="#FFFFFF">
+        #2 Consumption Agent
+      </text>
+      <text x="15" y="62" font-family="-apple-system, sans-serif" font-size="11" font-weight="800" fill="#064E3B">
+        Metering &amp; Credits
+      </text>
+      <text x="15" y="80" font-family="ui-monospace, monospace" font-size="9.5" fill="#059669">subagent.metering</text>
+      
+      <!-- Responsibilities list -->
+      <g transform="translate(12, 95)" font-family="-apple-system, sans-serif" font-size="10" fill="#1E293B">
+        <text y="15" font-weight="700">• Prepaid Credit Pools</text>
+        <text y="35" font-weight="700">• API Call Usage Modeling</text>
+        <text y="55" font-weight="700">• Dynamic Overage Tiers</text>
+        <text y="75" font-weight="700">• Threshold Burn Rate</text>
+        <text y="95" font-weight="700">• Rollover Rule Policy</text>
+        <rect x="0" y="115" width="166" height="45" rx="6" fill="#D1FAE5" stroke="#6EE7B7" stroke-width="1" />
+        <text x="8" y="132" font-family="ui-monospace, monospace" font-size="9" font-weight="700" fill="#065F46">Output: Rate Cards</text>
+        <text x="8" y="147" font-family="ui-monospace, monospace" font-size="8.5" fill="#059669">Drawdown Meter Config</text>
+      </g>
+    </g>
+
+    <!-- Subagent 3: Deal Desk & Discount Approval Subagent -->
+    <g transform="translate(755, 520)">
+      <rect width="190" height="270" rx="14" fill="url(#subagentGrad3)" stroke="#0F172A" stroke-width="2" filter="url(#softShadow)" />
+      <rect x="0" y="0" width="190" height="42" rx="14" fill="#F59E0B" stroke="#0F172A" stroke-width="2" />
+      <rect x="0" y="20" width="190" height="22" fill="#F59E0B" />
+      <text x="15" y="26" font-family="-apple-system, sans-serif" font-size="12" font-weight="900" fill="#FFFFFF">
+        #3 Deal Desk Agent
+      </text>
+      <text x="15" y="62" font-family="-apple-system, sans-serif" font-size="11" font-weight="800" fill="#78350F">
+        Margin &amp; Approvals
+      </text>
+      <text x="15" y="80" font-family="ui-monospace, monospace" font-size="9.5" fill="#D97706">subagent.dealdesk</text>
+      
+      <!-- Responsibilities list -->
+      <g transform="translate(12, 95)" font-family="-apple-system, sans-serif" font-size="10" fill="#1E293B">
+        <text y="15" font-weight="700">• Gross Margin Audit</text>
+        <text y="35" font-weight="700">• Blended Discount Check</text>
+        <text y="55" font-weight="700">• Non-Standard T&amp;C Flag</text>
+        <text y="75" font-weight="700">• Slack 1-Click Signoff</text>
+        <text y="95" font-weight="700">• DRICAD Governance</text>
+        <rect x="0" y="115" width="166" height="45" rx="6" fill="#FEF3C7" stroke="#FDE68A" stroke-width="1" />
+        <text x="8" y="132" font-family="ui-monospace, monospace" font-size="9" font-weight="700" fill="#92400E">Output: Approved Quote</text>
+        <text x="8" y="147" font-family="ui-monospace, monospace" font-size="8.5" fill="#D97706">Signature Ready PDF/Doc</text>
+      </g>
+    </g>
+
+    <!-- Subagent 4: Tenant & License Provisioning Subagent -->
+    <g transform="translate(960, 520)">
+      <rect width="190" height="270" rx="14" fill="url(#subagentGrad4)" stroke="#0F172A" stroke-width="2" filter="url(#softShadow)" />
+      <rect x="0" y="0" width="190" height="42" rx="14" fill="#8B5CF6" stroke="#0F172A" stroke-width="2" />
+      <rect x="0" y="20" width="190" height="22" fill="#8B5CF6" />
+      <text x="15" y="26" font-family="-apple-system, sans-serif" font-size="12" font-weight="900" fill="#FFFFFF">
+        #4 Provisioning Agent
+      </text>
+      <text x="15" y="62" font-family="-apple-system, sans-serif" font-size="11" font-weight="800" fill="#4C1D95">
+        Tenant &amp; Entitlement
+      </text>
+      <text x="15" y="80" font-family="ui-monospace, monospace" font-size="9.5" fill="#7C3AED">subagent.provisioning</text>
+      
+      <!-- Responsibilities list -->
+      <g transform="translate(12, 95)" font-family="-apple-system, sans-serif" font-size="10" fill="#1E293B">
+        <text y="15" font-weight="700">• SaaS Tenant ID Gen</text>
+        <text y="35" font-weight="700">• IAM Role &amp; Seat Assign</text>
+        <text y="55" font-weight="700">• Feature Flag Activation</text>
+        <text y="75" font-weight="700">• API Key Generation</text>
+        <text y="95" font-weight="700">• Metering Webhook Bind</text>
+        <rect x="0" y="115" width="166" height="45" rx="6" fill="#EDE9FE" stroke="#DDD6FE" stroke-width="1" />
+        <text x="8" y="132" font-family="ui-monospace, monospace" font-size="9" font-weight="700" fill="#5B21B6">Output: Active Tenant</text>
+        <text x="8" y="147" font-family="ui-monospace, monospace" font-size="8.5" fill="#7C3AED">Instant Access Provisioned</text>
+      </g>
+    </g>
+
+    <!-- Data 360 / Data Cloud Storage Box -->
+    <g transform="translate(345, 820)">
+      <rect width="805" height="195" rx="14" fill="#F8FAFC" stroke="#0F172A" stroke-width="2.5" />
+      
+      <!-- Title -->
+      <circle cx="28" cy="28" r="14" fill="#0F172A" />
+      <circle cx="28" cy="28" r="6" fill="#38BDF8" />
+      <text x="52" y="34" font-family="-apple-system, sans-serif" font-size="15" font-weight="900" fill="#0F172A">
+        Data 360 / Salesforce Data Cloud (Single Source of Truth)
+      </text>
+
+      <!-- 3 Data Column Cards inside Data 360 -->
+      <g transform="translate(20, 60)">
+        <rect width="240" height="115" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" />
+        <text x="15" y="24" font-family="-apple-system, sans-serif" font-size="12" font-weight="800" fill="#0284C7">PRODUCT CATALOG &amp; SKUS</text>
+        <text x="15" y="48" font-family="ui-monospace, monospace" font-size="10.5" fill="#475569">• SaaS Base Subscription SKUs</text>
+        <text x="15" y="68" font-family="ui-monospace, monospace" font-size="10.5" fill="#475569">• Consumption Meter Rate Cards</text>
+        <text x="15" y="88" font-family="ui-monospace, monospace" font-size="10.5" fill="#475569">• Currency Multi-Price Books</text>
+        <text x="15" y="108" font-family="ui-monospace, monospace" font-size="10.5" fill="#475569">• Ramp Term Pricing Matrix</text>
+      </g>
+
+      <g transform="translate(280, 60)">
+        <rect width="240" height="115" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" />
+        <text x="15" y="24" font-family="-apple-system, sans-serif" font-size="12" font-weight="800" fill="#059669">ENTITLEMENT &amp; USAGE</text>
+        <text x="15" y="48" font-family="ui-monospace, monospace" font-size="10.5" fill="#475569">• Active License Seats (Assigned)</text>
+        <text x="15" y="68" font-family="ui-monospace, monospace" font-size="10.5" fill="#475569">• Current Drawdown Telemetry</text>
+        <text x="15" y="88" font-family="ui-monospace, monospace" font-size="10.5" fill="#475569">• Overage Alerts &amp; Caps</text>
+        <text x="15" y="108" font-family="ui-monospace, monospace" font-size="10.5" fill="#475569">• Tenant Cluster Assignment</text>
+      </g>
+
+      <g transform="translate(540, 60)">
+        <rect width="245" height="115" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" />
+        <text x="15" y="24" font-family="-apple-system, sans-serif" font-size="12" font-weight="800" fill="#9333EA">GOVERNANCE &amp; POLICIES</text>
+        <text x="15" y="48" font-family="ui-monospace, monospace" font-size="10.5" fill="#475569">• Deal Desk Discounting Matrices</text>
+        <text x="15" y="68" font-family="ui-monospace, monospace" font-size="10.5" fill="#475569">• DRICAD Margin Thresholds</text>
+        <text x="15" y="88" font-family="ui-monospace, monospace" font-size="10.5" fill="#475569">• Multi-Tier Escalation Paths</text>
+        <text x="15" y="108" font-family="ui-monospace, monospace" font-size="10.5" fill="#475569">• Audit Trail &amp; Sign-off Records</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- CONNECTOR: Salesforce Subagents to MuleSoft MCP -->
+  <g>
+    <path d="M 1170 655 L 1230 655" fill="none" stroke="#0F172A" stroke-width="3.5" marker-end="url(#arrowGreen)" />
+    <rect x="1173" y="630" width="54" height="20" rx="4" fill="#0F172A" />
+    <text x="1200" y="644" text-anchor="middle" font-family="ui-monospace, monospace" font-size="10" font-weight="900" fill="#38BDF8">MCP</text>
+  </g>
+
+  <!-- RIGHT: MULESOFT & ORDERS MCP CONTAINER -->
+  <g id="mulesoftGroup">
+    <rect x="1230" y="140" width="280" height="900" rx="18" fill="#FFFFFF" stroke="#0F172A" stroke-width="3" filter="url(#cardShadow)" />
+    
+    <!-- Header -->
+    <rect x="1230" y="140" width="280" height="55" rx="18" fill="url(#headerGrad)" />
+    <rect x="1230" y="170" width="280" height="25" fill="url(#headerGrad)" />
+    
+    <circle cx="1258" cy="168" r="14" fill="#0284C7" />
+    <text x="1258" y="173" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="900" fill="#FFFFFF">M</text>
+    <text x="1282" y="174" font-family="-apple-system, sans-serif" font-size="16" font-weight="900" fill="#FFFFFF">
+      MuleSoft AnyPoint
+    </text>
+
+    <!-- Orders MCP Card -->
+    <g transform="translate(1250, 215)">
+      <rect width="240" height="380" rx="16" fill="url(#mulesoftGrad)" stroke="#0F172A" stroke-width="2.5" filter="url(#softShadow)" />
+      
+      <!-- Sparkle MCP Icon -->
+      <circle cx="40" cy="40" r="18" fill="#0284C7" stroke="#0F172A" stroke-width="2" />
+      <path d="M 40 28 L 43 37 L 52 40 L 43 43 L 40 52 L 37 43 L 28 40 L 37 37 Z" fill="#FFFFFF" />
+
+      <text x="70" y="38" font-family="-apple-system, sans-serif" font-size="17" font-weight="900" fill="#0F172A">
+        Orders MCP
+      </text>
+      <text x="70" y="55" font-family="ui-monospace, monospace" font-size="10" font-weight="700" fill="#059669">
+        Model Context Protocol
+      </text>
+
+      <text x="20" y="90" font-family="-apple-system, sans-serif" font-size="11" font-weight="800" fill="#0F172A">
+        STANDARDIZED MCP TOOL SET:
+      </text>
+
+      <!-- MCP Tool Buttons -->
+      <g transform="translate(15, 105)">
+        <g transform="translate(0, 0)">
+          <rect width="210" height="34" rx="8" fill="#FFFFFF" stroke="#059669" stroke-width="1.5" />
+          <text x="12" y="21" font-family="ui-monospace, monospace" font-size="10" font-weight="700" fill="#0F172A">⚡ Create SaaS Order</text>
+        </g>
+        <g transform="translate(0, 42)">
+          <rect width="210" height="34" rx="8" fill="#FFFFFF" stroke="#059669" stroke-width="1.5" />
+          <text x="12" y="21" font-family="ui-monospace, monospace" font-size="10" font-weight="700" fill="#0F172A">⚡ Provision Cloud Tenant</text>
+        </g>
+        <g transform="translate(0, 84)">
+          <rect width="210" height="34" rx="8" fill="#FFFFFF" stroke="#059669" stroke-width="1.5" />
+          <text x="12" y="21" font-family="ui-monospace, monospace" font-size="10" font-weight="700" fill="#0F172A">⚡ Sync Billing Schedule</text>
+        </g>
+        <g transform="translate(0, 126)">
+          <rect width="210" height="34" rx="8" fill="#FFFFFF" stroke="#059669" stroke-width="1.5" />
+          <text x="12" y="21" font-family="ui-monospace, monospace" font-size="10" font-weight="700" fill="#0F172A">⚡ Bind Consumption Meter</text>
+        </g>
+        <g transform="translate(0, 168)">
+          <rect width="210" height="34" rx="8" fill="#FFFFFF" stroke="#059669" stroke-width="1.5" />
+          <text x="12" y="21" font-family="ui-monospace, monospace" font-size="10" font-weight="700" fill="#0F172A">⚡ Amend / Co-Term Sub</text>
+        </g>
+        <g transform="translate(0, 210)">
+          <rect width="210" height="34" rx="8" fill="#FFFFFF" stroke="#059669" stroke-width="1.5" />
+          <text x="12" y="21" font-family="ui-monospace, monospace" font-size="10" font-weight="700" fill="#0F172A">⚡ Check Entitlements</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- MCP Pipeline Specifications Box -->
+    <g transform="translate(1250, 620)">
+      <rect width="240" height="395" rx="14" fill="#0F172A" />
+      <text x="20" y="32" font-family="ui-monospace, monospace" font-size="12" font-weight="800" fill="#34D399">
+        MCP ASYNC BUS
+      </text>
+      
+      <text x="20" y="60" font-family="ui-monospace, monospace" font-size="10" fill="#94A3B8">• Standardized Tool Calling</text>
+      <text x="20" y="78" font-family="ui-monospace, monospace" font-size="10" fill="#94A3B8">• Contextual Rate Limiting</text>
+      <text x="20" y="96" font-family="ui-monospace, monospace" font-size="10" fill="#94A3B8">• Bulk API v2 Streaming</text>
+      <text x="20" y="114" font-family="ui-monospace, monospace" font-size="10" fill="#94A3B8">• Zero-Loss Webhook Queue</text>
+      
+      <rect x="15" y="140" width="210" height="235" rx="10" fill="#1E293B" stroke="#334155" stroke-width="1" />
+      <text x="28" y="165" font-family="ui-monospace, monospace" font-size="10.5" font-weight="700" fill="#38BDF8">
+        EXECUTION TRACE:
+      </text>
+      <text x="28" y="190" font-family="ui-monospace, monospace" font-size="9.5" fill="#CBD5E1">✓ Input: Hybrid SaaS Quote</text>
+      <text x="28" y="210" font-family="ui-monospace, monospace" font-size="9.5" fill="#CBD5E1">✓ Transition: Agent Router</text>
+      <text x="28" y="230" font-family="ui-monospace, monospace" font-size="9.5" fill="#34D399">✦ Reason: 500 Seats + 100K</text>
+      <text x="28" y="250" font-family="ui-monospace, monospace" font-size="9.5" fill="#FBBF24">⚡ Action: Verify Discount</text>
+      <text x="28" y="270" font-family="ui-monospace, monospace" font-size="9.5" fill="#CBD5E1">✓ Transition: Orders MCP</text>
+      <text x="28" y="290" font-family="ui-monospace, monospace" font-size="9.5" fill="#818CF8">✦ Reason: Signature Confirmed</text>
+      <text x="28" y="310" font-family="ui-monospace, monospace" font-size="9.5" fill="#34D399">⚡ Action: Create Order</text>
+      <text x="28" y="330" font-family="ui-monospace, monospace" font-size="9.5" fill="#34D399">⚡ Action: Provision Tenant</text>
+      <text x="28" y="355" font-family="ui-monospace, monospace" font-size="9" font-weight="700" fill="#38BDF8">🔍 Output: QTC Complete (12s)</text>
+    </g>
+  </g>
+
+  <!-- CONNECTOR: MuleSoft to ERP / Cloud Provisioning -->
+  <g>
+    <path d="M 1510 390 L 1570 390" fill="none" stroke="#0F172A" stroke-width="3" marker-end="url(#arrow)" />
+    <rect x="1518" y="370" width="45" height="18" rx="4" fill="#0F172A" />
+    <text x="1540" y="383" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" font-weight="900" fill="#FFFFFF">REST</text>
+
+    <path d="M 1510 655 L 1570 655" fill="none" stroke="#0F172A" stroke-width="3" marker-end="url(#arrow)" />
+    <rect x="1518" y="635" width="45" height="18" rx="4" fill="#0F172A" />
+    <text x="1540" y="648" text-anchor="middle" font-family="ui-monospace, monospace" font-size="9" font-weight="900" fill="#FFFFFF">gRPC</text>
+  </g>
+
+  <!-- RIGHT: ERP, BILLING & SAAS CLOUD PROVISIONING -->
+  <g id="erpGroup">
+    <rect x="1570" y="140" width="310" height="900" rx="18" fill="#FFFFFF" stroke="#0F172A" stroke-width="3" filter="url(#cardShadow)" />
+    
+    <!-- Header -->
+    <rect x="1570" y="140" width="310" height="55" rx="18" fill="url(#headerGrad)" />
+    <rect x="1570" y="170" width="310" height="25" fill="url(#headerGrad)" />
+    <text x="1725" y="174" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="15" font-weight="900" fill="#FFFFFF">
+      DOWNSTREAM FULFILLMENT &amp; ERP
+    </text>
+
+    <!-- Cloud SaaS Provisioning Engine Card -->
+    <g transform="translate(1590, 215)">
+      <rect width="270" height="245" rx="14" fill="#FAF5FF" stroke="#0F172A" stroke-width="2.5" filter="url(#softShadow)" />
+      <rect x="15" y="15" width="42" height="42" rx="10" fill="#9333EA" stroke="#0F172A" stroke-width="2" />
+      <text x="36" y="42" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="900" fill="#FFFFFF">☁️</text>
+      <text x="68" y="34" font-family="-apple-system, sans-serif" font-size="15" font-weight="900" fill="#0F172A">
+        Cloud SaaS Infrastructure
+      </text>
+      <text x="68" y="50" font-family="ui-monospace, monospace" font-size="10" font-weight="700" fill="#7E22CE">
+        AWS / Azure / GCP Control Plane
+      </text>
+
+      <g transform="translate(15, 75)" font-family="-apple-system, sans-serif" font-size="11" fill="#1E293B">
+        <text y="15" font-weight="700">• Tenant Workspace Deployment</text>
+        <text y="35" font-weight="700">• IAM Access &amp; SSO Integration</text>
+        <text y="55" font-weight="700">• Feature Flag Tier Provisioning</text>
+        <text y="75" font-weight="700">• API License Token Generator</text>
+        <text y="95" font-weight="700">• Usage Telemetry Webhooks</text>
+        
+        <rect x="0" y="115" width="240" height="40" rx="8" fill="#F3E8FF" stroke="#C084FC" stroke-width="1" />
+        <text x="12" y="132" font-family="ui-monospace, monospace" font-size="9" font-weight="700" fill="#6B21A8">Tenant Status: PROVISIONED</text>
+        <text x="12" y="146" font-family="ui-monospace, monospace" font-size="8.5" fill="#7E22CE">Tenant ID: ten_8492_prod (12s)</text>
+      </g>
+    </g>
+
+    <!-- Billing & Revenue Recognition (Zuora / Stripe / NetSuite) -->
+    <g transform="translate(1590, 480)">
+      <rect width="270" height="245" rx="14" fill="#F0FDF4" stroke="#0F172A" stroke-width="2.5" filter="url(#softShadow)" />
+      <rect x="15" y="15" width="42" height="42" rx="10" fill="#059669" stroke="#0F172A" stroke-width="2" />
+      <text x="36" y="42" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="900" fill="#FFFFFF">💳</text>
+      <text x="68" y="34" font-family="-apple-system, sans-serif" font-size="15" font-weight="900" fill="#0F172A">
+        Billing &amp; Finance Engine
+      </text>
+      <text x="68" y="50" font-family="ui-monospace, monospace" font-size="10" font-weight="700" fill="#047857">
+        Stripe / Zuora Billing / NetSuite
+      </text>
+
+      <g transform="translate(15, 75)" font-family="-apple-system, sans-serif" font-size="11" fill="#1E293B">
+        <text y="15" font-weight="700">• Recurring Subscription Schedule</text>
+        <text y="35" font-weight="700">• Prepaid Consumption Balance</text>
+        <text y="55" font-weight="700">• Automated Overage Invoicing</text>
+        <text y="75" font-weight="700">• ASC 606 Revenue Recognition</text>
+        <text y="95" font-weight="700">• GL Sync &amp; Payment Gateway</text>
+        
+        <rect x="0" y="115" width="240" height="40" rx="8" fill="#DCFCE7" stroke="#86EFAC" stroke-width="1" />
+        <text x="12" y="132" font-family="ui-monospace, monospace" font-size="9" font-weight="700" fill="#065F46">Billing State: ACTIVE</text>
+        <text x="12" y="146" font-family="ui-monospace, monospace" font-size="8.5" fill="#047857">Invoice #INV-2026-904 Scheduled</text>
+      </g>
+    </g>
+
+    <!-- Summary KPI Callout in ERP column -->
+    <g transform="translate(1590, 745)">
+      <rect width="270" height="270" rx="14" fill="#0F172A" />
+      <text x="20" y="30" font-family="ui-monospace, monospace" font-size="12" font-weight="800" fill="#38BDF8">
+        SaaS QTC OUTCOMES
+      </text>
+
+      <g transform="translate(15, 50)">
+        <rect width="240" height="45" rx="8" fill="#1E293B" />
+        <text x="12" y="20" font-family="-apple-system, sans-serif" font-size="10" font-weight="700" fill="#94A3B8">QTC Turnaround Time</text>
+        <text x="12" y="38" font-family="sans-serif" font-size="15" font-weight="900" fill="#34D399">8 Days ➔ &lt;12 Minutes</text>
+      </g>
+
+      <g transform="translate(15, 105)">
+        <rect width="240" height="45" rx="8" fill="#1E293B" />
+        <text x="12" y="20" font-family="-apple-system, sans-serif" font-size="10" font-weight="700" fill="#94A3B8">Tenant Provisioning Delay</text>
+        <text x="12" y="38" font-family="sans-serif" font-size="15" font-weight="900" fill="#38BDF8">72 Hours ➔ 15 Seconds</text>
+      </g>
+
+      <g transform="translate(15, 160)">
+        <rect width="240" height="45" rx="8" fill="#1E293B" />
+        <text x="12" y="20" font-family="-apple-system, sans-serif" font-size="10" font-weight="700" fill="#94A3B8">Usage Meter Leakage</text>
+        <text x="12" y="38" font-family="sans-serif" font-size="15" font-weight="900" fill="#F87171">14% ➔ 0% Zero Drift</text>
+      </g>
+
+      <text x="20" y="240" font-family="ui-monospace, monospace" font-size="9" fill="#94A3B8">
+        100% ASC 606 &amp; SOX Audit-Proof
+      </text>
+    </g>
+  </g>
+</svg>
