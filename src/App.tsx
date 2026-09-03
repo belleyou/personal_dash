@@ -121,6 +121,7 @@ import { WebToLeadForm } from "./components/WebToLeadForm";
 
 // Import SF Bay Area Miniature 3D component
 import { SFBayMiniature } from "./components/SFBayMiniature";
+import { CartoonGloveCursor } from "./components/CartoonGloveCursor";
 
 // Import TIMES Magazine Component & Presets
 import { TimesMagazine, PRESET_ARTICLES } from "./components/TimesMagazine";
@@ -477,6 +478,9 @@ export default function App() {
   return (
     <div className={`min-h-screen text-ink selection:bg-highlight font-sans antialiased relative overflow-x-hidden ${activePage === "home" ? "p-0 m-0 bg-[#f4f0ea]" : "bg-sketchbook-paper pb-16"}`}>
       
+      {/* Cartoon Glove Pointing Hand Cursor - The ONLY mouse to navigate by the user */}
+      <CartoonGloveCursor />
+
       {/* Immersive Scanned Sketchbook Paper Overlay with faint wrinkles, smudges, and dust speckles (Only active on subpages) */}
       {activePage !== "home" && (
         <div className="fixed inset-0 pointer-events-none z-0 select-none overflow-hidden opacity-90">

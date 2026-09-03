@@ -14,13 +14,19 @@
   --color-marker-orange: #fef08a; /* Warm golden sun */
 }
 
-/* Custom AI Robot Pointing Hand Cursor for desktop fine-pointer devices */
+/* Custom Cartoon Glove Pointing Hand Cursor - replaces default mouse across application */
+@media (pointer: fine) {
+  html, body, a, button, input, select, textarea, [role="button"], [tabindex], .cursor-pointer, input[type="range"], * {
+    cursor: none !important;
+  }
+}
+
 .heart-cursor {
   position: fixed;
   top: 0;
   left: 0;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 99999;
   transition: transform 0.08s ease-out;
   display: none;
   user-select: none;
@@ -31,6 +37,40 @@
     display: block;
   }
 }
+
+/* 3D Interactive Classes */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1500 {
+  perspective: 1500px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.translate-z-10 {
+  transform: translateZ(10px);
+}
+
+.translate-z-20 {
+  transform: translateZ(20px);
+}
+
+.translate-z-30 {
+  transform: translateZ(30px);
+}
+
+.translate-z-50 {
+  transform: translateZ(50px);
+}
+
 
 /* Theme Polarity Variables */
 :root {

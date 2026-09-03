@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { 
-  MapPin, 
-  Building, 
-  Cpu, 
-  Sparkles, 
-  Navigation, 
-  Heart, 
-  X, 
-  ArrowUpRight, 
-  CheckCircle2, 
-  Info 
-} from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import sfBayMiniatureImg from "../assets/images/sf_bay_miniature_transparent_1785703019042.jpg";
 import { 
   RubrikSketchSvg,
@@ -22,19 +10,6 @@ import {
 } from "./DoodleDrawings";
 
 export type WeatherType = "stars" | "off";
-
-interface Landmark {
-  id: string;
-  name: string;
-  category: "landmark" | "technology" | "architecture";
-  description: string;
-  funFact: string;
-  techStack?: string;
-  x: string; // positioning percentage for absolute overlay
-  y: string;
-  icon: React.ReactNode;
-  color: string;
-}
 
 interface SFBayMiniatureProps {
   activePage: string;
@@ -53,35 +28,28 @@ export const SFBayMiniature: React.FC<SFBayMiniatureProps> = ({
   isDarkPolarity = false,
   onTogglePolarity
 }) => {
-  const [selectedLandmark, setSelectedLandmark] = useState<Landmark | null>(null);
-  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
-  const [isHoveringInteractive, setIsHoveringInteractive] = useState(false);
-  const [isMouseDown, setIsMouseDown] = useState(false);
   const [localDarkPolarity, setLocalDarkPolarity] = useState(isDarkPolarity);
+  const [mouse3D, setMouse3D] = useState({ x: 0, y: 0 });
+  const [isHoveringMiniature, setIsHoveringMiniature] = useState(false);
 
-  // Sync cursor position for custom heart cursor
+  // Subtle 3D parallax rotation based on mouse position
+  const rotX = -mouse3D.y * 7;
+  const rotY = mouse3D.x * 9;
+
+  // Sync cursor position for subtle 3D parallax tracking
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
-      
-      const target = e.target as HTMLElement | null;
-      if (target) {
-        const isInteractive = !!target.closest('a, button, input, [role="button"], .cursor-pointer');
-        setIsHoveringInteractive(isInteractive);
-      }
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const normX = Math.max(-1, Math.min(1, (e.clientX - centerX) / centerX));
+      const normY = Math.max(-1, Math.min(1, (e.clientY - centerY) / centerY));
+      setMouse3D({ x: normX, y: normY });
     };
 
-    const handleMouseDown = () => setIsMouseDown(true);
-    const handleMouseUp = () => setIsMouseDown(false);
-
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
     };
   }, []);
 
@@ -98,81 +66,6 @@ export const SFBayMiniature: React.FC<SFBayMiniatureProps> = ({
       }
     }
   };
-
-  const landmarks: Landmark[] = [
-    {
-      id: "goldengate",
-      name: "Golden Gate Bridge",
-      category: "landmark",
-      description: "The world's most iconic International Orange suspension bridge spanning the beautiful Golden Gate strait.",
-      funFact: "The bridge's orange color was originally intended only as a primer, but architect Irving Morrow preferred it to traditional black or grey!",
-      techStack: "Structural Steel, Wind Dynamics",
-      x: "15%",
-      y: "48%",
-      icon: <Navigation className="h-3.5 w-3.5" />,
-      color: "from-red-500 to-orange-600",
-    },
-    {
-      id: "presidio",
-      name: "The Presidio of San Francisco",
-      category: "landmark",
-      description: "A vast, lush former military outpost now serving as an expansive national park site filled with eucalyptus groves and scenic trails.",
-      funFact: "It is home to the Letterman Digital Arts Center, the global headquarters of Lucasfilm and the famous bronze Yoda fountain!",
-      techStack: "Eco-conservation, micro-climate mapping",
-      x: "12%",
-      y: "36%",
-      icon: <MapPin className="h-3.5 w-3.5" />,
-      color: "from-emerald-600 to-green-700",
-    },
-    {
-      id: "transamerica",
-      name: "Transamerica Pyramid",
-      category: "architecture",
-      description: "The classic brutalist modernist pyramid that defined San Francisco's skyline for generations.",
-      funFact: "The foundation is 9 feet thick and rests on a solid bed of sand and clay, engineered to withstand powerful San Francisco tremblers.",
-      techStack: "Modernist brutalism, seismic tieback rods",
-      x: "54%",
-      y: "22%",
-      icon: <Building className="h-3.5 w-3.5" />,
-      color: "from-zinc-400 to-zinc-600",
-    },
-    {
-      id: "salesforcetower",
-      name: "Salesforce Tower",
-      category: "architecture",
-      description: "The tallest architectural masterpiece in San Francisco's skyline, serving as a beacon of SaaS and Cloud Computing.",
-      funFact: "Its crown features a permanent 9-story LED art installation by Jim Campbell, casting atmospheric lights reflecting the city's vibe.",
-      techStack: "Cloud CRM, Enterprise APIs",
-      x: "59%",
-      y: "26%",
-      icon: <Building className="h-3.5 w-3.5" />,
-      color: "from-blue-500 to-sky-600",
-    },
-    {
-      id: "cablecar",
-      name: "Powell-Hyde Cable Car",
-      category: "architecture",
-      description: "SF's rolling kinetic historic monument, ascending the near-vertical hills of California and Hyde Streets.",
-      funFact: "It is the world's last manually operated cable car system, using mechanical grip-men to latch onto a moving underground steel cable!",
-      techStack: "Mechanical Grip Systems, Steel Cables",
-      x: "34%",
-      y: "72%",
-      icon: <MapPin className="h-3.5 w-3.5" />,
-      color: "from-amber-500 to-yellow-600",
-    },
-    {
-      id: "techhub",
-      name: "GTM Hub & AI Server",
-      category: "technology",
-      description: "The high-tech backbone of Silicon Valley, driving autonomous computing, LLMs, and real-time Revenue Operations.",
-      funFact: "Integrates GTM flows and AI models server-side to orchestrate Salesforce triggers and CPQ structures automatically.",
-      techStack: "Vibe Coding, Node.js, Gemini API, GTM Automations",
-      x: "62%",
-      y: "65%",
-      icon: <Cpu className="h-3.5 w-3.5" />,
-      color: "from-emerald-500 to-teal-600",
-    },
-  ];
 
   const themeBgClass = localDarkPolarity ? "bg-slate-900 text-slate-100" : "bg-[#f4f0ea] text-[#18181b]";
   const cellBgClass = localDarkPolarity ? "bg-slate-800 border-slate-700 text-slate-100 hover:bg-slate-700" : "bg-white border-[#18181b] text-[#18181b] hover:bg-emerald-50";
@@ -194,70 +87,10 @@ export const SFBayMiniature: React.FC<SFBayMiniatureProps> = ({
         <span className="absolute top-[82%] left-[10%] text-amber-400 text-xl animate-star-twinkle [animation-delay:1.7s]">✦</span>
         <span className="absolute top-[88%] right-[12%] text-sky-300 text-lg animate-star-twinkle [animation-delay:0.3s]">✧</span>
       </div>
-      
-      {/* 1. Custom 3D Angled Glove Pointer Cursor (Desktop Fine Pointer Devices) */}
-      <div 
-        className="heart-cursor" 
-        aria-hidden="true"
-        style={{ 
-          left: `${cursorPos.x}px`, 
-          top: `${cursorPos.y}px`,
-          transform: `translate(-18%, -8%) scale(${isMouseDown ? 0.85 : isHoveringInteractive ? 1.25 : 1.0})`,
-          pointerEvents: "none"
-        }}
-      >
-        <svg 
-          viewBox="0 0 100 100" 
-          className="w-12 h-12 select-none filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.35)]" 
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            <linearGradient id="handTopGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" />
-              <stop offset="65%" stopColor="#f8fafc" />
-              <stop offset="100%" stopColor="#e2e8f0" />
-            </linearGradient>
-            <linearGradient id="hand3dBevel" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#3f3f46" />
-              <stop offset="100%" stopColor="#18181b" />
-            </linearGradient>
-          </defs>
-
-          {/* 3D Black/Dark Extrusion Depth Layer */}
-          <path
-            d="M 28 10 C 22 10 18 15 20 25 L 30 46 C 24 44 16 48 17 58 C 18 68 28 78 43 86 C 58 92 70 86 76 74 C 80 64 75 52 68 45 C 71 40 70 34 63 30 C 58 27 53 28 50 31 C 48 26 43 24 38 26 L 28 10 Z"
-            fill="url(#hand3dBevel)"
-            transform="translate(4, 5)"
-          />
-
-          {/* Black Outer Contour Line */}
-          <path 
-            d="M 28 8 C 22 8 18 13 20 23 L 30 44 C 24 42 16 46 17 56 C 18 66 28 76 43 84 C 58 90 70 84 76 72 C 80 62 75 50 68 43 C 71 38 70 32 63 28 C 58 25 53 26 50 29 C 48 24 43 22 38 24 L 28 8 Z"
-            fill="#18181b" 
-          />
-          
-          {/* Main White Glossy 3D Surface */}
-          <path 
-            d="M 28 11 C 24 11 21 15 23 23 L 32 42 C 27 40 20 44 21 52 C 22 60 30 70 43 78 C 56 84 66 80 71 70 C 74 61 70 51 64 45 C 67 41 66 36 60 32 C 56 29 52 30 49 33 C 47 29 43 27 38 29 L 28 11 Z"
-            fill="url(#handTopGrad)" 
-          />
-
-          {/* Finger Grooves & Separator Lines */}
-          <path d="M 41 39 L 51 57" stroke="#18181b" strokeWidth="3.5" strokeLinecap="round" />
-          <path d="M 50 34 L 59 52" stroke="#18181b" strokeWidth="3.5" strokeLinecap="round" />
-          <path d="M 58 40 L 65 52" stroke="#18181b" strokeWidth="3.5" strokeLinecap="round" />
-          
-          {/* Thumb Crease */}
-          <path d="M 33 46 Q 26 44 24 50" stroke="#18181b" strokeWidth="3" strokeLinecap="round" fill="none" />
-
-          {/* Soft Highlight Glare */}
-          <path d="M 27 15 L 30 30" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" opacity="0.8" />
-        </svg>
-      </div>
 
       <main className="w-full max-w-[1600px] mx-auto px-3 sm:px-6 md:px-8 pt-2 pb-1 space-y-3 flex-1 flex flex-col justify-between">
         
-        {/* 2. MASTHEAD / BRAND HEADER */}
+        {/* MASTHEAD / BRAND HEADER */}
         <header className={`flex items-center justify-between border-b-2 ${borderClass} pb-4 pt-2`}>
           <a 
             className="flex items-center gap-2.5 font-sans font-bold text-sm md:text-base hover:opacity-85 transition-opacity" 
@@ -266,11 +99,11 @@ export const SFBayMiniature: React.FC<SFBayMiniatureProps> = ({
               e.preventDefault();
               onNavigate("home");
             }}
-            aria-label="Welcome to the Animation World home"
+            aria-label="Welcome to HYROXBY TECH LLC. home"
           >
             <span className="text-red-500 text-xl font-bold select-none">♥</span>
             <span className="tracking-tight font-extrabold text-xs sm:text-sm md:text-base">
-              Welcome to the Animation World - Bao You - GTM RevOps AI Systems Architect Pro.
+              Welcome to HYROXBY TECH LLC. - Bao You - GTM RevOps AI Systems Architect Pro.
             </span>
           </a>
           
@@ -459,14 +292,29 @@ export const SFBayMiniature: React.FC<SFBayMiniatureProps> = ({
               </div>
             </div>
 
-            {/* Middle: Floating Hero Animation Image Stage in Circular Frame */}
-            <div className="relative w-full flex items-center justify-center my-1 pointer-events-auto -translate-y-20 sm:-translate-y-24 -mb-20 sm:-mb-24">
-              <div className="hero-artwork-float flex items-center justify-center transform rotate-1 hover:scale-105 transition-transform duration-300">
-                <div className="w-[430px] h-[430px] sm:w-[520px] sm:h-[520px] md:w-[585px] md:h-[585px] rounded-full border-4 border-[#18181b] bg-white shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] overflow-hidden flex items-center justify-center p-2 sm:p-4 shrink-0">
+            {/* Middle: Floating Hero Animation Image Stage in 3D Parallax Perspective Frame */}
+            <div 
+              className="relative w-full flex items-center justify-center my-1 pointer-events-auto -translate-y-20 sm:-translate-y-24 -mb-20 sm:-mb-24 perspective-1000 select-none"
+              onMouseEnter={() => setIsHoveringMiniature(true)}
+              onMouseLeave={() => setIsHoveringMiniature(false)}
+            >
+              <div 
+                className="hero-artwork-float flex items-center justify-center transition-transform duration-200 ease-out transform-style-3d cursor-pointer"
+                style={{
+                  transform: `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(${isHoveringMiniature ? 1.03 : 1.0})`,
+                  transformStyle: "preserve-3d"
+                }}
+              >
+                <div className="relative w-[430px] h-[430px] sm:w-[520px] sm:h-[520px] md:w-[585px] md:h-[585px] rounded-full border-4 border-[#18181b] bg-white shadow-[8px_8px_0px_0px_rgba(24,24,27,1)] flex items-center justify-center p-2 sm:p-4 shrink-0 overflow-hidden transform-style-3d">
+                  
+                  {/* 3D Base Image Layer */}
                   <img 
                     src={sfBayMiniatureImg} 
                     alt="A child turned 45 degrees right holding a heart balloon on a miniature San Francisco Bay Area island" 
-                    className="w-full h-full object-cover scale-105 select-none rounded-full"
+                    className="w-full h-full object-cover scale-105 select-none rounded-full transition-transform duration-200"
+                    style={{
+                      transform: "translateZ(12px)"
+                    }}
                     referrerPolicy="no-referrer"
                   />
                 </div>
@@ -489,7 +337,12 @@ export const SFBayMiniature: React.FC<SFBayMiniatureProps> = ({
 
             {/* Bottom Row Headline Banner: THINK AI SIDEWAYS (Positioned directly below the floating image) */}
             <div className="w-full flex justify-center pt-2 pb-1 z-10 -translate-y-16 sm:-translate-y-20 -mb-16 sm:-mb-20">
-              <div className="bg-white p-3 sm:p-4 md:p-5 rounded-2xl border-2 border-[#18181b] shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] inline-block text-center">
+              <div 
+                className="bg-white p-3 sm:p-4 md:p-5 rounded-2xl border-2 border-[#18181b] shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] inline-block text-center transition-transform hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] cursor-pointer"
+                style={{
+                  transform: `perspective(800px) rotateX(${rotX * 0.4}deg) rotateY(${rotY * 0.4}deg)`,
+                }}
+              >
                 <h1 className="font-sans font-black text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tighter leading-none text-[#18181b] uppercase select-none">
                   <span className="text-emerald-500 underline decoration-4 underline-offset-4">THINK AI SIDEWAYS</span>
                 </h1>
@@ -499,57 +352,7 @@ export const SFBayMiniature: React.FC<SFBayMiniatureProps> = ({
           </div>
         </section>
 
-        {/* Selected Landmark Modal Popup */}
-        <AnimatePresence>
-          {selectedLandmark && (
-            <div className="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-              <motion.div 
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-white dark:bg-slate-900 border-3 border-[#18181b] rounded-2xl max-w-md w-full p-5 shadow-[6px_6px_0px_0px_rgba(24,24,27,1)] space-y-4 relative"
-              >
-                <button
-                  onClick={() => setSelectedLandmark(null)}
-                  className="absolute top-4 right-4 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 cursor-pointer"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-
-                <div className="flex items-center gap-3">
-                  <div className={`p-2.5 rounded-xl bg-gradient-to-r ${selectedLandmark.color} text-white shadow`}>
-                    {selectedLandmark.icon}
-                  </div>
-                  <div>
-                    <h3 className="font-sans font-black text-lg text-slate-900 dark:text-white">{selectedLandmark.name}</h3>
-                    <span className="font-mono text-[10px] font-bold text-emerald-600 uppercase">{selectedLandmark.category}</span>
-                  </div>
-                </div>
-
-                <p className="font-sans text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {selectedLandmark.description}
-                </p>
-
-                <div className="bg-emerald-50 dark:bg-slate-800/80 p-3 rounded-xl border border-emerald-200 dark:border-slate-700 text-xs space-y-1">
-                  <div className="font-mono text-[10px] font-bold text-emerald-800 dark:text-emerald-400 flex items-center gap-1">
-                    <Info className="h-3.5 w-3.5" /> FUN FACT
-                  </div>
-                  <p className="text-slate-700 dark:text-slate-300 text-[11px] leading-snug">
-                    {selectedLandmark.funFact}
-                  </p>
-                </div>
-
-                {selectedLandmark.techStack && (
-                  <div className="text-[11px] font-mono text-slate-500">
-                    <span className="font-bold text-slate-700 dark:text-slate-300">Tech Stack:</span> {selectedLandmark.techStack}
-                  </div>
-                )}
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
-
-        {/* 6. IDENTITY FOOTER */}
+        {/* IDENTITY FOOTER */}
         <footer className="pt-2 pb-1 mt-1 border-t-2 border-dashed border-zinc-300 dark:border-zinc-800 text-center select-none">
           <p className="font-mono text-[9px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest leading-none">
             COPYRIGHT © 2026 HYROXBY TECH LLC

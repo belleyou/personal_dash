@@ -34,6 +34,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import { SaaSCPQOrderManagementProcess } from "./SaaSCPQOrderManagementProcess";
+import { SubagentsTechToolingSpecs } from "./SubagentsTechToolingSpecs";
 
 interface ChannelPartnerQTCAutomationProps {
   onCopyLink?: (text: string, label: string) => void;
@@ -44,7 +45,7 @@ export const ChannelPartnerQTCAutomation: React.FC<ChannelPartnerQTCAutomationPr
   onCopyLink,
   copiedLabel
 }) => {
-  const [activeTab, setActiveTab] = useState<"saas_cpq_logic" | "star_framework" | "kpi_matrix" | "agent_swarm" | "simulator" | "slack_hook">("saas_cpq_logic");
+  const [activeTab, setActiveTab] = useState<"saas_cpq_logic" | "star_framework" | "kpi_matrix" | "agent_swarm" | "simulator" | "slack_hook" | "subagents_tech_specs">("saas_cpq_logic");
 
   // Simulator state
   const [simPartnerTier, setSimPartnerTier] = useState<"Platinum" | "Gold" | "Silver">("Platinum");
@@ -256,7 +257,8 @@ export const ChannelPartnerQTCAutomation: React.FC<ChannelPartnerQTCAutomationPr
           { id: "kpi_matrix", label: "📊 KPI Metrics (Pre / Post)", icon: BarChart3 },
           { id: "agent_swarm", label: "🤖 4-Agent AI Swarm Architecture", icon: Cpu },
           { id: "simulator", label: "⚡ Interactive Deal Reg Simulator", icon: Sliders },
-          { id: "slack_hook", label: "💬 Slack & Teams Self-Service Hooks", icon: MessageSquare }
+          { id: "slack_hook", label: "💬 Slack & Teams Self-Service Hooks", icon: MessageSquare },
+          { id: "subagents_tech_specs", label: "🛠️ 5 Subagents Tech Stack & Features", icon: Layers }
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -960,6 +962,11 @@ export const ChannelPartnerQTCAutomation: React.FC<ChannelPartnerQTCAutomationPr
             </div>
           </div>
         </div>
+      )}
+
+      {/* TAB 6: 5 Subagents Technical Tooling & Features Specs */}
+      {activeTab === "subagents_tech_specs" && (
+        <SubagentsTechToolingSpecs />
       )}
 
       {/* Footer / Product Manager Architecture Takeaways */}
