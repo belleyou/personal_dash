@@ -14,28 +14,9 @@
   --color-marker-orange: #fef08a; /* Warm golden sun */
 }
 
-/* Custom Cartoon Glove Pointing Hand Cursor - replaces default mouse across application */
-@media (pointer: fine) {
-  html, body, a, button, input, select, textarea, [role="button"], [tabindex], .cursor-pointer, input[type="range"], * {
-    cursor: none !important;
-  }
-}
-
-.heart-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 99999;
-  transition: transform 0.08s ease-out;
-  display: none;
-  user-select: none;
-}
-
-@media (pointer: fine) {
-  .heart-cursor {
-    display: block;
-  }
+/* Custom Cartoon Glove Pointing Hand Cursor - replaces default mouse across all pages */
+html, body, a, button, input, select, textarea, [role="button"], [tabindex], .cursor-pointer, input[type="range"], * {
+  cursor: none !important;
 }
 
 /* 3D Interactive Classes */
@@ -207,10 +188,9 @@
   pointer-events: none;
 }
 
-/* Smooth scrolling and default 110% zoom */
+/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
-  zoom: 1.1;
 }
 
 /* Interactive hover scales */

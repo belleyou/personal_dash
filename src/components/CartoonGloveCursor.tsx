@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 interface CartoonGloveCursorProps {
   /** Optional custom scaling factor */
@@ -6,74 +7,103 @@ interface CartoonGloveCursorProps {
 }
 
 export const CartoonGloveCursor: React.FC<CartoonGloveCursorProps> = ({ scale = 1 }) => {
-  const [pos, setPos] = useState({ x: -100, y: -100 });
   const [isDown, setIsDown] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const lastPosRef = useRef({ x: -200, y: -200 });
 
   useEffect(() => {
-    // Check if the device has a fine pointer (desktop mouse/trackpad)
-    const isFinePointer = window.matchMedia("(pointer: fine)").matches;
-    if (!isFinePointer) return;
+    setMounted(true);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      setPos({ x: e.clientX, y: e.clientY });
-      if (!isVisible) setIsVisible(true);
+    const updatePosition = (clientX: number, clientY: number) => {
+      lastPosRef.current = { x: clientX, y: clientY };
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${clientX}px, ${clientY}px, 0)`;
+      }
+    };
+
+    const handlePointerMove = (e: MouseEvent | PointerEvent) => {
+      updatePosition(e.clientX, e.clientY);
+      setIsVisible(true);
 
       const target = e.target as HTMLElement | null;
       if (target) {
         const interactive = !!target.closest(
-          'a, button, input, select, textarea, [role="button"], [tabindex], .cursor-pointer, input[type="range"]'
+          'a, button, input, select, textarea, [role="button"], [tabindex], .cursor-pointer, input[type="range"], [onclick], summary, label'
         );
         setIsHovering(interactive);
       }
     };
 
-    const handleMouseDown = () => setIsDown(true);
-    const handleMouseUp = () => setIsDown(false);
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
+    const handlePointerDown = () => setIsDown(true);
+    const handlePointerUp = () => setIsDown(false);
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("mouseleave", handleMouseLeave);
-    document.addEventListener("mouseenter", handleMouseEnter);
+    const handleWindowLeave = (e: MouseEvent) => {
+      // Only hide if the cursor truly leaves the root window
+      if (!e.relatedTarget && e.clientY <= 0) {
+        setIsVisible(false);
+      }
+    };
+
+    const handleWindowEnter = () => {
+      setIsVisible(true);
+    };
+
+    // Listen on window and document to ensure global coverage across all subpages, modals, and views
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("mousemove", handlePointerMove, { passive: true });
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("mousedown", handlePointerDown);
+    window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("mouseup", handlePointerUp);
+    document.addEventListener("mouseleave", handleWindowLeave);
+    document.addEventListener("mouseenter", handleWindowEnter);
+    window.addEventListener("focus", handleWindowEnter);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("mouseleave", handleMouseLeave);
-      document.removeEventListener("mouseenter", handleMouseEnter);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("mousemove", handlePointerMove);
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("mousedown", handlePointerDown);
+      window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("mouseup", handlePointerUp);
+      document.removeEventListener("mouseleave", handleWindowLeave);
+      document.removeEventListener("mouseenter", handleWindowEnter);
+      window.removeEventListener("focus", handleWindowEnter);
     };
-  }, [isVisible]);
+  }, []);
 
-  if (!isVisible) return null;
+  if (!mounted || typeof document === "undefined") return null;
 
-  return (
+  const cursorContent = (
     <div
-      className="fixed top-0 left-0 pointer-events-none z-[99999] select-none transition-transform duration-75 ease-out"
+      ref={cursorRef}
+      className="fixed top-0 left-0 pointer-events-none z-[999999] select-none"
       style={{
-        transform: `translate3d(${pos.x}px, ${pos.y}px, 0)`,
+        transform: `translate3d(${lastPosRef.current.x}px, ${lastPosRef.current.y}px, 0)`,
+        opacity: isVisible ? 1 : 0,
+        transition: "opacity 0.15s ease-out",
         willChange: "transform",
       }}
       aria-hidden="true"
     >
       {/* 
         The cartoon glove pointing hand matching the user's attachment:
-        - White glove with thick black borders
-        - Straight index pointing upward/angled left (tip is at index finger hotspot x=18, y=4)
+        - White glove with thick black ink borders
+        - Straight index pointing upward/angled left (tip is at index finger hotspot x=19, y=4)
         - Curled middle, ring, pinky fingers with black crease markings
         - Thumb resting folded across
-        - Solid black cartoon drop shadow offset down-right (matching neobrutalist style)
+        - Solid black cartoon drop shadow offset down-right (matching neobrutalist sketchbook aesthetic)
       */}
       <div
         className="relative transition-transform duration-100 ease-out"
         style={{
-          // Hotspot calibration: fingertip at top-left of the index finger
-          transform: `translate(-18px, -4px) scale(${isDown ? 0.88 * scale : isHovering ? 1.15 * scale : 1.0 * scale}) rotate(${isHovering ? "-8deg" : isDown ? "4deg" : "0deg"})`,
-          transformOrigin: "18px 4px",
+          // Hotspot calibration: fingertip at (19px, 4px) in the SVG viewBox
+          transform: `translate(-19px, -4px) scale(${isDown ? 0.88 * scale : isHovering ? 1.15 * scale : 1.0 * scale}) rotate(${isHovering ? "-8deg" : isDown ? "4deg" : "0deg"})`,
+          transformOrigin: "19px 4px",
         }}
       >
         <svg
@@ -188,7 +218,7 @@ export const CartoonGloveCursor: React.FC<CartoonGloveCursorProps> = ({ scale = 
           {isHovering && (
             <circle
               cx="19"
-              cy="5"
+              cy="4"
               r="3"
               fill="#10b981"
               className="animate-ping"
@@ -199,4 +229,6 @@ export const CartoonGloveCursor: React.FC<CartoonGloveCursorProps> = ({ scale = 
       </div>
     </div>
   );
+
+  return createPortal(cursorContent, document.body);
 };
