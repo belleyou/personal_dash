@@ -351,8 +351,13 @@ export default function App() {
        // Support path and queries like articles?id=salesforce-scale or projects?tab=n8n_orchestration
        const [pagePath, queryStr] = fullHash.split("?");
 
-       const targetPage = ["home", "about", "certifications", "projects", "articles", "career", "contact", "meet", "thank-you", "data-analyst-dashboard", "gtm-admin-dashboard"].includes(pagePath)
-         ? pagePath
+       let normalizedPage = pagePath;
+       if (normalizedPage === "chat" || normalizedPage === "lets-chat" || normalizedPage === "letschat") {
+         normalizedPage = "meet";
+       }
+
+       const targetPage = ["home", "about", "certifications", "projects", "articles", "career", "contact", "meet", "thank-you", "data-analyst-dashboard", "gtm-admin-dashboard"].includes(normalizedPage)
+         ? normalizedPage
          : "home";
 
        setActivePage(targetPage);
@@ -413,10 +418,11 @@ export default function App() {
   }, [activePage]);
 
   const navigateToPage = (pageName: string, targetSection?: string) => {
-    window.location.hash = pageName === "home" ? "" : pageName;
-    setActivePage(pageName);
-    setHoveredNav(pageName);
-    if (pageName === "articles") {
+    const resolvedPage = (pageName === "chat" || pageName === "lets-chat" || pageName === "letschat") ? "meet" : pageName;
+    window.location.hash = resolvedPage === "home" ? "" : resolvedPage;
+    setActivePage(resolvedPage);
+    setHoveredNav(resolvedPage);
+    if (resolvedPage === "articles") {
       setSelectedArticleId("gtm-vc");
     }
 
@@ -2126,13 +2132,13 @@ export default function App() {
           </div>
         )}
 
-        {/* 6. MEET ME VIEW */}
+        {/* 6. MEET ME / LET'S CHAT VIEW */}
         {activePage === "meet" && (
           <div className="space-y-12 mb-12 animate-fade-in text-ink">
             
             <div className="border-b-3 border-ink pb-4">
               <h2 className="font-hand text-3xl md:text-4xl font-extrabold text-ink flex items-center flex-wrap gap-2.5">
-                <span>Meet Me & Booking Workspace</span>
+                <span>Let's Chat & Booking Workspace</span>
                 <CoffeeSketchSvg className="h-9 w-9 shrink-0 hover:scale-110 active:scale-95 transition-transform duration-150 cursor-pointer" />
               </h2>
               <p className="font-sans text-sm text-zinc-650 mt-1">

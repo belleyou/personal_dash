@@ -169,10 +169,10 @@ export const SFBayMiniature: React.FC<SFBayMiniatureProps> = ({
 
           <a 
             className={`p-3.5 border-2 ${borderClass} rounded-xl shadow-[3px_3px_0px_0px_rgba(24,24,27,1)] transition-all hover:-translate-y-0.5 hover:shadow-[4.5px_4.5px_0px_0px_rgba(24,24,27,1)] cursor-pointer flex items-center justify-between ${cellBgClass}`}
-            href="#contact"
+            href="#meet"
             onClick={(e) => {
               e.preventDefault();
-              onNavigate("contact");
+              onNavigate("meet");
             }}
           >
             <div>
