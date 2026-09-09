@@ -40,6 +40,7 @@ import {
 } from "lucide-react";
 import { GTM_VENDORS_DATA, GTMVendor, GTM_9_LIFECYCLE_STAGES, MatchedGTMStage } from "../data/gtmVendorData";
 import { getOobActionsForVendor, OOBAction } from "../data/gtmOobSimulators";
+import { N8nNodeLogo } from "./N8nNodeLogo";
 
 interface GTMAdminDashboardProps {
   onBackToMain?: () => void;
@@ -426,6 +427,39 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
     return (
       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 border border-orange-200">
         HTTP Request
+      </span>
+    );
+  };
+
+  // Render Category Badge with distinct visual accents
+  const renderCategoryBadge = (category: string) => {
+    const lower = category.toLowerCase();
+    let colorClass = "bg-zinc-100/90 text-zinc-700 border-zinc-200/60";
+    if (lower.includes("data transformation")) {
+      colorClass = "bg-emerald-50 text-emerald-800 border-emerald-200";
+    } else if (lower === "ai" || lower.includes("ai trigger")) {
+      colorClass = "bg-purple-50 text-purple-800 border-purple-200";
+    } else if (lower.includes("flow")) {
+      colorClass = "bg-blue-50 text-blue-800 border-blue-200";
+    } else if (lower.includes("trigger")) {
+      colorClass = "bg-amber-50 text-amber-800 border-amber-200";
+    } else if (lower.includes("files")) {
+      colorClass = "bg-rose-50 text-rose-800 border-rose-200";
+    } else if (lower.includes("development") || lower.includes("core")) {
+      colorClass = "bg-slate-100 text-slate-800 border-slate-300";
+    } else if (lower.includes("data & storage")) {
+      colorClass = "bg-indigo-50 text-indigo-800 border-indigo-200";
+    } else if (lower.includes("crm") || lower.includes("revenue")) {
+      colorClass = "bg-sky-50 text-sky-800 border-sky-200";
+    } else if (lower.includes("marketing")) {
+      colorClass = "bg-violet-50 text-violet-800 border-violet-200";
+    } else if (lower.includes("analytics")) {
+      colorClass = "bg-cyan-50 text-cyan-800 border-cyan-200";
+    }
+
+    return (
+      <span className={`inline-block px-2.5 py-0.5 rounded-md text-[11px] font-mono font-medium border whitespace-nowrap ${colorClass}`}>
+        {category}
       </span>
     );
   };
@@ -1209,29 +1243,13 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
                         {/* N8N NODE LOGO/ICON */}
                         <td className="py-3.5 px-4 align-middle">
                           <div className="w-9 h-9 rounded-xl border border-zinc-200 bg-white p-1.5 flex items-center justify-center shrink-0 shadow-2xs">
-                            {vendor.n8nNodeIcon && vendor.n8nNodeIcon !== "No native node" && vendor.n8nNodeIcon !== "—" ? (
-                              <img
-                                src={vendor.n8nNodeIcon}
-                                alt={vendor.vendor}
-                                className="max-w-full max-h-full object-contain"
-                                referrerPolicy="no-referrer"
-                                onError={(e) => {
-                                  (e.target as HTMLElement).style.display = "none";
-                                }}
-                              />
-                            ) : (
-                              <div className="w-full h-full rounded-md bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-xs">
-                                {vendor.vendor.charAt(0).toUpperCase()}
-                              </div>
-                            )}
+                            <N8nNodeLogo vendor={vendor} className="w-5 h-5" />
                           </div>
                         </td>
 
                         {/* CATEGORY */}
                         <td className="py-3.5 px-4 align-middle">
-                          <span className="inline-block px-2.5 py-1 rounded-md text-[11px] font-mono font-medium bg-zinc-100/90 text-zinc-700 border border-zinc-200/60 whitespace-nowrap">
-                            {vendor.category}
-                          </span>
+                          {renderCategoryBadge(vendor.category)}
                         </td>
 
                         {/* CORE FUNCTIONALITY & MATCHED GTM STAGES */}
@@ -1395,21 +1413,18 @@ export const GTMAdminDashboard: React.FC<GTMAdminDashboardProps> = ({ onBackToMa
             {/* Drawer Header */}
             <div className="p-5 border-b border-zinc-200 bg-zinc-50 flex items-start justify-between gap-4 sticky top-0 z-10">
               <div className="flex items-center gap-3">
-                <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-base border shrink-0 ${getAvatarBg(
-                    activeVendor.vendor
-                  )}`}
-                >
-                  {activeVendor.vendor.charAt(0).toUpperCase()}
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center border shrink-0 bg-white border-zinc-200 shadow-2xs p-1.5">
+                  <N8nNodeLogo vendor={activeVendor} className="w-6 h-6" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-lg font-bold text-zinc-950">{activeVendor.vendor}</h2>
                     {renderConnectViaBadge(activeVendor.connectVia)}
                   </div>
-                  <p className="text-xs text-zinc-500">
-                    Category: <span className="font-semibold text-zinc-700">{activeVendor.category}</span>
-                  </p>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className="text-xs text-zinc-500">Category:</span>
+                    {renderCategoryBadge(activeVendor.category)}
+                  </div>
                 </div>
               </div>
               <button

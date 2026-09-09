@@ -916,6 +916,198 @@ ORDER BY 1 DESC;`,
     ];
   }
 
+  // n8n Built-in Node Simulator: Data transformation
+  if (cat.includes("data transformation")) {
+    return [
+      {
+        id: `${vendor.vendor.toLowerCase().replace(/[^a-z0-9]/g, "")}_transform`,
+        name: `Execute ${vendor.vendor} Transformation Pipeline`,
+        description: `Transforms, normalizes, or deduplicates incoming GTM records in real time using n8n native node engine.`,
+        method: "POST",
+        endpoint: `/api/v1/n8n/node/${vendor.vendor.toLowerCase().replace(/[^a-z0-9]/g, "")}/transform`,
+        defaultParams: {
+          inputRecordCount: 25,
+          targetSchema: "RevOps Golden Record v2",
+          operation: vendor.coreFunctionality,
+          preserveDedupeLineage: true,
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 38 + Math.floor(Math.random() * 25),
+          statusCode: 200,
+          result: {
+            node: v.vendor,
+            category: "Data transformation",
+            operationApplied: v.coreFunctionality,
+            recordsProcessed: params.inputRecordCount || 25,
+            deduplicatedCount: 3,
+            outputRecords: 22,
+            schemaValidation: "PASSED (100% compliant)",
+            executionMode: "Zero-latency in-memory streaming",
+            status: "Successfully executed data transformation pipeline with zero data loss.",
+          },
+          log: [
+            `[n8n::${v.vendor}] Ingested ${params.inputRecordCount || 25} JSON items from upstream node...`,
+            `[n8n::${v.vendor}] Applying logic: "${v.coreFunctionality}"...`,
+            `[n8n::${v.vendor}] Schema normalized against ${params.targetSchema || "RevOps Golden Record"}.`,
+            `[n8n::${v.vendor}] Outputting 22 clean records to downstream CRM destination. 200 OK.`,
+          ],
+        }),
+      },
+    ];
+  }
+
+  // n8n Built-in Node Simulator: AI & AI trigger
+  if (cat.includes("ai")) {
+    return [
+      {
+        id: `${vendor.vendor.toLowerCase().replace(/[^a-z0-9]/g, "")}_agent_exec`,
+        name: `Invoke ${vendor.vendor} Autonomous Reasoning`,
+        description: `Prompts LLM models, retrieves vector context, or classifies text signals dynamically.`,
+        method: "POST",
+        endpoint: `/api/v1/n8n/ai/${vendor.vendor.toLowerCase().replace(/[^a-z0-9]/g, "")}/run`,
+        defaultParams: {
+          model: "gemini-2.5-pro / claude-3-5-sonnet",
+          inputPrompt: "Analyze buyer intent from inbound enterprise chat inquiry and score urgency.",
+          temperature: 0.2,
+          retrievalMemoryStore: "Pinecone Vector Store",
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 240 + Math.floor(Math.random() * 120),
+          statusCode: 200,
+          result: {
+            node: v.vendor,
+            category: "AI Reasoning & Orchestration",
+            modelInvoked: params.model,
+            tokenUsage: { prompt: 342, completion: 88, total: 430 },
+            reasoningOutput: {
+              intentClassification: "High Urgency - Evaluation Phase",
+              buyingStage: "Stage 2 (Dedupe & Enrich) -> Stage 6 (AE Meeting Handshake)",
+              recommendedNextAction: "Assign Enterprise SDR, attach competitor battlecard, and send calendly VIP invite.",
+              confidenceScore: 0.96,
+            },
+            status: "AI reasoning completed successfully. Structured JSON output passed to downstream action.",
+          },
+          log: [
+            `[n8n::${v.vendor}] Initializing LangChain model context with ${params.model}...`,
+            `[n8n::${v.vendor}] Ingesting prompt: "${params.inputPrompt}"...`,
+            `[n8n::${v.vendor}] Context augmented from ${params.retrievalMemoryStore}...`,
+            `[n8n::${v.vendor}] Model output received (430 tokens). Confidence 0.96. 200 OK.`,
+          ],
+        }),
+      },
+    ];
+  }
+
+  // n8n Built-in Node Simulator: Flow orchestration
+  if (cat.includes("flow")) {
+    return [
+      {
+        id: `${vendor.vendor.toLowerCase().replace(/[^a-z0-9]/g, "")}_flow_eval`,
+        name: `Evaluate ${vendor.vendor} Routing Logic`,
+        description: `Branches, splits, pauses, or loops over execution items based on GTM business rules.`,
+        method: "POST",
+        endpoint: `/api/v1/n8n/flow/${vendor.vendor.toLowerCase().replace(/[^a-z0-9]/g, "")}/branch`,
+        defaultParams: {
+          condition: "dealSize >= $50,000 && territory == 'North America'",
+          branchTrue: "Route to VP Sales & Strategic Deal Desk",
+          branchFalse: "Route to Standard Inbound SDR Pool",
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 18 + Math.floor(Math.random() * 15),
+          statusCode: 200,
+          result: {
+            node: v.vendor,
+            category: "Flow Orchestration",
+            conditionEvaluated: params.condition,
+            branchDecision: "TRUE -> Route to VP Sales & Strategic Deal Desk",
+            latencyBreakdown: { conditionEvalMs: 4, branchSwitchMs: 8 },
+            status: "Flow branched cleanly according to RevOps governance guardrails.",
+          },
+          log: [
+            `[n8n::${v.vendor}] Ingesting deal context payload...`,
+            `[n8n::${v.vendor}] Evaluating condition: ${params.condition}...`,
+            `[n8n::${v.vendor}] Condition TRUE. Dispatching execution token to Output Branch 1.`,
+          ],
+        }),
+      },
+    ];
+  }
+
+  // n8n Built-in Node Simulator: Trigger
+  if (cat.includes("trigger")) {
+    return [
+      {
+        id: `${vendor.vendor.toLowerCase().replace(/[^a-z0-9]/g, "")}_dispatch`,
+        name: `Trigger Test Event for ${vendor.vendor}`,
+        description: `Simulates an incoming event, webhook payload, schedule tick, or form submission.`,
+        method: "POST",
+        endpoint: `/api/v1/n8n/triggers/${vendor.vendor.toLowerCase().replace(/[^a-z0-9]/g, "")}/test`,
+        defaultParams: {
+          eventType: "gtm.lead.form_submitted",
+          source: "Marketing Landing Page #2",
+          simulateAuthHeader: "Bearer eyJhbGciOi...",
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 32,
+          statusCode: 200,
+          result: {
+            node: v.vendor,
+            category: "Trigger & Ingestion",
+            eventReceived: params.eventType,
+            payloadSizeKb: 1.8,
+            workflowInstanceId: "wfl_9918204_exec",
+            triggerStatus: "Active & Listening",
+          },
+          log: [
+            `[n8n::${v.vendor}] Trigger listener received simulated HTTP payload for ${params.eventType}...`,
+            `[n8n::${v.vendor}] Signature and authorization headers validated.`,
+            `[n8n::${v.vendor}] Workflow instance #wfl_9918204_exec spawned.`,
+          ],
+        }),
+      },
+    ];
+  }
+
+  // n8n Built-in Node Simulator: Files
+  if (cat.includes("files")) {
+    return [
+      {
+        id: `${vendor.vendor.toLowerCase().replace(/[^a-z0-9]/g, "")}_file_proc`,
+        name: `Process Binary File via ${vendor.vendor}`,
+        description: `Generates, converts, extracts, or compresses binary documents, CSVs, PDFs, or archive packages.`,
+        method: "POST",
+        endpoint: `/api/v1/n8n/files/${vendor.vendor.toLowerCase().replace(/[^a-z0-9]/g, "")}/process`,
+        defaultParams: {
+          fileName: "Enterprise_Order_CPQ_Quote_49201.pdf",
+          fileFormat: "application/pdf",
+          compressionAlgorithm: "deflate",
+        },
+        executeSimulated: (v, params) => ({
+          success: true,
+          latencyMs: 85 + Math.floor(Math.random() * 40),
+          statusCode: 200,
+          result: {
+            node: v.vendor,
+            category: "Files & Documents",
+            targetFile: params.fileName,
+            bytesProcessed: 284192,
+            mimeType: params.fileFormat,
+            status: "File processed and stored in workflow binary memory buffer.",
+          },
+          log: [
+            `[n8n::${v.vendor}] Reading binary stream for ${params.fileName}...`,
+            `[n8n::${v.vendor}] Applying file transformation: "${v.coreFunctionality}"...`,
+            `[n8n::${v.vendor}] Output binary buffer ready for CRM / eSignature attachment. 200 OK.`,
+          ],
+        }),
+      },
+    ];
+  }
+
   // Default fallback for Content & social / Productivity & events
   return [
     {

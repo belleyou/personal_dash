@@ -617,6 +617,48 @@ export const RAW_GTM_CSV = `
 "Zoom","Productivity & events","Coordinate work, meetings, forms and events","Free–$30+/user/mo","SMB | MMS","Assistants, summaries and workflow generation","Broad ecosystem + native n8n node","Via API or workflow","Zoom","https://n8n.io/nodes/zoom.svg","Native"
 "ZoomInfo","ABM & intent","Identify, prioritize and engage target accounts","Custom / contact sales","MMS | LCS","Intent scoring and account recommendations","API, webhooks and partner connectors","Via API or workflow","—","No native node","Webhook"
 "Zuora","Commerce & payments","Run commerce, billing, subscriptions and finance ops","Usage-based / custom","SMB | MMS","Fraud, recommendations and finance automation","API, webhooks and partner connectors","Via API or workflow","—","No native node","HTTP Request"
+"Aggregate","Data transformation","Group item values into lists or summary structures","Core / built-in","SMB | MMS | LCS","Group item values into lists or summary structures","Native n8n node","Built-in / assisted","Aggregate","https://n8n.io/nodes/aggregate.svg","Native"
+"AI Agent","AI","Use tools and a language model to complete multi-step tasks","Core / built-in","SMB | MMS | LCS","Use tools and a language model to complete multi-step tasks","Native n8n node","Built-in / assisted","AI Agent","https://n8n.io/nodes/ai-agent.svg","Native"
+"Basic LLM Chain","AI","Send prompts through a language model with optional parsing","Core / built-in","SMB | MMS | LCS","Send prompts through a language model with optional parsing","Native n8n node","Built-in / assisted","Basic LLM Chain","https://n8n.io/nodes/basic-llm-chain.svg","Native"
+"Chat Trigger","AI trigger","Start conversational AI workflows from chat","Core / built-in","SMB | MMS | LCS","Start conversational AI workflows from chat","Native n8n node","Built-in / assisted","Chat Trigger","https://n8n.io/nodes/chat-trigger.svg","Native"
+"Code","Development","Run custom JavaScript or Python for advanced transformations","Core / built-in","SMB | MMS | LCS","Run custom JavaScript or Python for advanced transformations","Native n8n node","Built-in / assisted","Code","https://n8n.io/nodes/code.svg","Native"
+"Compression","Files","Compress and decompress binary files","Core / built-in","SMB | MMS | LCS","Compress and decompress binary files","Native n8n node","Via API or workflow","Compression","https://n8n.io/nodes/compression.svg","Native"
+"Convert to File","Files","Convert JSON, CSV, text and other data into binary files","Core / built-in","SMB | MMS | LCS","Convert JSON, CSV, text and other data into binary files","Native n8n node","Via API or workflow","Convert to File","https://n8n.io/nodes/convert-to-file.svg","Native"
+"Crypto","Utility","Hash, sign, encrypt and generate random values","Core / built-in","SMB | MMS | LCS","Hash, sign, encrypt and generate random values","Native n8n node","Via API or workflow","Crypto","https://n8n.io/nodes/crypto.svg","Native"
+"Data Table","Data & storage","Store and query structured data inside n8n","Core / built-in","SMB | MMS | LCS","Store and query structured data inside n8n","Native n8n node","Via API or workflow","Data Table","https://n8n.io/nodes/data-table.svg","Native"
+"Date & Time","Data transformation","Parse, format and calculate date/time values","Core / built-in","SMB | MMS | LCS","Parse, format and calculate date/time values","Native n8n node","Via API or workflow","Date & Time","https://n8n.io/nodes/date--time.svg","Native"
+"Edit Fields (Set)","Data transformation","Add, remove or overwrite fields and shape item data","Core / built-in","SMB | MMS | LCS","Add, remove or overwrite fields and shape item data","Native n8n node","Via API or workflow","Edit Fields (Set)","https://n8n.io/nodes/edit-fields-set.svg","Native"
+"Embeddings","AI","Turn text into vectors for semantic search","Core / built-in","SMB | MMS | LCS","Turn text into vectors for semantic search","Native n8n node","Built-in / assisted","Embeddings","https://n8n.io/nodes/embeddings.svg","Native"
+"Execute Workflow","Flow","Call another workflow as a reusable sub-workflow","Core / built-in","SMB | MMS | LCS","Call another workflow as a reusable sub-workflow","Native n8n node","Via API or workflow","Execute Workflow","https://n8n.io/nodes/execute-workflow.svg","Native"
+"Execute Workflow Trigger","Trigger","Receive inputs from a parent workflow","Core / built-in","SMB | MMS | LCS","Receive inputs from a parent workflow","Native n8n node","Via API or workflow","Execute Workflow Trigger","https://n8n.io/nodes/execute-workflow-trigger.svg","Native"
+"Extract From File","Files","Read structured content from common file formats","Core / built-in","SMB | MMS | LCS","Read structured content from common file formats","Native n8n node","Via API or workflow","Extract From File","https://n8n.io/nodes/extract-from-file.svg","Native"
+"Filter","Data transformation","Keep only items that match conditions","Core / built-in","SMB | MMS | LCS","Keep only items that match conditions","Native n8n node","Via API or workflow","Filter","https://n8n.io/nodes/filter.svg","Native"
+"Form Trigger","Trigger","Host a form that starts a workflow on submission","Core / built-in","SMB | MMS | LCS","Host a form that starts a workflow on submission","Native n8n node","Via API or workflow","Form Trigger","https://n8n.io/nodes/form-trigger.svg","Native"
+"GraphQL","Core","Send GraphQL queries and mutations","Core / built-in","SMB | MMS | LCS","Send GraphQL queries and mutations","Native n8n node","Via API or workflow","GraphQL","https://n8n.io/nodes/graphql.svg","Native"
+"HTML","Data transformation","Generate HTML templates or extract data from HTML","Core / built-in","SMB | MMS | LCS","Generate HTML templates or extract data from HTML","Native n8n node","Via API or workflow","HTML","https://n8n.io/nodes/html.svg","Native"
+"HTTP Request","Core","Call any REST API with authentication, headers, query parameters and bodies","Core / built-in","SMB | MMS | LCS","Call any REST API with authentication, headers, query parameters and bodies","Native n8n node","Via API or workflow","HTTP Request","https://n8n.io/nodes/http-request.svg","Native"
+"If","Flow","Route items down true or false paths using conditions","Core / built-in","SMB | MMS | LCS","Route items down true or false paths using conditions","Native n8n node","Via API or workflow","If","https://n8n.io/nodes/if.svg","Native"
+"Information Extractor","AI","Extract structured fields from unstructured text","Core / built-in","SMB | MMS | LCS","Extract structured fields from unstructured text","Native n8n node","Built-in / assisted","Information Extractor","https://n8n.io/nodes/information-extractor.svg","Native"
+"Limit","Data transformation","Keep a defined number of input items","Core / built-in","SMB | MMS | LCS","Keep a defined number of input items","Native n8n node","Via API or workflow","Limit","https://n8n.io/nodes/limit.svg","Native"
+"Loop Over Items","Flow","Process input items in batches","Core / built-in","SMB | MMS | LCS","Process input items in batches","Native n8n node","Via API or workflow","Loop Over Items","https://n8n.io/nodes/loop-over-items.svg","Native"
+"Manual Trigger","Trigger","Start a workflow manually for testing","Core / built-in","SMB | MMS | LCS","Start a workflow manually for testing","Native n8n node","Via API or workflow","Manual Trigger","https://n8n.io/nodes/manual-trigger.svg","Native"
+"Merge","Flow","Combine streams by position, matching fields or append mode","Core / built-in","SMB | MMS | LCS","Combine streams by position, matching fields or append mode","Native n8n node","Via API or workflow","Merge","https://n8n.io/nodes/merge.svg","Native"
+"n8n","Development","Manage workflows, credentials and executions through the n8n API","Core / built-in","SMB | MMS | LCS","Manage workflows, credentials and executions through the n8n API","Native n8n node","Built-in / assisted","n8n","https://n8n.io/nodes/n8n.svg","Native"
+"Read/Write Files from Disk","Files","Read or write files on a self-hosted n8n machine","Core / built-in","SMB | MMS | LCS","Read or write files on a self-hosted n8n machine","Native n8n node","Via API or workflow","Read/Write Files from Disk","https://n8n.io/nodes/read-write-files-from-disk.svg","Native"
+"Remove Duplicates","Data transformation","De-duplicate current input or past executions","Core / built-in","SMB | MMS | LCS","De-duplicate current input or past executions","Native n8n node","Via API or workflow","Remove Duplicates","https://n8n.io/nodes/remove-duplicates.svg","Native"
+"Respond to Webhook","Core","Control the response returned to a webhook caller","Core / built-in","SMB | MMS | LCS","Control the response returned to a webhook caller","Native n8n node","Via API or workflow","Respond to Webhook","https://n8n.io/nodes/respond-to-webhook.svg","Native"
+"RSS Feed Read","Core","Fetch and parse RSS or Atom feeds","Core / built-in","SMB | MMS | LCS","Fetch and parse RSS or Atom feeds","Native n8n node","Via API or workflow","RSS Feed Read","https://n8n.io/nodes/rss-feed-read.svg","Native"
+"Schedule Trigger","Trigger","Run workflows on intervals or cron schedules","Core / built-in","SMB | MMS | LCS","Run workflows on intervals or cron schedules","Native n8n node","Via API or workflow","Schedule Trigger","https://n8n.io/nodes/schedule-trigger.svg","Native"
+"Sort","Data transformation","Order items by one or more fields","Core / built-in","SMB | MMS | LCS","Order items by one or more fields","Native n8n node","Via API or workflow","Sort","https://n8n.io/nodes/sort.svg","Native"
+"Split Out","Data transformation","Turn list values into individual items","Core / built-in","SMB | MMS | LCS","Turn list values into individual items","Native n8n node","Via API or workflow","Split Out","https://n8n.io/nodes/split-out.svg","Native"
+"Stop And Error","Flow","End execution with a controlled error message","Core / built-in","SMB | MMS | LCS","End execution with a controlled error message","Native n8n node","Via API or workflow","Stop And Error","https://n8n.io/nodes/stop-and-error.svg","Native"
+"Summarize","Data transformation","Group and calculate counts, sums, averages and more","Core / built-in","SMB | MMS | LCS","Group and calculate counts, sums, averages and more","Native n8n node","Via API or workflow","Summarize","https://n8n.io/nodes/summarize.svg","Native"
+"Switch","Flow","Route items to multiple outputs using rules or expressions","Core / built-in","SMB | MMS | LCS","Route items to multiple outputs using rules or expressions","Native n8n node","Via API or workflow","Switch","https://n8n.io/nodes/switch.svg","Native"
+"Text Classifier","AI","Classify input text into defined categories","Core / built-in","SMB | MMS | LCS","Classify input text into defined categories","Native n8n node","Built-in / assisted","Text Classifier","https://n8n.io/nodes/text-classifier.svg","Native"
+"Vector Store","AI","Insert, retrieve and manage embedded documents","Core / built-in","SMB | MMS | LCS","Insert, retrieve and manage embedded documents","Native n8n node","Built-in / assisted","Vector Store","https://n8n.io/nodes/vector-store.svg","Native"
+"Wait","Flow","Pause until a time, interval or webhook event","Core / built-in","SMB | MMS | LCS","Pause until a time, interval or webhook event","Native n8n node","Via API or workflow","Wait","https://n8n.io/nodes/wait.svg","Native"
+"Webhook","Trigger","Start a workflow from an incoming HTTP request","Core / built-in","SMB | MMS | LCS","Start a workflow from an incoming HTTP request","Native n8n node","Via API or workflow","Webhook","https://n8n.io/nodes/webhook.svg","Native"
+"XML","Data transformation","Convert between XML and JSON","Core / built-in","SMB | MMS | LCS","Convert between XML and JSON","Native n8n node","Via API or workflow","XML","https://n8n.io/nodes/xml.svg","Native"
 `;
 
 // Specific Integration Resolvers for Enterprise Systems
@@ -978,9 +1020,174 @@ export function getMatchedGTMStages(vendorName: string, category: string): Match
     });
 }
 
+export const N8N_BUILTIN_CATEGORIES = [
+  "Data transformation",
+  "Flow",
+  "AI",
+  "Trigger",
+  "Core",
+  "Files",
+  "Development",
+  "Data & storage",
+  "Utility",
+  "AI trigger",
+] as const;
+
+export const N8N_BUILTIN_NODE_NAMES = new Set([
+  "aggregate",
+  "ai agent",
+  "basic llm chain",
+  "chat trigger",
+  "code",
+  "compression",
+  "convert to file",
+  "crypto",
+  "data table",
+  "date & time",
+  "edit fields (set)",
+  "edit fields",
+  "embeddings",
+  "execute workflow",
+  "execute workflow trigger",
+  "extract from file",
+  "filter",
+  "form trigger",
+  "graphql",
+  "html",
+  "http request",
+  "if",
+  "information extractor",
+  "limit",
+  "loop over items",
+  "manual trigger",
+  "merge",
+  "n8n",
+  "read/write files from disk",
+  "remove duplicates",
+  "respond to webhook",
+  "rss feed read",
+  "schedule trigger",
+  "sort",
+  "split out",
+  "stop and error",
+  "summarize",
+  "switch",
+  "text classifier",
+  "vector store",
+  "wait",
+  "webhook",
+  "xml",
+]);
+
+export function isN8nBuiltInNode(nameOrCategory: string): boolean {
+  const norm = nameOrCategory.toLowerCase().trim();
+  return (
+    N8N_BUILTIN_NODE_NAMES.has(norm) ||
+    N8N_BUILTIN_CATEGORIES.some((c) => c.toLowerCase() === norm)
+  );
+}
+
+const N8N_NODE_EXAMPLE_1: Record<string, string> = {
+  "aggregate": "Match an inbound form lead to the correct account using domain plus fuzzy company name.",
+  "ai agent": "Assign a high-fit MQL by territory, segment, capacity, and account ownership.",
+  "basic llm chain": "Enroll a qualified lead in a personalized outbound sequence with signal-based messaging.",
+  "chat trigger": "Upsert the qualified person and account into the CRM system of record with source lineage.",
+  "code": "Use AI reasoning to summarize signals and recommend the next-best nurture action.",
+  "compression": "Attribute pipeline to first-touch, last-touch, and influenced campaigns.",
+  "convert to file": "Create a CPQ quote when opportunity stage and product configuration are complete.",
+  "crypto": "Resolve parent-child account hierarchy before territory assignment and opportunity creation.",
+  "data table": "Capture a webinar submission, validate consent, and start an omni-channel nurture.",
+  "date & time": "Convert a scored lead to an MQL and sync lifecycle stage across CRM and marketing automation.",
+  "edit fields (set)": "Score a webinar lead using role, company fit, engagement recency, and intent strength.",
+  "edit fields": "Score a webinar lead using role, company fit, engagement recency, and intent strength.",
+  "embeddings": "Attribute pipeline to first-touch, last-touch, and influenced campaigns.",
+  "execute workflow": "Attribute pipeline to first-touch, last-touch, and influenced campaigns.",
+  "execute workflow trigger": "Create a CPQ quote when opportunity stage and product configuration are complete.",
+  "extract from file": "Capture a webinar submission, validate consent, and start an omni-channel nurture.",
+  "filter": "Score a webinar lead using role, company fit, engagement recency, and intent strength.",
+  "form trigger": "Use AI reasoning to summarize signals and recommend the next-best nurture action.",
+  "graphql": "Match an inbound form lead to the correct account using domain plus fuzzy company name.",
+  "html": "Ingest a G2 intent signal, normalize the account domain, and attach campaign context.",
+  "http request": "Ingest a G2 intent signal, normalize the account domain, and attach campaign context.",
+  "if": "Waterfall-enrich a missing work email across two providers, stopping on the first valid result.",
+  "information extractor": "Convert a scored lead to an MQL and sync lifecycle stage across CRM and marketing automation.",
+  "limit": "Upsert the qualified person and account into the CRM system of record with source lineage.",
+  "loop over items": "Ingest a G2 intent signal, normalize the account domain, and attach campaign context.",
+  "manual trigger": "Resolve parent-child account hierarchy before territory assignment and opportunity creation.",
+  "merge": "Upsert the qualified person and account into the CRM system of record with source lineage.",
+  "n8n": "Monitor failed lead-routing executions and send the RevOps team a remediation payload.",
+  "read/write files from disk": "Monitor failed lead-routing executions and send the RevOps team a remediation payload.",
+  "remove duplicates": "Waterfall-enrich a missing work email across two providers, stopping on the first valid result.",
+  "respond to webhook": "Enroll a qualified lead in a personalized outbound sequence with signal-based messaging.",
+  "rss feed read": "Waterfall-enrich a missing work email across two providers, stopping on the first valid result.",
+  "schedule trigger": "Convert a scored lead to an MQL and sync lifecycle stage across CRM and marketing automation.",
+  "sort": "Use AI reasoning to summarize signals and recommend the next-best nurture action.",
+  "split out": "Assign a high-fit MQL by territory, segment, capacity, and account ownership.",
+  "stop and error": "Monitor failed lead-routing executions and send the RevOps team a remediation payload.",
+  "summarize": "Enroll a qualified lead in a personalized outbound sequence with signal-based messaging.",
+  "switch": "Match an inbound form lead to the correct account using domain plus fuzzy company name.",
+  "text classifier": "Resolve parent-child account hierarchy before territory assignment and opportunity creation.",
+  "vector store": "Create a CPQ quote when opportunity stage and product configuration are complete.",
+  "wait": "Capture a webinar submission, validate consent, and start an omni-channel nurture.",
+  "webhook": "Assign a high-fit MQL by territory, segment, capacity, and account ownership.",
+  "xml": "Score a webinar lead using role, company fit, engagement recency, and intent strength.",
+};
+
+const N8N_NODE_EXAMPLE_2: Record<string, string> = {
+  "aggregate": "Dedupe contacts by normalized email and retain the record with the freshest enrichment.",
+  "ai agent": "Route a buying-committee contact to the parent-account owner and notify the SDR.",
+  "basic llm chain": "Trigger coordinated email, LinkedIn, and call tasks while respecting suppression lists.",
+  "chat trigger": "Synchronize golden account fields to the SSoT while preserving field ownership rules.",
+  "code": "Classify buying stage from web, email, CRM, and product signals with a confidence score.",
+  "compression": "Join campaign costs to sourced revenue and calculate channel ROI by quarter.",
+  "convert to file": "Validate discount guardrails, request approval, and sync the accepted quote to CRM.",
+  "crypto": "Roll subsidiary engagement up to the global account for account-level qualification.",
+  "data table": "Ingest a chat hand-raise, enrich the visitor, and send an immediate sales alert.",
+  "date & time": "Qualify an inbound request, create the opportunity, and preserve campaign membership.",
+  "edit fields (set)": "Format CPQ currency fields, apply discount percentage overrides, and set opportunity stage tags.",
+  "edit fields": "Format CPQ currency fields, apply discount percentage overrides, and set opportunity stage tags.",
+  "embeddings": "Convert customer objection notes into vector embeddings to retrieve winning rebuttal battlecards.",
+  "execute workflow": "Trigger reusable enterprise credit approval and legal redline sub-workflows during CPQ closing.",
+  "execute workflow trigger": "Accept opportunity payload from parent pipeline orchestrator to execute specialized provisioning.",
+  "extract from file": "Extract product SKUs and seat counts from customer-uploaded RFPs or vendor order forms.",
+  "filter": "Filter out unengaged contacts or non-ICP company domains prior to launching high-touch cadences.",
+  "form trigger": "Host internal sales deal desk approval form to initiate discount review workflows.",
+  "graphql": "Query product catalog, price books, and inventory tiers via modern GraphQL APIs for CPQ quotes.",
+  "html": "Render dynamic branded quote summary HTML emails with order tables for executive sign-off.",
+  "http request": "Call enterprise ERP / CPQ REST endpoints with OAuth2 headers to generate quote IDs.",
+  "if": "Branch deals over $50k ARR to VP Sales review and route smaller deals to standard auto-checkout.",
+  "information extractor": "Extract renewal date, competitor names, and budget numbers from sales email conversations.",
+  "limit": "Cap daily SDR outreach allocations to top 25 accounts per rep to protect domain deliverability.",
+  "loop over items": "Iterate over opportunity line items to calculate item-specific volume tier discounts in batches.",
+  "manual trigger": "Manually trigger monthly commission recalculation and pipeline reconciliation for sales ops.",
+  "merge": "Join product catalog prices with custom customer discount tiers to output unified quote records.",
+  "n8n": "Programmatically deploy standardized sales deal desk workflows across staging and production instances.",
+  "read/write files from disk": "Save generated master CPQ contract PDFs and audit trail logs to secure on-premise storage.",
+  "remove duplicates": "Deduplicate imported event attendee lists against existing CRM contacts before triggering SDR alerts.",
+  "respond to webhook": "Return instant quote confirmation JSON and payment checkout URL to client CPQ applications.",
+  "rss feed read": "Monitor competitor press release feeds and funding announcements to trigger real-time sales battlecard alerts.",
+  "schedule trigger": "Run weekly pipeline hygiene audits and stale deal reminder notifications every Monday at 7 AM.",
+  "sort": "Rank target accounts by intent surge score and ARR potential to guide morning SDR outreach.",
+  "split out": "Unpack bundled order product line items into individual opportunity products in Salesforce.",
+  "stop and error": "Halt quote generation with alert when deal discount exceeds 40% without VP approval.",
+  "summarize": "Aggregate monthly deal values per AE to compute quarterly quota attainment percentages.",
+  "switch": "Route incoming deal approvals to SMB, Mid-Market, or Enterprise deal desks based on ACV.",
+  "text classifier": "Categorize inbound customer procurement inquiries into Pricing, Security, or Legal queues.",
+  "vector store": "Index enterprise master service agreements (MSAs) for semantic clause lookup during contract review.",
+  "wait": "Wait 3 days after quote delivery before sending automated CPQ follow-up reminder to buyer.",
+  "webhook": "Receive DocuSign agreement signed event to trigger automated license provisioning and invoice dispatch.",
+  "xml": "Convert legacy ERP SOAP/XML billing records into modern JSON for CRM billing ledger updates.",
+};
+
 function getEnhancedCoreFunctionality(vendorName: string, category: string, raw: string): string {
   const v = vendorName.toLowerCase().trim();
   const cat = category.toLowerCase().trim();
+
+  // If it's one of the 42 n8n built-in nodes, return the exact concise functionality string from user specs
+  if (N8N_BUILTIN_NODE_NAMES.has(v) || isN8nBuiltInNode(cat)) {
+    return raw || "Built-in core node for data transformation, flow orchestration, and AI reasoning.";
+  }
+
   let baseOverview = "";
 
   // 1. Direct dictionary match
@@ -996,32 +1203,7 @@ function getEnhancedCoreFunctionality(vendorName: string, category: string, raw:
     }
   }
 
-  // 3. Specialized n8n core node overviews
-  if (!baseOverview) {
-    if (v.includes("aggregate")) {
-      baseOverview = "The Aggregate node is a data manipulation utility in n8n that combines multiple incoming data items into arrays or unified lists for batch processing.";
-    } else if (v.includes("ai agent") || v.includes("agent")) {
-      baseOverview = "The AI Agent node is an autonomous reasoning engine in n8n that connects LLMs to custom tools, memory stores, and APIs to execute multi-step workflows.";
-    } else if (v.includes("basic llm") || v.includes("llm")) {
-      baseOverview = "The Basic LLM Chain node is an AI orchestration tool in n8n that prompts large language models and outputs structured text or parsed JSON.";
-    } else if (v.includes("chat trigger")) {
-      baseOverview = "The Chat Trigger node is an event listener in n8n that initiates automated workflows directly from inbound user chat messages and conversational interfaces.";
-    } else if (v.includes("code") && !v.includes("codex")) {
-      baseOverview = "The Code node is an execution environment in n8n that runs custom JavaScript or Python code to transform data payloads and apply algorithmic logic.";
-    } else if (v.includes("compression")) {
-      baseOverview = "The Compression node is a file utility in n8n that zips, unzips, compresses, and decompresses binary files and asset bundles within workflows.";
-    } else if (v.includes("convert to file")) {
-      baseOverview = "The Convert to File node is a document utility in n8n that converts JSON, CSV, HTML, or raw text data into downloadable binary files.";
-    } else if (v.includes("crypto")) {
-      baseOverview = "The Crypto node is a cryptographic security tool in n8n that generates hashes, HMAC signatures, encryption keys, and secure tokens for API authorization.";
-    } else if (v.includes("data table")) {
-      baseOverview = "The Data Table node is an in-memory data store in n8n that enables workflows to read, write, query, and cache structured records across executions.";
-    } else if (v.includes("date & time")) {
-      baseOverview = "The Date & Time node is a temporal processing utility in n8n that parses, formats, adds, subtracts, and normalizes timestamps across timezones.";
-    }
-  }
-
-  // 4. Synthesized Google Search AI Overview by Category
+  // 3. Synthesized Google Search AI Overview by Category
   if (!baseOverview) {
     if (cat.includes("abm") || cat.includes("intent")) {
       baseOverview = `${vendorName} is an account-based marketing (ABM) and B2B intent platform designed to identify in-market accounts, capture buyer signals, and prioritize high-value pipeline opportunities.`;
@@ -1052,38 +1234,17 @@ function getEnhancedCoreFunctionality(vendorName: string, category: string, raw:
 }
 
 function getExample1SignalSSOT(vendorName: string, category: string): string {
-  const v = vendorName.toLowerCase();
-  const cat = category.toLowerCase();
+  const v = vendorName.toLowerCase().trim();
+  const cat = category.toLowerCase().trim();
 
-  if (v.includes("aggregate")) {
-    return "Match an inbound form lead to the correct account using domain plus fuzzy company name.";
+  // n8n built-in node match
+  if (N8N_NODE_EXAMPLE_1[v]) {
+    return N8N_NODE_EXAMPLE_1[v];
   }
-  if (v.includes("ai agent")) {
-    return "Assign a high-fit MQL by territory, segment, capacity, and account ownership.";
-  }
-  if (v.includes("basic llm")) {
-    return "Enroll a qualified lead in a personalized outbound sequence with signal-based messaging.";
-  }
-  if (v.includes("chat trigger")) {
-    return "Upsert the qualified person and account into the CRM system of record with source lineage.";
-  }
-  if (v.includes("code") && !v.includes("codex")) {
-    return "Use AI reasoning to summarize signals and recommend the next-best nurture action.";
-  }
-  if (v.includes("compression")) {
-    return "Attribute pipeline to first-touch, last-touch, and influenced campaigns.";
-  }
-  if (v.includes("convert to file")) {
-    return "Create a CPQ quote when opportunity stage and product configuration are complete.";
-  }
-  if (v.includes("crypto")) {
-    return "Resolve parent-child account hierarchy before territory assignment and opportunity creation.";
-  }
-  if (v.includes("data table")) {
-    return "Capture a webinar submission, validate consent, and start an omni-channel nurture.";
-  }
-  if (v.includes("date & time")) {
-    return "Convert a scored lead to an MQL and sync lifecycle stage across CRM and marketing automation.";
+  for (const [nodeName, example] of Object.entries(N8N_NODE_EXAMPLE_1)) {
+    if (v.includes(nodeName) || nodeName.includes(v)) {
+      return example;
+    }
   }
 
   // Enterprise Vendor specific examples
@@ -1150,38 +1311,17 @@ function getExample1SignalSSOT(vendorName: string, category: string): string {
 }
 
 function getExample2EngageCPQ(vendorName: string, category: string): string {
-  const v = vendorName.toLowerCase();
-  const cat = category.toLowerCase();
+  const v = vendorName.toLowerCase().trim();
+  const cat = category.toLowerCase().trim();
 
-  if (v.includes("aggregate")) {
-    return "Dedupe contacts by normalized email and retain the record with the freshest enrichment.";
+  // n8n built-in node match
+  if (N8N_NODE_EXAMPLE_2[v]) {
+    return N8N_NODE_EXAMPLE_2[v];
   }
-  if (v.includes("ai agent")) {
-    return "Route a buying-committee contact to the parent-account owner and notify the SDR.";
-  }
-  if (v.includes("basic llm")) {
-    return "Trigger coordinated email, LinkedIn, and call tasks while respecting suppression lists.";
-  }
-  if (v.includes("chat trigger")) {
-    return "Synchronize golden account fields to the SSoT while preserving field ownership rules.";
-  }
-  if (v.includes("code") && !v.includes("codex")) {
-    return "Classify buying stage from web, email, CRM, and product signals with a confidence score.";
-  }
-  if (v.includes("compression")) {
-    return "Join campaign costs to sourced revenue and calculate channel ROI by quarter.";
-  }
-  if (v.includes("convert to file")) {
-    return "Validate discount guardrails, request approval, and sync the accepted quote to CRM.";
-  }
-  if (v.includes("crypto")) {
-    return "Roll subsidiary engagement up to the global account for account-level qualification.";
-  }
-  if (v.includes("data table")) {
-    return "Ingest a chat hand-raise, enrich the visitor, and send an immediate sales alert.";
-  }
-  if (v.includes("date & time")) {
-    return "Qualify an inbound request, create the opportunity, and preserve campaign membership.";
+  for (const [nodeName, example] of Object.entries(N8N_NODE_EXAMPLE_2)) {
+    if (v.includes(nodeName) || nodeName.includes(v)) {
+      return example;
+    }
   }
 
   // Enterprise Vendor specific examples
@@ -1263,6 +1403,9 @@ function getAvailability(vendorName: string, connectVia: string, n8nNode: string
 
 function getSalesforceIntegration(vendorName: string, category: string): string {
   const v = vendorName.toLowerCase();
+  if (isN8nBuiltInNode(vendorName) || isN8nBuiltInNode(category)) {
+    return "Direct n8n Salesforce Node, Bi-directional CRM Sync & Apex Webhooks";
+  }
   if (v.includes("beeze")) {
     return "REST API, Bi-directional CRM Sync, Lead Creation & Task Webhooks";
   }
@@ -1336,6 +1479,9 @@ function getClaudeIntegration(vendorName: string, category: string): string {
   const v = vendorName.toLowerCase();
   const cat = category.toLowerCase();
 
+  if (isN8nBuiltInNode(vendorName) || isN8nBuiltInNode(category)) {
+    return "Anthropic Model Node, Claude Tool Calling, LangChain Agent";
+  }
   if (v.includes("airtable") || v.includes("notion") || v.includes("github") || v.includes("postgres") || v.includes("snowflake") || v.includes("bigquery")) {
     return "MCP Server (Model Context Protocol), REST API";
   }
@@ -1358,6 +1504,9 @@ function getCodexIntegration(vendorName: string, category: string): string {
   const v = vendorName.toLowerCase();
   const cat = category.toLowerCase();
 
+  if (isN8nBuiltInNode(vendorName) || isN8nBuiltInNode(category)) {
+    return "OpenAI Node, Custom GPT Actions, Function Calling & Embeddings";
+  }
   if (v.includes("airtable") || v.includes("notion") || v.includes("github") || v.includes("linear") || v.includes("jira")) {
     return "Custom GPT Actions, MCP Server, REST API";
   }
