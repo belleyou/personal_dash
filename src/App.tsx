@@ -50,7 +50,10 @@ import {
   Lock,
   Link,
   Bot,
-  RotateCcw
+  RotateCcw,
+  Share2,
+  Mic,
+  RefreshCw
 } from "lucide-react";
 
 import baoSelfie from "./Selfie.png";
@@ -67,6 +70,9 @@ import { RevenueStreamlineCaseStudy } from "./components/RevenueStreamlineCaseSt
 import { InactiveLeadsReengagement } from "./components/InactiveLeadsReengagement";
 import { GongRevenueIntelligenceAgent } from "./components/GongRevenueIntelligenceAgent";
 import { PartnerChannelSalesBoost } from "./components/PartnerChannelSalesBoost";
+import { LinkedinIntentOrchestration } from "./components/LinkedinIntentOrchestration";
+import { GongTriggeredWorkflowDiagram } from "./components/GongTriggeredWorkflowDiagram";
+import { RenewalProcessWorkflowDiagram } from "./components/OpportunityRenewalProcessWorkflow";
 import { ProjectTinderDeck } from "./components/ProjectTinderDeck";
 import { DataAnalystDashboard } from "./components/DataAnalystDashboard";
 import { GTMAdminDashboard } from "./components/GTMAdminDashboard";
@@ -294,7 +300,7 @@ export default function App() {
   const [hoveredNav, setHoveredNav] = useState<string>("home");
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // Career experience expansion
-  const [activeProjectTab, setActiveProjectTab] = useState<"gong_revenue_agent" | "channel_partner_qtc" | "revops_streamline" | "inactive_leads" | "partner_channel_sales_boost" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("gong_revenue_agent");
+  const [activeProjectTab, setActiveProjectTab] = useState<"gong_revenue_agent" | "channel_partner_qtc" | "revops_streamline" | "inactive_leads" | "partner_channel_sales_boost" | "linkedin" | "gong" | "renewal" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales">("gong_revenue_agent");
   const [projectDisplayMode, setProjectDisplayMode] = useState<"tinder" | "detail" | "tabs">("tinder");
   
   // Permanent Liked Projects State - never lost across backwards navigation or page changes
@@ -967,6 +973,39 @@ export default function App() {
                 Partner Channel Sales Boost 🤝 ⭐
               </a>
               <a
+                href="#projects?tab=linkedin"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
+                  activeProjectTab === "linkedin"
+                    ? "bg-sky-300 text-ink border-b-3 border-b-sky-300 z-10 scale-105"
+                    : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
+                }`}
+              >
+                <Share2 className="h-4 w-4 text-sky-900 animate-pulse" />
+                Linkedin 🔗 ⭐
+              </a>
+              <a
+                href="#projects?tab=gong"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
+                  activeProjectTab === "gong"
+                    ? "bg-cyan-300 text-ink border-b-3 border-b-cyan-300 z-10 scale-105"
+                    : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
+                }`}
+              >
+                <Mic className="h-4 w-4 text-cyan-900 animate-pulse" />
+                Gong 🎙️ ⭐
+              </a>
+              <a
+                href="#projects?tab=renewal"
+                className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
+                  activeProjectTab === "renewal"
+                    ? "bg-purple-300 text-ink border-b-3 border-b-purple-300 z-10 scale-105"
+                    : "bg-zinc-150 text-zinc-500 border-b-3 border-b-ink hover:text-ink hover:bg-[#fafafa]"
+                }`}
+              >
+                <RefreshCw className="h-4 w-4 text-purple-900 animate-pulse" />
+                Renewal 🔄 ⭐
+              </a>
+              <a
                 href="#projects?tab=gong_revenue_agent"
                 className={`flex items-center gap-1.5 px-4 py-2.5 font-hand text-sm md:text-base font-bold transition-all border-t-3 border-x-3 border-ink rounded-t-lg translate-y-[3px] shrink-0 select-none cursor-pointer ${
                   activeProjectTab === "gong_revenue_agent"
@@ -1114,6 +1153,12 @@ export default function App() {
             {/* Project Cards Grid / Walkthrough */}
             {activeProjectTab === "partner_channel_sales_boost" ? (
               <PartnerChannelSalesBoost />
+            ) : activeProjectTab === "linkedin" ? (
+              <LinkedinIntentOrchestration />
+            ) : activeProjectTab === "gong" ? (
+              <GongTriggeredWorkflowDiagram />
+            ) : activeProjectTab === "renewal" ? (
+              <RenewalProcessWorkflowDiagram />
             ) : activeProjectTab === "gong_revenue_agent" ? (
               <GongRevenueIntelligenceAgent onCopyLink={copyToClipboard} copiedLabel={copiedText} />
             ) : activeProjectTab === "channel_partner_qtc" ? (

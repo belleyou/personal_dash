@@ -1,0 +1,559 @@
+import sys
+
+svg = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" style="background:#fafafa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <pattern id="dotPattern" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="8" cy="8" r="1.2" fill="#cbd5e1" opacity="0.6" />
+    </pattern>
+    <marker id="arrowHead" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 7 5 L 0 8.5 z" fill="#0f172a" />
+    </marker>
+    <marker id="redArrowHead" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 7 5 L 0 8.5 z" fill="#b91c1c" />
+    </marker>
+    <marker id="purpleArrowHead" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 7 5 L 0 8.5 z" fill="#4338ca" />
+    </marker>
+  </defs>
+
+  <!-- Background Dots -->
+  <rect x="0" y="44" width="1024" height="980" fill="#f8fafc" />
+  <rect x="0" y="44" width="1024" height="980" fill="url(#dotPattern)" />
+
+  <!-- TOP FIGMA APP HEADER BAR -->
+  <rect x="0" y="0" width="1024" height="42" fill="#1e293b" />
+  
+  <!-- Figma Tools (Left) -->
+  <g transform="translate(18, 12)">
+    <!-- Figma Logo icon -->
+    <path d="M 0 0 C 0 0 6 0 6 3 C 6 6 0 6 0 6 Z" fill="#F24E1E" />
+    <path d="M 6 0 C 6 0 12 0 12 3 C 12 6 6 6 6 6 Z" fill="#FF7262" />
+    <path d="M 0 6 C 0 6 6 6 6 9 C 6 12 0 12 0 12 Z" fill="#A259FF" />
+    <circle cx="9" cy="9" r="3" fill="#1ABCFE" />
+    <path d="M 0 12 C 0 12 6 12 6 15 C 6 18 3 18 0 18 Z" fill="#0ACF83" />
+    <polygon points="16,10 20,6 20,14" fill="#94a3b8" />
+  </g>
+
+  <!-- Tool Icons -->
+  <g transform="translate(68, 12)" stroke="#94a3b8" stroke-width="1.6" fill="none">
+    <!-- Frame # -->
+    <line x1="4" y1="2" x2="4" y2="16" />
+    <line x1="12" y1="2" x2="12" y2="16" />
+    <line x1="1" y1="6" x2="15" y2="6" />
+    <line x1="1" y1="12" x2="15" y2="12" />
+    <polygon points="18,10 22,6 22,14" fill="#94a3b8" stroke="none" />
+  </g>
+  <g transform="translate(108, 12)" stroke="#94a3b8" stroke-width="1.6" fill="none">
+    <rect x="2" y="2" width="12" height="12" rx="1" />
+    <polygon points="18,10 22,6 22,14" fill="#94a3b8" stroke="none" />
+  </g>
+  <g transform="translate(148, 12)" stroke="#94a3b8" stroke-width="1.6" fill="none">
+    <!-- Pen -->
+    <path d="M 3 13 L 13 3 L 15 5 L 5 15 Z" />
+    <polygon points="18,10 22,6 22,14" fill="#94a3b8" stroke="none" />
+  </g>
+  <g transform="translate(186, 12)">
+    <text x="0" y="14" fill="#94a3b8" font-size="16" font-weight="bold">T</text>
+  </g>
+  <g transform="translate(216, 12)" stroke="#94a3b8" stroke-width="1.6" fill="none">
+    <!-- Hand -->
+    <path d="M 2 8 C 2 6 5 6 5 8 L 5 14 C 5 16 9 16 9 14 L 9 7 C 9 5 12 5 12 7 L 12 14" />
+  </g>
+  <g transform="translate(248, 12)" stroke="#94a3b8" stroke-width="1.6" fill="none">
+    <!-- Comment -->
+    <path d="M 2 3 C 2 1 14 1 14 3 L 14 11 C 14 13 2 13 2 11 Z" />
+    <path d="M 4 13 L 2 17 L 7 13" />
+  </g>
+
+  <!-- Center Document Title -->
+  <g transform="translate(512, 26)">
+    <text x="0" y="0" fill="#f8fafc" font-size="13" font-weight="500" text-anchor="middle">Figma-style ⌵</text>
+  </g>
+
+  <!-- Header Right Controls -->
+  <g transform="translate(860, 11)">
+    <circle cx="10" cy="10" r="10" fill="#92400e" />
+    <text x="10" y="14" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">A</text>
+    
+    <!-- Save Button -->
+    <rect x="30" y="0" width="46" height="20" rx="4" fill="#0284c7" />
+    <text x="53" y="14" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">Save</text>
+    
+    <!-- Play button -->
+    <polygon points="90,5 98,10 90,15" fill="#94a3b8" />
+    
+    <!-- Zoom -->
+    <text x="125" y="14" fill="#94a3b8" font-size="11">105K ⌵</text>
+  </g>
+
+  <!-- MAIN PAGE TITLE -->
+  <g transform="translate(36, 82)">
+    <text x="0" y="0" font-size="28" font-weight="900" fill="#0f172a" letter-spacing="-0.5">Sales Intent Signal to Outreach Orchestration</text>
+    <!-- Avatar right -->
+    <circle cx="948" cy="-8" r="16" fill="#854d0e" />
+    <text x="948" y="-2" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+
+  <!-- ================= TOP LEFT TRIGGER CARD ================= -->
+  <!-- Top badge pills above trigger -->
+  <g transform="translate(100, 186)">
+    <!-- Small slack icon pill -->
+    <circle cx="16" cy="16" r="13" fill="#1e293b" />
+    <!-- Slack hash mini -->
+    <g transform="translate(9,9) scale(0.24)">
+      <rect x="18" y="0" width="8" height="24" rx="4" fill="#36C5F0" />
+      <circle cx="6" cy="12" r="4" fill="#36C5F0" />
+      <rect x="28" y="18" width="24" height="8" rx="4" fill="#2EB67D" />
+      <circle cx="40" cy="6" r="4" fill="#2EB67D" />
+      <rect x="28" y="32" width="8" height="24" rx="4" fill="#E01E5A" />
+      <circle cx="48" cy="44" r="4" fill="#E01E5A" />
+      <rect x="2" y="28" width="24" height="8" rx="4" fill="#ECB22E" />
+      <circle cx="14" cy="48" r="4" fill="#ECB22E" />
+    </g>
+    <!-- Small in icon pill -->
+    <circle cx="-6" cy="36" r="12" fill="#0284c7" />
+    <text x="-6" y="40" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">in</text>
+    <circle cx="42" cy="36" r="12" fill="#0284c7" />
+    <text x="42" y="40" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">in</text>
+  </g>
+
+  <!-- Trigger Box -->
+  <g transform="translate(36, 226)">
+    <rect x="0" y="0" width="168" height="126" rx="14" fill="#f0fdfa" stroke="#38bdf8" stroke-width="2" />
+    
+    <!-- Clock icon -->
+    <circle cx="26" cy="28" r="12" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" />
+    <polyline points="26,20 26,28 32,28" stroke="#0284c7" stroke-width="1.8" stroke-linecap="round" fill="none" />
+
+    <!-- LinkedIn Icon -->
+    <rect x="66" y="16" width="32" height="32" rx="6" fill="#0284c7" />
+    <text x="82" y="38" fill="#ffffff" font-size="20" font-weight="900" text-anchor="middle">in</text>
+
+    <!-- Text -->
+    <text x="84" y="68" font-size="13" font-weight="900" fill="#0f172a" text-anchor="middle">TRIGGER:</text>
+    <text x="84" y="86" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Nightly LinkedIn</text>
+    <text x="84" y="103" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Batch Job</text>
+
+    <!-- Avatars at bottom -->
+    <g transform="translate(66, 114)">
+      <circle cx="8" cy="8" r="9" fill="#fde047" stroke="#ffffff" stroke-width="1.5" />
+      <circle cx="8" cy="6" r="4" fill="#b45309" />
+      <circle cx="24" cy="8" r="9" fill="#fed7aa" stroke="#ffffff" stroke-width="1.5" />
+      <circle cx="24" cy="6" r="4" fill="#ca8a04" />
+    </g>
+  </g>
+
+  <!-- ================= CRITICAL ACTION BOX (LEFT) ================= -->
+  <g transform="translate(32, 428)">
+    <rect x="0" y="0" width="186" height="142" rx="12" fill="#fff1f2" stroke="#f43f5e" stroke-width="1.8" />
+    
+    <!-- Magnifying glass & Red alert icon -->
+    <circle cx="78" cy="28" r="12" fill="none" stroke="#be123c" stroke-width="2.2" />
+    <line x1="86" y1="36" x2="96" y2="46" stroke="#be123c" stroke-width="2.8" stroke-linecap="round" />
+    <polygon points="152,18 162,36 142,36" fill="#dc2626" />
+    <text x="152" y="34" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">!</text>
+
+    <!-- Text -->
+    <text x="93" y="68" font-size="12.5" font-weight="900" fill="#9f1239" text-anchor="middle">CRITICAL ACTION:</text>
+    <text x="93" y="88" font-size="13.5" font-weight="900" fill="#9f1239" text-anchor="middle">MANNER LOOKUP</text>
+    <text x="93" y="108" font-size="12" font-weight="bold" fill="#9f1239" text-anchor="middle">(Prevent Missed</text>
+    <text x="93" y="125" font-size="12" font-weight="bold" fill="#9f1239" text-anchor="middle">Opportunities)</text>
+  </g>
+
+  <!-- Connectors from Trigger:
+       1) Down into Left Critical Action
+       2) Right/Red connector elbow into "NOT MISSING WARM PATHS?" diamond
+  -->
+  <path d="M 120 354 L 120 422" fill="none" stroke="#991b1b" stroke-width="1.8" marker-end="url(#redArrowHead)" />
+
+  <path d="M 120 400 L 236 400 L 236 298 L 290 298" fill="none" stroke="#991b1b" stroke-width="1.8" marker-end="url(#redArrowHead)" />
+
+  <!-- Connector from Left Critical Action down to Persona Routing -->
+  <path d="M 128 570 L 128 626" fill="none" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+
+
+  <!-- ================= TOP PURPLE CONTAINER ================= -->
+  <g transform="translate(240, 194)">
+    <rect x="0" y="0" width="418" height="240" rx="14" fill="#ede9fe" stroke="#a855f7" stroke-width="1.8" />
+
+    <!-- Diamond: NOT MISSING WARM PATHS? -->
+    <g transform="translate(50, 44)">
+      <polygon points="56,0 112,56 56,112 0,56" fill="#ffffff" stroke="#2563eb" stroke-width="2" />
+      <!-- Shield icon -->
+      <path d="M 44 38 Q 56 34 68 38 L 68 58 Q 56 70 44 58 Z" fill="#60a5fa" stroke="#2563eb" stroke-width="1.8" />
+      <circle cx="56" cy="50" r="7" fill="#22c55e" />
+      <polyline points="52,50 55,53 60,47" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" />
+    </g>
+
+    <!-- Diamond caption -->
+    <text x="106" y="174" font-size="12.5" font-weight="900" fill="#1e1b4b" text-anchor="middle">NOT MISSING</text>
+    <text x="106" y="190" font-size="12.5" font-weight="900" fill="#1e1b4b" text-anchor="middle">WARM PATHS?</text>
+    <text x="106" y="208" font-size="11.5" font-weight="bold" fill="#1e1b4b" text-anchor="middle">(Increase Data Hygiene)</text>
+
+    <!-- Arrow from Diamond to Manner Lookup box -->
+    <line x1="164" y1="100" x2="204" y2="100" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+
+    <!-- Pink Box: CRITICAL ACTION: MANNER LOOKUP -->
+    <g transform="translate(210, 32)">
+      <rect x="0" y="0" width="192" height="144" rx="10" fill="#fff1f2" stroke="#f43f5e" stroke-width="1.8" />
+      
+      <!-- Magnifying glass & Red alert icon -->
+      <circle cx="78" cy="24" r="10" fill="none" stroke="#be123c" stroke-width="2.2" />
+      <line x1="85" y1="31" x2="94" y2="40" stroke="#be123c" stroke-width="2.8" stroke-linecap="round" />
+      <polygon points="156,16 166,32 146,32" fill="#dc2626" />
+      <text x="156" y="30" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">!</text>
+
+      <text x="96" y="60" font-size="12" font-weight="900" fill="#9f1239" text-anchor="middle">CRITICAL ACTION:</text>
+      <text x="96" y="78" font-size="13" font-weight="900" fill="#9f1239" text-anchor="middle">MANNER LOOKUP</text>
+      <text x="96" y="98" font-size="11.5" font-weight="bold" fill="#9f1239" text-anchor="middle">(Prevent Missed</text>
+      <text x="96" y="115" font-size="11.5" font-weight="bold" fill="#9f1239" text-anchor="middle">Opportunities)</text>
+    </g>
+  </g>
+
+  <!-- ================= TOP RIGHT: INTENT SIGNAL DISCOVERY ================= -->
+  <g transform="translate(672, 130)">
+    <rect x="0" y="0" width="336" height="304" rx="16" fill="#f5f3ff" stroke="#a855f7" stroke-width="1.8" />
+
+    <!-- Header -->
+    <g transform="translate(18, 14)">
+      <!-- Binoculars Icon -->
+      <circle cx="16" cy="18" r="7" fill="#6366f1" stroke="#312e81" stroke-width="1.5" />
+      <circle cx="34" cy="18" r="7" fill="#6366f1" stroke="#312e81" stroke-width="1.5" />
+      <rect x="18" y="15" width="14" height="6" fill="#312e81" />
+      <polyline points="10,24 16,34 34,34 40,24" stroke="#312e81" stroke-width="2" fill="none" />
+
+      <text x="50" y="18" font-size="14.5" font-weight="900" fill="#0f172a">INTENT SIGNAL DISCOVERY</text>
+      <text x="50" y="34" font-size="13" font-weight="bold" fill="#0f172a">(New Oppty)</text>
+    </g>
+
+    <!-- Signal Card 1 -->
+    <g transform="translate(24, 66)">
+      <rect x="0" y="0" width="280" height="62" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+      <!-- Person Icon in purple circle -->
+      <circle cx="30" cy="31" r="16" fill="#ede9fe" />
+      <circle cx="30" cy="26" r="6" fill="#6366f1" />
+      <path d="M 20 40 C 20 33, 40 33, 40 40 Z" fill="#6366f1" />
+
+      <text x="58" y="27" font-size="12.5" font-weight="bold" fill="#0f172a">Team / Job / Profile</text>
+      <text x="58" y="44" font-size="12.5" font-weight="bold" fill="#0f172a">Changes</text>
+
+      <text x="236" y="27" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">New</text>
+      <text x="236" y="44" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">Job title</text>
+    </g>
+
+    <!-- Signal Card 2 -->
+    <g transform="translate(24, 142)">
+      <rect x="0" y="0" width="280" height="62" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+      <!-- Thumbs up icon -->
+      <path d="M 22 34 L 22 28 C 22 24 26 22 28 20 L 30 20 C 30 24 33 26 36 26 L 40 26 C 42 26 43 28 43 30 L 41 38 C 41 40 39 42 36 42 L 26 42 C 24 42 22 40 22 38 Z" fill="#f59e0b" stroke="#b45309" stroke-width="1.5" />
+
+      <text x="58" y="28" font-size="12.5" font-weight="bold" fill="#0f172a">Post Reply / Like /</text>
+      <text x="58" y="46" font-size="12.5" font-weight="bold" fill="#0f172a">Seniority</text>
+
+      <!-- Chat and Chart icons -->
+      <rect x="206" y="20" width="22" height="18" rx="3" fill="#60a5fa" />
+      <polygon points="210,38 214,38 214,42" fill="#60a5fa" />
+      <line x1="210" y1="25" x2="224" y2="25" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="210" y1="30" x2="220" y2="30" stroke="#ffffff" stroke-width="1.5" />
+
+      <polyline points="242,38 248,30 254,34 262,22" stroke="#22c55e" stroke-width="2.5" fill="none" />
+      <polygon points="260,20 266,22 264,28" fill="#22c55e" />
+    </g>
+
+    <!-- Signal Card 3 -->
+    <g transform="translate(24, 218)">
+      <rect x="0" y="0" width="280" height="74" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+      <!-- Org Chart Icon -->
+      <rect x="18" y="32" width="10" height="8" fill="#3b82f6" />
+      <rect x="34" y="32" width="10" height="8" fill="#3b82f6" />
+      <rect x="26" y="16" width="10" height="8" fill="#3b82f6" />
+      <line x1="31" y1="24" x2="31" y2="28" stroke="#3b82f6" stroke-width="1.5" />
+      <line x1="23" y1="28" x2="39" y2="28" stroke="#3b82f6" stroke-width="1.5" />
+      <line x1="23" y1="28" x2="23" y2="32" stroke="#3b82f6" stroke-width="1.5" />
+      <line x1="39" y1="28" x2="39" y2="32" stroke="#3b82f6" stroke-width="1.5" />
+
+      <text x="56" y="27" font-size="12" font-weight="bold" fill="#0f172a">Executive Relationship</text>
+      <text x="56" y="44" font-size="12" font-weight="bold" fill="#0f172a">Mapping &amp; Team Link</text>
+      <text x="56" y="61" font-size="12" font-weight="bold" fill="#0f172a">Connection Degree</text>
+
+      <!-- Chain link icon -->
+      <g transform="translate(236, 28) rotate(-45)">
+        <rect x="0" y="0" width="16" height="8" rx="4" fill="none" stroke="#6366f1" stroke-width="2" />
+        <rect x="8" y="0" width="16" height="8" rx="4" fill="none" stroke="#6366f1" stroke-width="2" />
+      </g>
+    </g>
+  </g>
+
+  <!-- Connectors from Purple Container Manner Lookup to 3 Discovery Cards -->
+  <path d="M 642 300 L 664 300 L 664 226 L 694 226" fill="none" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+  <path d="M 664 300 L 694 300" fill="none" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+  <path d="M 664 300 L 664 384 L 694 384" fill="none" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+
+
+  <!-- ================= MIDDLE: SIGNAL SCORING ================= -->
+  <!-- Long Connector from Intent Signal Discovery down to Signal Scoring -->
+  <path d="M 984 400 L 994 400 L 994 450 L 400 450 L 400 472" fill="none" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+
+  <g transform="translate(240, 476)">
+    <rect x="0" y="0" width="336" height="100" rx="12" fill="#1e1b4b" />
+    
+    <text x="22" y="34" font-size="15" font-weight="900" fill="#ffffff">SIGNAL SCORING:</text>
+    <text x="22" y="58" font-size="14.5" font-weight="900" fill="#ffffff">Estimate Deal Risk</text>
+    <text x="22" y="80" font-size="14.5" font-weight="bold" fill="#a5b4fc">[per the signal]</text>
+
+    <!-- Calculator and chart icon -->
+    <g transform="translate(238, 20)">
+      <!-- Calculator -->
+      <rect x="0" y="6" width="34" height="46" rx="4" fill="#4338ca" stroke="#818cf8" stroke-width="1.5" />
+      <rect x="5" y="11" width="24" height="10" fill="#312e81" />
+      <circle cx="9" cy="28" r="2" fill="#ffffff" />
+      <circle cx="17" cy="28" r="2" fill="#ffffff" />
+      <circle cx="25" cy="28" r="2" fill="#ffffff" />
+      <circle cx="9" cy="38" r="2" fill="#ffffff" />
+      <circle cx="17" cy="38" r="2" fill="#ffffff" />
+      <circle cx="25" cy="38" r="2" fill="#ffffff" />
+
+      <!-- Bar chart behind -->
+      <rect x="36" y="24" width="8" height="28" fill="#60a5fa" />
+      <rect x="46" y="14" width="8" height="38" fill="#38bdf8" />
+      <rect x="56" y="4" width="8" height="48" fill="#22c55e" />
+
+      <!-- Alert warning icon -->
+      <polygon points="62,32 74,52 50,52" fill="#ef4444" />
+      <text x="62" y="49" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">!</text>
+    </g>
+  </g>
+
+  <!-- Score pill -->
+  <g transform="translate(592, 510)">
+    <line x1="-16" y1="16" x2="0" y2="16" stroke="#0f172a" stroke-width="2" />
+    <rect x="0" y="0" width="58" height="32" rx="10" fill="#1e1b4b" />
+    <text x="29" y="21" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">Score</text>
+  </g>
+
+  <!-- Connectors from Signal Scoring to Persona Routing -->
+  <path d="M 440 576 L 440 600 L 170 600 L 170 626" fill="none" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+
+
+  <!-- ================= PERSONA ROUTING BAR ================= -->
+  <g transform="translate(78, 626)">
+    <!-- Container -->
+    <rect x="0" y="0" width="868" height="74" rx="12" fill="#ede9fe" stroke="#a855f7" stroke-width="1.8" />
+
+    <!-- Left Title: PERSONA ROUTING with People Icon -->
+    <g transform="translate(12, 16)">
+      <!-- 3 People icon -->
+      <circle cx="18" cy="14" r="6" fill="#4338ca" />
+      <circle cx="32" cy="14" r="6" fill="#4338ca" />
+      <circle cx="25" cy="8" r="6" fill="#312e81" />
+      <path d="M 8 28 C 8 22 28 22 28 28 Z" fill="#4338ca" />
+      <path d="M 22 28 C 22 22 42 22 42 28 Z" fill="#4338ca" />
+      <path d="M 15 28 C 15 20 35 20 35 28 Z" fill="#312e81" />
+
+      <text x="58" y="18" font-size="13.5" font-weight="900" fill="#0f172a">PERSONA</text>
+      <text x="58" y="34" font-size="13.5" font-weight="900" fill="#0f172a">ROUTING</text>
+    </g>
+
+    <!-- Sub-container holding pills -->
+    <rect x="164" y="10" width="692" height="54" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+
+    <!-- SDR -->
+    <g transform="translate(194, 20)">
+      <rect x="0" y="0" width="82" height="34" rx="17" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+      <circle cx="16" cy="17" r="10" fill="#ede9fe" />
+      <circle cx="16" cy="14" r="4" fill="#6366f1" />
+      <path d="M 10 23 C 10 19, 22 19, 22 23 Z" fill="#6366f1" />
+      <text x="49" y="22" font-size="13.5" font-weight="900" fill="#0f172a" text-anchor="middle">SDR</text>
+    </g>
+
+    <line x1="284" y1="37" x2="304" y2="37" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+
+    <!-- AE/AM -->
+    <g transform="translate(312, 20)">
+      <rect x="0" y="0" width="108" height="34" rx="17" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+      <circle cx="16" cy="17" r="10" fill="#fed7aa" />
+      <circle cx="16" cy="14" r="4" fill="#ea580c" />
+      <path d="M 10 23 C 10 19, 22 19, 22 23 Z" fill="#ea580c" />
+      <text x="62" y="22" font-size="13.5" font-weight="900" fill="#0f172a" text-anchor="middle">AE/AM</text>
+    </g>
+
+    <line x1="428" y1="37" x2="448" y2="37" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+
+    <!-- SalesOps -->
+    <g transform="translate(456, 20)">
+      <rect x="0" y="0" width="120" height="34" rx="17" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+      <circle cx="16" cy="17" r="10" fill="#fee2e2" />
+      <!-- Flame / feather icon -->
+      <path d="M 16 9 Q 20 15 16 23 Q 12 18 16 9 Z" fill="#dc2626" />
+      <text x="68" y="22" font-size="13" font-weight="900" fill="#0f172a" text-anchor="middle">SalesOps</text>
+    </g>
+
+    <line x1="584" y1="37" x2="604" y2="37" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+
+    <!-- RevOps -->
+    <g transform="translate(612, 20)">
+      <rect x="0" y="0" width="118" height="34" rx="17" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+      <circle cx="16" cy="17" r="10" fill="#ccfbf1" />
+      <circle cx="14" cy="15" r="4" fill="#0d9488" />
+      <circle cx="20" cy="18" r="3" fill="#0d9488" />
+      <text x="66" y="22" font-size="13" font-weight="900" fill="#0f172a" text-anchor="middle">RevOps</text>
+    </g>
+
+    <line x1="738" y1="37" x2="758" y2="37" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+
+    <!-- MktOps -->
+    <g transform="translate(766, 20)">
+      <rect x="0" y="0" width="118" height="34" rx="17" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+      <!-- Megaphone icon -->
+      <path d="M 12 18 L 18 14 L 24 14 L 24 22 L 18 22 Z" fill="#6366f1" />
+      <polygon points="12,18 10,24 13,24 14,20" fill="#4338ca" />
+      <text x="66" y="22" font-size="13" font-weight="900" fill="#0f172a" text-anchor="middle">MktOps</text>
+    </g>
+  </g>
+
+
+  <!-- ================= BOTTOM CONTAINER: SOLUTION ARCHITECTURE & WRITE-BACK ================= -->
+  <g transform="translate(32, 734)">
+    <rect x="0" y="0" width="960" height="260" rx="16" fill="#ffedd5" stroke="#f59e0b" stroke-width="2" />
+
+    <!-- Left Header Area -->
+    <g transform="translate(24, 24)">
+      <!-- Gear and DB cylinders -->
+      <circle cx="16" cy="16" r="10" fill="#ea580c" />
+      <circle cx="16" cy="16" r="5" fill="#ffedd5" />
+      <circle cx="36" cy="24" r="8" fill="#ea580c" />
+      <circle cx="36" cy="24" r="4" fill="#ffedd5" />
+
+      <!-- Database Cylinder -->
+      <ellipse cx="26" cy="46" rx="14" ry="5" fill="#ea580c" />
+      <rect x="12" y="46" width="28" height="14" fill="#ea580c" />
+      <ellipse cx="26" cy="60" rx="14" ry="5" fill="#c2410c" />
+      
+      <text x="0" y="96" font-size="15" font-weight="900" fill="#0f172a">SOLUTION</text>
+      <text x="0" y="118" font-size="15" font-weight="900" fill="#0f172a">ARCHITECTURE</text>
+      <text x="0" y="140" font-size="15" font-weight="900" fill="#0f172a">&amp; WRITE-BACK</text>
+    </g>
+
+    <!-- Vertical divider inside bottom card -->
+    <line x1="208" y1="0" x2="208" y2="260" stroke="#fed7aa" stroke-width="2" />
+
+    <!-- 1. n8n Box -->
+    <g transform="translate(230, 28)">
+      <rect x="0" y="0" width="224" height="120" rx="14" fill="#ffffff" stroke="#ea580c" stroke-width="1.8" />
+      
+      <!-- n8n logo nodes -->
+      <g transform="translate(16, 16)">
+        <circle cx="6" cy="10" r="5" fill="#ea580c" />
+        <circle cx="22" cy="6" r="5" fill="#ea580c" />
+        <circle cx="38" cy="14" r="5" fill="#ea580c" />
+        <line x1="6" y1="10" x2="22" y2="6" stroke="#ea580c" stroke-width="2.5" />
+        <line x1="22" y1="6" x2="38" y2="14" stroke="#ea580c" stroke-width="2.5" />
+      </g>
+
+      <text x="68" y="26" font-size="20" font-weight="900" fill="#ea580c">n8n</text>
+      <text x="68" y="44" font-size="12" font-weight="bold" fill="#0f172a">(No-Code Automation)</text>
+
+      <!-- Inner AI Engine Box -->
+      <rect x="42" y="56" width="140" height="48" rx="8" fill="#fef3c7" stroke="#fbbf24" stroke-width="1.5" />
+      <text x="112" y="76" font-size="13.5" font-weight="900" fill="#0f172a" text-anchor="middle">AI Engine</text>
+      <text x="112" y="94" font-size="11.5" font-weight="bold" fill="#0f172a" text-anchor="middle">(Compute Signal)</text>
+    </g>
+
+    <!-- Arrow from n8n to Clay -->
+    <line x1="454" y1="88" x2="512" y2="88" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+
+    <!-- 2. Clay Box -->
+    <g transform="translate(516, 26)">
+      <rect x="0" y="0" width="116" height="136" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8" />
+      
+      <!-- Clay Pill Logo -->
+      <g transform="translate(32, 10)">
+        <rect x="0" y="0" width="52" height="26" rx="13" fill="#0284c7" />
+        <text x="26" y="17" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Clay</text>
+      </g>
+      <!-- Green Check Badge -->
+      <circle cx="106" cy="16" r="10" fill="#16a34a" />
+      <polyline points="101,16 104,19 111,12" stroke="#ffffff" stroke-width="2.2" fill="none" stroke-linecap="round" />
+
+      <text x="58" y="66" font-size="24" font-weight="900" fill="#0f172a" text-anchor="middle">Clay</text>
+      <text x="58" y="92" font-size="12.5" font-weight="bold" fill="#0f172a" text-anchor="middle">(Data</text>
+      <text x="58" y="110" font-size="12.5" font-weight="bold" fill="#0f172a" text-anchor="middle">Enrichment)</text>
+    </g>
+
+    <!-- Bi-directional Connector between Clay and SFDC -->
+    <line x1="634" y1="78" x2="684" y2="78" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+    <line x1="684" y1="96" x2="634" y2="96" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+
+    <!-- 3. SFDC Write-Back Box -->
+    <g transform="translate(688, 26)">
+      <rect x="0" y="0" width="98" height="136" rx="14" fill="#ffffff" stroke="#f59e0b" stroke-width="1.8" />
+      
+      <!-- Salesforce Cloud Logo -->
+      <g transform="translate(14, 12)">
+        <path d="M 12 18 C 8 18 4 14 6 10 C 8 6 14 6 18 8 C 22 2 34 2 38 8 C 44 6 50 10 50 14 C 54 14 56 18 54 22 C 54 26 48 28 44 28 L 12 28 C 8 28 4 24 6 20 Z" fill="#0284c7" />
+        <text x="28" y="20" fill="#ffffff" font-size="8" font-weight="bold" text-anchor="middle">salesforce</text>
+      </g>
+
+      <text x="49" y="66" font-size="16" font-weight="900" fill="#0f172a" text-anchor="middle">SFDC</text>
+      <text x="49" y="88" font-size="16" font-weight="900" fill="#0f172a" text-anchor="middle">Write-</text>
+      <text x="49" y="110" font-size="16" font-weight="900" fill="#0f172a" text-anchor="middle">Back</text>
+    </g>
+
+    <!-- Link text and branch arrows to Outreach & Slack -->
+    <text x="806" y="44" font-size="13" font-weight="900" fill="#0f172a">Link</text>
+    <path d="M 788 80 L 804 80 L 804 56 L 834 56" fill="none" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+    <path d="M 788 80 L 804 80 L 804 126 L 834 126" fill="none" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+
+    <!-- 4. Outreach Card -->
+    <g transform="translate(840, 20)">
+      <rect x="0" y="0" width="112" height="88" rx="10" fill="#ffffff" stroke="#ea580c" stroke-width="1.8" />
+      <!-- Outreach swirl logo -->
+      <circle cx="56" cy="24" r="14" fill="#581c87" />
+      <circle cx="56" cy="24" r="7" fill="#ffffff" />
+      
+      <text x="56" y="52" font-size="14.5" font-weight="900" fill="#0f172a" text-anchor="middle">Outreach</text>
+      <text x="56" y="68" font-size="11.5" font-weight="bold" fill="#0f172a" text-anchor="middle">(Campaign</text>
+      <text x="56" y="80" font-size="11.5" font-weight="bold" fill="#0f172a" text-anchor="middle">Execution)</text>
+    </g>
+
+    <!-- 5. Slack Card -->
+    <g transform="translate(840, 120)">
+      <rect x="0" y="0" width="112" height="72" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8" />
+      
+      <!-- Slack logo -->
+      <g transform="translate(18, 14) scale(0.42)">
+        <rect x="18" y="0" width="8" height="24" rx="4" fill="#36C5F0" />
+        <circle cx="6" cy="12" r="4" fill="#36C5F0" />
+        <rect x="28" y="18" width="24" height="8" rx="4" fill="#2EB67D" />
+        <circle cx="40" cy="6" r="4" fill="#2EB67D" />
+        <rect x="28" y="32" width="8" height="24" rx="4" fill="#E01E5A" />
+        <circle cx="48" cy="44" r="4" fill="#E01E5A" />
+        <rect x="2" y="28" width="24" height="8" rx="4" fill="#ECB22E" />
+        <circle cx="14" cy="48" r="4" fill="#ECB22E" />
+      </g>
+
+      <text x="68" y="32" font-size="18" font-weight="900" fill="#0f172a">slack</text>
+      <text x="64" y="56" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">(Alerts)</text>
+    </g>
+
+    <!-- Workflow Execution Lines below n8n -->
+    <path d="M 320 150 L 320 176 L 366 176" fill="none" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+    <text x="374" y="181" font-size="15" font-weight="900" fill="#0f172a">Data Orchestrate</text>
+    <text x="510" y="181" font-size="12.5" font-weight="bold" fill="#0f172a">(Merge &amp; Map)</text>
+
+    <path d="M 346 150 L 346 220 L 388 220" fill="none" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+    <text x="396" y="225" font-size="17" font-weight="bold" fill="#0f172a">Trigger WF</text>
+    <line x1="504" y1="220" x2="538" y2="220" stroke="#0f172a" stroke-width="1.8" marker-end="url(#arrowHead)" />
+    <text x="548" y="225" font-size="17" font-weight="bold" fill="#0f172a">Recomm/Summary)</text>
+  </g>
+
+  <!-- Figma Help Bubble at bottom right -->
+  <circle cx="986" cy="986" r="16" fill="#1e1e1e" />
+  <text x="986" y="992" fill="#ffffff" font-size="17" font-weight="bold" text-anchor="middle">?</text>
+
+</svg>"""
+
+with open("public/linkedin_intent_orchestration.svg", "w") as f:
+    f.write(svg)
+
+print("SVG written to public/linkedin_intent_orchestration.svg")

@@ -31,7 +31,9 @@ import {
   Bookmark,
   Award,
   Zap,
-  Briefcase
+  Briefcase,
+  Mic,
+  RefreshCw
 } from "lucide-react";
 import { Project } from "../types";
 import {
@@ -45,7 +47,7 @@ import {
 export interface TinderCardItem {
   id: string;
   title: string;
-  category: "Star Case Study" | "AI GTM & Workflows" | "Core GTM Systems" | "System Evaluation" | "Data Modeling" | "Revenue Growth Ops" | "PM Responsibility" | "Partner Channel Sales Boost";
+  category: "Star Case Study" | "AI GTM & Workflows" | "Core GTM Systems" | "System Evaluation" | "Data Modeling" | "Revenue Growth Ops" | "PM Responsibility" | "Partner Channel Sales Boost" | "Linkedin" | "Gong" | "Renewal";
   categoryColor: string;
   categoryBg: string;
   icon: any;
@@ -54,7 +56,7 @@ export interface TinderCardItem {
   impact: string;
   tools: string[];
   aiUse?: string;
-  targetTab: "gong_revenue_agent" | "channel_partner_qtc" | "inactive_leads" | "partner_channel_sales_boost" | "revops_streamline" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales";
+  targetTab: "gong_revenue_agent" | "channel_partner_qtc" | "inactive_leads" | "partner_channel_sales_boost" | "linkedin" | "gong" | "renewal" | "revops_streamline" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales";
   isSpecialCaseStudy: boolean;
   demoUrl?: string;
   stats?: { label: string; value: string }[];
@@ -105,6 +107,72 @@ export const MASTER_DECK: TinderCardItem[] = [
       { label: "Architecture", value: "AI + NLP Engine" },
       { label: "Execution", value: "PM Tasks Matrix" },
       { label: "Outcome", value: "Zero Revenue Leakage" }
+    ]
+  },
+  {
+    id: "linkedin",
+    title: "Linkedin: Sales Intent Signal to Outreach Orchestration",
+    category: "Linkedin",
+    categoryColor: "text-sky-900",
+    categoryBg: "bg-sky-100 border-sky-300",
+    icon: Share2,
+    problem: "Outreach teams miss high-intent warm paths and executive job changes due to delayed manual lookups, leading to stale accounts, missed warm paths, and pipeline loss.",
+    solution: "Nightly LinkedIn batch job triggers Manner Lookup for warm paths, intent signal discovery (job changes, post engagement, executive link degrees), deal risk signal scoring, persona routing (SDR ➔ AE ➔ SalesOps ➔ RevOps ➔ MktOps), and automated n8n AI engine write-back to Clay, SFDC, Outreach, and Slack.",
+    impact: "Automated end-to-end intent detection and multi-channel outreach routing with zero manual leakage, automated deal risk estimation, and full SFDC write-back synchronization.",
+    tools: ["LinkedIn Signals", "n8n Automation", "Clay", "SFDC Write-Back", "Outreach", "Slack", "Figma Blueprint"],
+    aiUse: "AI Engine Signal Scoring & Automated Multi-Channel Intent Routing",
+    targetTab: "linkedin",
+    isSpecialCaseStudy: true,
+    highlightBadge: "🔗 Linkedin Architecture",
+    stats: [
+      { label: "Original Diagram", value: "Single Page View" },
+      { label: "Triggers", value: "Nightly LinkedIn Job" },
+      { label: "Enrichment", value: "Clay + n8n Engine" },
+      { label: "Write-Back", value: "SFDC + Outreach" }
+    ]
+  },
+  {
+    id: "gong",
+    title: "Gong: Triggered Sales Workflow Process",
+    category: "Gong",
+    categoryColor: "text-cyan-900",
+    categoryBg: "bg-cyan-100 border-cyan-300",
+    icon: Mic,
+    problem: "Sales calls often lack systematic follow-up, MEDDICC updates in CRM are incomplete, manual note-taking delays customer recap emails, and sales management lacks automated coaching and feedback loops.",
+    solution: "Gong.io meeting recording triggers automatic speech-to-text transcription, keyword & topic extraction, and sentiment analysis into an Automation Engine (Zapier/API) that synchronizes CRM (MEDDICC, meeting notes, follow-up task), dispatches customer email recaps and Slack wins, and activates a complete coaching workflow.",
+    impact: "Improved forecasting accuracy, shortened sales cycles, higher win rates, and scalable rep development & training through closed-loop automation.",
+    tools: ["Gong.io Trigger", "Speech-to-Text", "NLP & Sentiment", "Automation Engine", "Salesforce CRM", "Slack Alerts", "Coaching Workflow"],
+    aiUse: "NLP Keyword & Sentiment Extraction + Zapier/API Automation Engine",
+    targetTab: "gong",
+    isSpecialCaseStudy: true,
+    highlightBadge: "🎙️ Gong Workflow Diagram",
+    stats: [
+      { label: "Original Diagram", value: "Single Page View" },
+      { label: "Trigger", value: "Gong Meeting Recorded" },
+      { label: "Sync", value: "CRM MEDDICC & Tasks" },
+      { label: "Outcomes", value: "Higher Win Rates" }
+    ]
+  },
+  {
+    id: "renewal",
+    title: "Opportunity Renewal Signal Process Workflow",
+    category: "Renewal",
+    categoryColor: "text-purple-900",
+    categoryBg: "bg-purple-100 border-purple-300",
+    icon: RefreshCw,
+    problem: "Sales operations struggle with detecting upcoming contract renewals early, calculating churn risk dynamically against competitor pricing and usage signals, and standardizing human-in-the-loop approvals before sending proposal terms to customers.",
+    solution: "Nightly batch job triggers Salesforce CRM renewal signal detection (Oppty End Date ≤ 120 Days, Stage = Closed Won, Active Product) into AI Orchestrator analyzing churn risk, ARR vs competitor rate, managed services utilization, and historical interactions (≤ 3 yrs). Generates draft proposal tiers, submits to Slack for AE review/revision, and upon approval automatically triggers Gmail customer proposals and Google Calendar discussion invites.",
+    impact: "Automated early renewal pipeline capture, eliminated churn blind spots with multi-variable AI risk scoring, and secured 100% human-approved renewal execution via automated Slack, Gmail, and Google Calendar sync.",
+    tools: ["Nightly Batch Job", "Salesforce CRM", "AI Orchestrator", "Slack Channel", "Gmail Integration", "Google Calendar"],
+    aiUse: "AI Churn Risk Scoring & Competitor Analysis + Proposal Tier Generation",
+    targetTab: "renewal",
+    isSpecialCaseStudy: true,
+    highlightBadge: "🔄 Renewal Workflow Diagram",
+    stats: [
+      { label: "Original Diagram", value: "Single Page View" },
+      { label: "Trigger", value: "Nightly Batch Job" },
+      { label: "Review", value: "Slack Human-in-the-Loop" },
+      { label: "Execution", value: "Gmail + Calendar Auto" }
     ]
   },
   {
@@ -483,6 +551,18 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
       onSelectProjectDetail("partner_channel_sales_boost");
       return;
     }
+    if (catId === "linkedin") {
+      onSelectProjectDetail("linkedin");
+      return;
+    }
+    if (catId === "gong") {
+      onSelectProjectDetail("gong");
+      return;
+    }
+    if (catId === "renewal") {
+      onSelectProjectDetail("renewal");
+      return;
+    }
     setFilterCategory(catId);
     setCurrentIndex(0);
     setHistory([]);
@@ -603,6 +683,21 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
             {
               id: "partner_channel_sales_boost",
               label: "🤝 Partner Channel Sales Boost",
+              highlight: true
+            },
+            {
+              id: "linkedin",
+              label: "🔗 Linkedin",
+              highlight: true
+            },
+            {
+              id: "gong",
+              label: "🎙️ Gong",
+              highlight: true
+            },
+            {
+              id: "renewal",
+              label: "🔄 Renewal",
               highlight: true
             }
           ].map((cat) => (
