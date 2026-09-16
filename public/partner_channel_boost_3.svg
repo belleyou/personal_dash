@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 660" width="600" height="660" style="background:#ffffff; font-family:-apple-system, BlinkMacSystemFont, Arial, sans-serif;">
+  <!-- Border outline -->
+  <rect x="2" y="2" width="596" height="656" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="2.5" />
+
+  <!-- Header Row (Dark Navy Blue #16365C) -->
+  <path d="M 2 10 Q 2 2 10 2 L 590 2 Q 598 2 598 10 L 598 56 L 2 56 Z" fill="#16365C" />
+  <text x="150" y="38" fill="#ffffff" font-size="28" font-weight="900" text-anchor="middle">Challenges</text>
+  <text x="440" y="38" fill="#ffffff" font-size="28" font-weight="900" text-anchor="middle">PM Tasks</text>
+
+  <!-- Vertical Divider Line -->
+  <line x1="298" y1="2" x2="298" y2="656" stroke="#94a3b8" stroke-width="1.5" />
+
+  <!-- ROW 1: Trigger | Interview (bg: #E8EDF3) -->
+  <rect x="3" y="57" width="294" height="58" fill="#E8EDF3" />
+  <rect x="299" y="57" width="298" height="58" fill="#E8EDF3" />
+  <line x1="2" y1="115" x2="598" y2="115" stroke="#94a3b8" stroke-width="1.2" />
+  <text x="18" y="96" fill="#000000" font-size="25" font-weight="900">Trigger</text>
+  <text x="314" y="96" fill="#000000" font-size="25" font-weight="900">Interview</text>
+
+  <!-- ROW 2: Objects/Fields | Discovery Phase (bg: #FFFFFF) -->
+  <rect x="3" y="116" width="294" height="58" fill="#FFFFFF" />
+  <rect x="299" y="116" width="298" height="58" fill="#FFFFFF" />
+  <line x1="2" y1="174" x2="598" y2="174" stroke="#94a3b8" stroke-width="1.2" />
+  <text x="18" y="155" fill="#000000" font-size="25" font-weight="900">Objects/Fields</text>
+  <text x="314" y="155" fill="#000000" font-size="25" font-weight="900">Discovery Phase</text>
+
+  <!-- ROW 3: LMS Match | Analysis, KPI Metrics (bg: #E8EDF3) -->
+  <rect x="3" y="175" width="294" height="58" fill="#E8EDF3" />
+  <rect x="299" y="175" width="298" height="58" fill="#E8EDF3" />
+  <line x1="2" y1="233" x2="598" y2="233" stroke="#94a3b8" stroke-width="1.2" />
+  <text x="18" y="214" fill="#000000" font-size="25" font-weight="900">LMS Match</text>
+  <text x="314" y="214" fill="#000000" font-size="25" font-weight="900">Analysis, KPI Metrics</text>
+
+  <!-- ROW 4: (empty) | Map, Modeling, Govt (bg: #FFFFFF) -->
+  <rect x="3" y="234" width="294" height="80" fill="#FFFFFF" />
+  <rect x="299" y="234" width="298" height="80" fill="#FFFFFF" />
+  <line x1="2" y1="314" x2="598" y2="314" stroke="#94a3b8" stroke-width="1.2" />
+  <text x="314" y="268" fill="#000000" font-size="24" font-weight="900">Map, Modeling,</text>
+  <text x="314" y="299" fill="#000000" font-size="24" font-weight="900">Govt</text>
+
+  <!-- ROW 5: Patch | prompt, implement (bg: #E8EDF3) -->
+  <rect x="3" y="315" width="294" height="56" fill="#E8EDF3" />
+  <rect x="299" y="315" width="298" height="56" fill="#E8EDF3" />
+  <line x1="2" y1="371" x2="598" y2="371" stroke="#94a3b8" stroke-width="1.2" />
+  <text x="18" y="353" fill="#000000" font-size="25" font-weight="900">Patch</text>
+  <text x="314" y="353" fill="#000000" font-size="25" font-weight="900">prompt, implement</text>
+
+  <!-- ROW 6: Migrate | model, memory (bg: #FFFFFF) -->
+  <rect x="3" y="372" width="294" height="56" fill="#FFFFFF" />
+  <rect x="299" y="372" width="298" height="56" fill="#FFFFFF" />
+  <line x1="2" y1="428" x2="598" y2="428" stroke="#94a3b8" stroke-width="1.2" />
+  <text x="18" y="410" fill="#000000" font-size="25" font-weight="900">Migrate</text>
+  <text x="314" y="410" fill="#000000" font-size="25" font-weight="900">model, memory</text>
+
+  <!-- ROW 7: Prompt | dedupe, sync (bg: #E8EDF3) -->
+  <rect x="3" y="429" width="294" height="56" fill="#E8EDF3" />
+  <rect x="299" y="429" width="298" height="56" fill="#E8EDF3" />
+  <line x1="2" y1="485" x2="598" y2="485" stroke="#94a3b8" stroke-width="1.2" />
+  <text x="18" y="467" fill="#000000" font-size="25" font-weight="900">Prompt</text>
+  <text x="314" y="467" fill="#000000" font-size="25" font-weight="900">dedupe, sync</text>
+
+  <!-- ROW 8: Rule | Enable/Feedback, (bg: #FFFFFF) -->
+  <rect x="3" y="486" width="294" height="56" fill="#FFFFFF" />
+  <rect x="299" y="486" width="298" height="56" fill="#FFFFFF" />
+  <line x1="2" y1="542" x2="598" y2="542" stroke="#94a3b8" stroke-width="1.2" />
+  <text x="18" y="524" fill="#000000" font-size="25" font-weight="900">Rule</text>
+  <text x="314" y="524" fill="#000000" font-size="25" font-weight="900">Enable/Feedback,</text>
+
+  <!-- ROW 9: AI Gate | sync (bg: #E8EDF3) -->
+  <rect x="3" y="543" width="294" height="56" fill="#E8EDF3" />
+  <rect x="299" y="543" width="298" height="56" fill="#E8EDF3" />
+  <line x1="2" y1="599" x2="598" y2="599" stroke="#94a3b8" stroke-width="1.2" />
+  <text x="18" y="581" fill="#000000" font-size="25" font-weight="900">AI Gate</text>
+  <text x="314" y="581" fill="#000000" font-size="25" font-weight="900">sync</text>
+
+  <!-- ROW 10: Human-In-Loop | CRM Sync (bg: #FFFFFF) -->
+  <path d="M 3 600 L 298 600 L 298 656 L 10 656 Q 3 656 3 648 Z" fill="#FFFFFF" />
+  <path d="M 298 600 L 598 600 L 598 648 Q 598 656 590 656 L 298 656 Z" fill="#FFFFFF" />
+  <text x="18" y="638" fill="#000000" font-size="25" font-weight="900">Human-In-Loop</text>
+  <text x="314" y="638" fill="#000000" font-size="25" font-weight="900">CRM Sync</text>
+</svg>

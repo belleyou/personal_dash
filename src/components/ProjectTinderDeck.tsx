@@ -45,7 +45,7 @@ import {
 export interface TinderCardItem {
   id: string;
   title: string;
-  category: "Star Case Study" | "AI GTM & Workflows" | "Core GTM Systems" | "System Evaluation" | "Data Modeling" | "Revenue Growth Ops" | "PM Responsibility";
+  category: "Star Case Study" | "AI GTM & Workflows" | "Core GTM Systems" | "System Evaluation" | "Data Modeling" | "Revenue Growth Ops" | "PM Responsibility" | "Partner Channel Sales Boost";
   categoryColor: string;
   categoryBg: string;
   icon: any;
@@ -54,7 +54,7 @@ export interface TinderCardItem {
   impact: string;
   tools: string[];
   aiUse?: string;
-  targetTab: "gong_revenue_agent" | "channel_partner_qtc" | "inactive_leads" | "revops_streamline" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales";
+  targetTab: "gong_revenue_agent" | "channel_partner_qtc" | "inactive_leads" | "partner_channel_sales_boost" | "revops_streamline" | "innovations_video" | "crm" | "jira_automation" | "n8n_orchestration" | "ai" | "traditional" | "evaluation" | "modeling" | "sales";
   isSpecialCaseStudy: boolean;
   demoUrl?: string;
   stats?: { label: string; value: string }[];
@@ -83,6 +83,28 @@ export const MASTER_DECK: TinderCardItem[] = [
       { label: "Data Ops", value: "Model & Access" },
       { label: "Lead Filter", value: "SDR-Vetted Stale" },
       { label: "Execution", value: "n8n + AI + Gmail" }
+    ]
+  },
+  {
+    id: "partner_channel_sales_boost",
+    title: "Partner Channel Sales Boost",
+    category: "Partner Channel Sales Boost",
+    categoryColor: "text-indigo-900",
+    categoryBg: "bg-indigo-100 border-indigo-300",
+    icon: Briefcase,
+    problem: "Partner onboarding and quote experience suffer from slow manual OMS / Deal Registration, dedupe lead submissions, deal claims friction, and approval bottlenecks causing pipeline forecast inaccuracies.",
+    solution: "AI Agents & NLP Integration: Quote Creation Copilot in Slack/Grok, Approval Agent with partner summary and data normalization, Match LMS Patch, and a 5-step analysis pipeline (Summary Deal Context ➔ Recommend ➔ Dedupe ➔ Categorize ➔ Reasoning Risk).",
+    impact: "Streamlines partner channel quoting, eliminates pipeline forecast inaccuracy and revenue leakage, accelerates approvals with seller/approver routing, and maps challenges directly into 10 structured PM operational tasks.",
+    tools: ["AI Agents", "NLP Copilot", "Slack/Grok Command", "OMS / Deal Reg", "Approval Agent", "Figma Blueprint", "Match LMS", "CRM Sync"],
+    aiUse: "Slack/Grok Copilot + NLP + AI Summary & Approval Agents",
+    targetTab: "partner_channel_sales_boost",
+    isSpecialCaseStudy: true,
+    highlightBadge: "🤝 Partner Channel Sales Boost",
+    stats: [
+      { label: "Original Images", value: "3 Flowcharts" },
+      { label: "Architecture", value: "AI + NLP Engine" },
+      { label: "Execution", value: "PM Tasks Matrix" },
+      { label: "Outcome", value: "Zero Revenue Leakage" }
     ]
   },
   {
@@ -457,6 +479,10 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
 
   // Handle explicit category selection
   const handleSelectCategory = (catId: string) => {
+    if (catId === "partner_channel_sales_boost") {
+      onSelectProjectDetail("partner_channel_sales_boost");
+      return;
+    }
     setFilterCategory(catId);
     setCurrentIndex(0);
     setHistory([]);
@@ -573,6 +599,11 @@ export const ProjectTinderDeck: React.FC<ProjectTinderDeckProps> = ({
             {
               id: "PM Responsibility",
               label: `💼 PM Responsibility (${MASTER_DECK.filter(c => c.category === "PM Responsibility").length})`
+            },
+            {
+              id: "partner_channel_sales_boost",
+              label: "🤝 Partner Channel Sales Boost",
+              highlight: true
             }
           ].map((cat) => (
             <button

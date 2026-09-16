@@ -1,0 +1,275 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000" style="background:#f8f9fa; font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;">
+  <defs>
+    <marker id="fArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 7 5 L 0 8.5 z" fill="#0f172a" />
+    </marker>
+    <marker id="fGreenArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 7 5 L 0 8.5 z" fill="#15803d" />
+    </marker>
+  </defs>
+
+  <!-- TOP FIGMA APP BAR -->
+  <rect x="0" y="0" width="1000" height="42" fill="#1e1e1e" />
+  <!-- Mac Window Dots -->
+  <circle cx="18" cy="21" r="5.5" fill="#ff5f56" />
+  <circle cx="36" cy="21" r="5.5" fill="#ffbd2e" />
+  <circle cx="54" cy="21" r="5.5" fill="#27c93f" />
+
+  <!-- Figma Hamburger -->
+  <line x1="82" y1="16" x2="98" y2="16" stroke="#999999" stroke-width="2" stroke-linecap="round" />
+  <line x1="82" y1="21" x2="98" y2="21" stroke="#999999" stroke-width="2" stroke-linecap="round" />
+  <line x1="82" y1="26" x2="98" y2="26" stroke="#999999" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Home Icon -->
+  <path d="M 120 25 L 120 19 L 126 14 L 132 19 L 132 25 Z" fill="none" stroke="#999999" stroke-width="1.8" />
+
+  <!-- Active Tab: Figma chart - still -->
+  <rect x="148" y="7" width="165" height="29" rx="5" fill="#2c2c2c" />
+  <circle cx="160" cy="21" r="3.5" fill="#f24e1e" />
+  <text x="172" y="25" fill="#ffffff" font-size="12" font-weight="500">Figma chart - still</text>
+  <text x="296" y="24" fill="#888888" font-size="14">×</text>
+  <text x="325" y="25" fill="#888888" font-size="16">+</text>
+
+  <!-- Center Tools -->
+  <polygon points="68,14 74,27 71,28 75,34 72,35 68,29 65,31" fill="#0284c7" />
+  
+  <!-- Right Controls -->
+  <circle cx="802" cy="21" r="10.5" fill="#8b5cf6" />
+  <text x="802" y="25" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">A</text>
+  <rect x="832" y="10" width="56" height="22" rx="4" fill="#0284c7" />
+  <text x="860" y="25" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Share</text>
+  <polygon points="908,16 918,21 908,26" fill="#888888" />
+  <text x="965" y="25" fill="#888888" font-size="12" text-anchor="middle">100% ⌵</text>
+
+  <!-- SECONDARY FIGMA TOOLBAR -->
+  <rect x="0" y="42" width="1000" height="42" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+  <polygon points="70,55 76,68 73,69 77,75 74,76 70,70 67,72" fill="#0284c7" />
+  <rect x="110" y="54" width="18" height="18" fill="none" stroke="#444444" stroke-width="2" />
+  <rect x="160" y="56" width="16" height="14" rx="2" fill="none" stroke="#444444" stroke-width="1.8" />
+  <text x="250" y="69" fill="#444444" font-size="16" font-weight="bold">T</text>
+  <circle cx="340" cy="62" r="7" fill="none" stroke="#444444" stroke-width="1.8" />
+
+  <!-- LEFT SIDEBAR -->
+  <rect x="0" y="84" width="230" height="916" fill="#ffffff" stroke="#e5e7eb" stroke-width="1" />
+  <g fill="#1e293b" font-size="12" font-weight="bold">
+    <circle cx="20" cy="104" r="4.5" fill="none" stroke="#64748b" stroke-width="1.5" />
+    <line x1="24" y1="107" x2="28" y2="111" stroke="#64748b" stroke-width="1.5" />
+    <text x="36" y="108">Home</text>
+    <text x="86" y="108" fill="#64748b">Layers</text>
+    <text x="164" y="108" fill="#64748b">Target ⌵</text>
+  </g>
+  <line x1="0" y1="120" x2="230" y2="120" stroke="#f1f5f9" stroke-width="1" />
+
+  <!-- Layers List -->
+  <g fill="#334155" font-size="12" font-family="-apple-system, sans-serif">
+    <text x="14" y="140" font-weight="bold"># Frame</text>
+    <text x="36" y="170" fill="#64748b">--- Problem</text>
+    <text x="36" y="200" fill="#64748b">&lt;&gt; Project</text>
+    <text x="36" y="230"># Project 1</text>
+    <text x="36" y="260"># Project 2</text>
+    <text x="36" y="290"># Pacent 3</text>
+    <text x="36" y="320"># Layent 4</text>
+    <text x="36" y="350"># Project 5</text>
+    <text x="36" y="380"># Payent 6</text>
+    <text x="36" y="410"># Layent 7</text>
+    <text x="36" y="440"># Layent 8</text>
+    <text x="36" y="470"># Layent 9</text>
+    <text x="36" y="500"># Payent 10</text>
+    <text x="36" y="530"># Payent 11</text>
+    <text x="36" y="560"># Payent 12</text>
+    <text x="36" y="590"># Payent 13</text>
+    <text x="36" y="620"># Payent 14</text>
+    <text x="36" y="650"># Payent 14</text>
+    <text x="36" y="680"># Payent 15</text>
+    <text x="36" y="710"># Payent 16</text>
+    <text x="36" y="740"># Payent 17</text>
+    <text x="36" y="770"># Payent 18</text>
+    <text x="36" y="800"># Payent 19</text>
+    <text x="36" y="830"># Payers 20</text>
+    <text x="36" y="860"># Current Uivsing</text>
+    <text x="36" y="890" fill="#64748b">--- Current Contexts</text>
+    <text x="36" y="920"># Payers Page</text>
+  </g>
+
+  <!-- MAIN CANVAS AREA -->
+  <rect x="230" y="84" width="770" height="916" fill="#ffffff" />
+
+  <!-- TOP CONTAINER: CURRENT PROCESS (Orange) -->
+  <rect x="234" y="116" width="748" height="190" fill="#ffedd5" stroke="#000000" stroke-width="1.5" />
+  <text x="248" y="146" font-size="18" font-weight="900" fill="#000000">CURRENT PROCESS: Slow Manual Partner Onboard / Sales Experience (Problem)</text>
+
+  <!-- Process List -->
+  <g fill="#000000" font-size="15" font-weight="bold">
+    <text x="248" y="176">Slow, Manual</text>
+    <text x="248" y="198">OMS / Deal Reg</text>
+    <text x="248" y="220">Dedupe Lead Submission</text>
+    <text x="248" y="242">Deal Claims</text>
+    <text x="248" y="264">Approval Process</text>
+    <text x="248" y="286">Renewal Signals</text>
+  </g>
+
+  <!-- Connectors from Process List -->
+  <!-- OMS / Deal Reg to Data Hygiene Issue -->
+  <path d="M 390 194 L 778 194 L 778 300" fill="none" stroke="#000000" stroke-width="1.5" />
+  
+  <!-- Dedupe Lead Submission to Revenue Leaking -->
+  <path d="M 460 216 L 622 216 L 622 300" fill="none" stroke="#000000" stroke-width="1.5" />
+  
+  <!-- Deal Claims to Revenue Leaking -->
+  <path d="M 390 238 L 594 238 L 594 300" fill="none" stroke="#000000" stroke-width="1.5" />
+  
+  <!-- Approval Process to Revenue Leaking -->
+  <path d="M 402 260 L 494 260 L 494 300" fill="none" stroke="#000000" stroke-width="1.5" />
+  
+  <!-- Renewal Signals to Requires Manual Processing -->
+  <path d="M 388 282 L 458 282 L 458 326" fill="none" stroke="#000000" stroke-width="1.5" />
+
+  <!-- INTERMEDIATE LABELS -->
+  <!-- Requires Manual Processing -->
+  <text x="456" y="342" font-size="14" font-weight="bold" fill="#000000" text-anchor="middle">Requires Manual</text>
+  <text x="456" y="360" font-size="14" font-weight="bold" fill="#000000" text-anchor="middle">Processing</text>
+  <!-- Arrow from Renewal down into Slack box -->
+  <path d="M 458 368 L 368 376 L 368 450" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#fArrow)" />
+
+  <!-- Revenue Leaking / Pipeline Forecast Inaccuracy -->
+  <text x="618" y="342" font-size="14" font-weight="bold" fill="#000000" text-anchor="middle">Revenue Leaking/Pipeline</text>
+  <text x="618" y="360" font-size="14" font-weight="bold" fill="#000000" text-anchor="middle">Forecast Inaccuracy</text>
+  <!-- Down arrows -->
+  <text x="594" y="380" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">↓</text>
+  <text x="622" y="380" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">↓</text>
+
+  <!-- Data Hygiene Issue -->
+  <text x="780" y="352" font-size="14" font-weight="bold" fill="#000000" text-anchor="middle">Data Hygiene Issue</text>
+  <line x1="778" y1="334" x2="778" y2="310" stroke="#000000" stroke-width="1.5" marker-end="url(#fArrow)" />
+
+  <!-- BOTTOM CONTAINER: THE SOLUTION (Light Blue) -->
+  <rect x="230" y="396" width="752" height="510" fill="#f0f9ff" stroke="#000000" stroke-width="1.5" />
+  <text x="606" y="426" font-size="20" font-weight="900" fill="#000000" text-anchor="middle">THE SOLUTION: AI Agents &amp; NLP Integration</text>
+
+  <!-- Slack Logo in Solution -->
+  <g transform="translate(240, 480) scale(0.7)">
+    <rect x="18" y="0" width="8" height="24" rx="4" fill="#36C5F0" />
+    <circle cx="6" cy="12" r="4" fill="#36C5F0" />
+    <rect x="28" y="18" width="24" height="8" rx="4" fill="#2EB67D" />
+    <circle cx="40" cy="6" r="4" fill="#2EB67D" />
+    <rect x="28" y="32" width="8" height="24" rx="4" fill="#E01E5A" />
+    <circle cx="48" cy="44" r="4" fill="#E01E5A" />
+    <rect x="2" y="28" width="24" height="8" rx="4" fill="#ECB22E" />
+    <circle cx="14" cy="48" r="4" fill="#ECB22E" />
+  </g>
+
+  <!-- Deal Reg Agent in Slack/Grok Command -->
+  <g transform="translate(306, 464)">
+    <rect x="0" y="0" width="134" height="78" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="2" />
+    <text x="67" y="28" font-size="13" font-weight="bold" fill="#000000" text-anchor="middle">Deal Reg Agent</text>
+    <text x="67" y="48" font-size="13" font-weight="bold" fill="#000000" text-anchor="middle">in Slack/Grok</text>
+    <text x="67" y="68" font-size="13" font-weight="bold" fill="#000000" text-anchor="middle">Command</text>
+  </g>
+
+  <!-- Approval Agent -->
+  <g transform="translate(470, 460)">
+    <rect x="0" y="0" width="176" height="86" rx="8" fill="#ccfbf1" stroke="#14b8a6" stroke-width="2" />
+    <text x="88" y="26" font-size="13.5" font-weight="bold" fill="#000000" text-anchor="middle">Approval Agent</text>
+    <text x="88" y="44" font-size="11.5" font-weight="bold" fill="#000000" text-anchor="middle">(Partner Summary, Risk,</text>
+    <text x="88" y="59" font-size="11.5" font-weight="bold" fill="#000000" text-anchor="middle">Margin, Usage, Recom),</text>
+    <text x="88" y="75" font-size="11.5" font-weight="bold" fill="#000000" text-anchor="middle">Data Normalization</text>
+  </g>
+
+  <!-- NLP Box -->
+  <g transform="translate(240, 626)">
+    <rect x="0" y="0" width="106" height="62" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="2" />
+    <text x="53" y="38" font-size="20" font-weight="900" fill="#000000" text-anchor="middle">NLP</text>
+  </g>
+
+  <!-- Arrow from NLP to Deal Reg Agent -->
+  <line x1="293" y1="626" x2="340" y2="548" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+  <!-- Line from Deal Reg Agent to AI Agents -->
+  <path d="M 368 542 L 368 584 L 476 584 L 476 608" fill="none" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+
+  <!-- Arrow from NLP to AI Agents -->
+  <line x1="346" y1="657" x2="442" y2="657" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+
+  <!-- Match LMS Patch -->
+  <g transform="translate(240, 750)">
+    <rect x="0" y="0" width="114" height="64" rx="8" fill="#cffafe" stroke="#06b6d4" stroke-width="2" />
+    <text x="57" y="29" font-size="13.5" font-weight="bold" fill="#000000" text-anchor="middle">Match LMS</text>
+    <text x="57" y="49" font-size="13.5" font-weight="bold" fill="#000000" text-anchor="middle">Patch</text>
+  </g>
+  <!-- Arrow from NLP to Match LMS Patch -->
+  <line x1="293" y1="688" x2="293" y2="744" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+
+  <!-- LMS Database Icon -->
+  <g transform="translate(265, 834)">
+    <path d="M 0 10 C 0 4, 56 4, 56 10 L 56 40 C 56 46, 0 46, 0 40 Z" fill="#0284c7" />
+    <ellipse cx="28" cy="10" rx="28" ry="8" fill="#38bdf8" />
+    <text x="28" y="32" font-size="13" font-weight="900" fill="#ffffff" text-anchor="middle">LMS</text>
+  </g>
+  <path d="M 354 782 L 376 782 L 376 856 L 328 856" fill="none" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+
+  <!-- AI Agents Box -->
+  <g transform="translate(446, 610)">
+    <rect x="0" y="0" width="134" height="88" rx="8" fill="#ede9fe" stroke="#6366f1" stroke-width="2" />
+    <text x="67" y="50" font-size="18" font-weight="900" fill="#000000" text-anchor="middle">AI Agents</text>
+  </g>
+
+  <!-- Connectors from AI Agents to Approval Agent -->
+  <path d="M 552 610 L 552 552" fill="none" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+
+  <!-- Fast Approval Process Diamond -->
+  <g transform="translate(654, 608)">
+    <polygon points="52,0 104,50 52,100 0,50" fill="#dcfce7" stroke="#22c55e" stroke-width="2" />
+    <text x="52" y="42" font-size="12.5" font-weight="bold" fill="#000000" text-anchor="middle">Fast</text>
+    <text x="52" y="58" font-size="12.5" font-weight="bold" fill="#000000" text-anchor="middle">Approval</text>
+    <text x="52" y="74" font-size="12.5" font-weight="bold" fill="#000000" text-anchor="middle">Process</text>
+  </g>
+  <line x1="580" y1="658" x2="650" y2="658" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+
+  <!-- Increase ROI Partner Box -->
+  <g transform="translate(650, 750)">
+    <rect x="0" y="0" width="116" height="62" rx="8" fill="#86efac" stroke="#16a34a" stroke-width="2" />
+    <text x="58" y="28" font-size="13" font-weight="bold" fill="#000000" text-anchor="middle">Increase</text>
+    <text x="58" y="46" font-size="13" font-weight="bold" fill="#000000" text-anchor="middle">ROI Partner</text>
+  </g>
+  <line x1="706" y1="708" x2="706" y2="744" stroke="#000000" stroke-width="1.8" marker-end="url(#fGreenArrow)" />
+  <!-- Line from AI Agents to Increase ROI Partner -->
+  <path d="M 580 675 L 608 675 L 608 781 L 644 781" fill="none" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+
+  <!-- RIGHT SIDE CARD: Detailed Analysis & Actions -->
+  <g transform="translate(808, 470)">
+    <rect x="0" y="0" width="162" height="434" rx="6" fill="#f0f9ff" stroke="#38bdf8" stroke-width="2" />
+    <text x="81" y="24" font-size="13" font-weight="900" fill="#000000" text-anchor="middle">Detailed Analysis</text>
+    <text x="81" y="40" font-size="13" font-weight="900" fill="#000000" text-anchor="middle">&amp; Actions</text>
+
+    <!-- 1. Summary Deal Context -->
+    <rect x="18" y="58" width="126" height="54" rx="6" fill="#f0f9ff" stroke="#38bdf8" stroke-width="2" />
+    <text x="81" y="82" font-size="12" font-weight="bold" fill="#000000" text-anchor="middle">Summary</text>
+    <text x="81" y="99" font-size="12" font-weight="bold" fill="#000000" text-anchor="middle">Deal Context</text>
+    <line x1="81" y1="112" x2="81" y2="134" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+
+    <!-- 2. Recommend -->
+    <rect x="18" y="138" width="126" height="42" rx="6" fill="#f0f9ff" stroke="#38bdf8" stroke-width="2" />
+    <text x="81" y="164" font-size="12.5" font-weight="bold" fill="#000000" text-anchor="middle">Recommend</text>
+    <line x1="81" y1="180" x2="81" y2="202" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+
+    <!-- 3. Dedupe -->
+    <rect x="18" y="206" width="126" height="42" rx="6" fill="#f0f9ff" stroke="#38bdf8" stroke-width="2" />
+    <text x="81" y="232" font-size="12.5" font-weight="bold" fill="#000000" text-anchor="middle">Dedupe</text>
+    <line x1="81" y1="248" x2="81" y2="270" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+
+    <!-- 4. Categorize -->
+    <rect x="18" y="274" width="126" height="42" rx="6" fill="#f0f9ff" stroke="#38bdf8" stroke-width="2" />
+    <text x="81" y="300" font-size="12.5" font-weight="bold" fill="#000000" text-anchor="middle">Categorize</text>
+    <line x1="81" y1="316" x2="81" y2="338" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+
+    <!-- 5. Reasoning Risk -->
+    <rect x="18" y="342" width="126" height="42" rx="6" fill="#f0f9ff" stroke="#38bdf8" stroke-width="2" />
+    <text x="81" y="368" font-size="12.5" font-weight="bold" fill="#000000" text-anchor="middle">Reasoning Risk</text>
+  </g>
+
+  <!-- Connect Approval Process to Detailed Analysis -->
+  <path d="M 616 584 L 798 584 L 798 556 L 820 556" fill="none" stroke="#000000" stroke-width="1.8" marker-end="url(#fArrow)" />
+
+  <!-- Figma Help Bubble at bottom right -->
+  <circle cx="958" cy="958" r="18" fill="#1e1e1e" />
+  <text x="958" y="965" fill="#ffffff" font-size="18" font-weight="bold" text-anchor="middle">?</text>
+</svg>

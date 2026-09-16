@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 500" width="1080" height="500" style="background:#f3eef8; font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;">
+  <defs>
+    <pattern id="dotGrid" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="8" cy="8" r="1.5" fill="#a78bfa" opacity="0.35" />
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 7 5 L 0 8.5 z" fill="#1e1b4b" />
+    </marker>
+    <marker id="purpleArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 7 5 L 0 8.5 z" fill="#4c1d95" />
+    </marker>
+  </defs>
+
+  <!-- Left dotted backdrop -->
+  <rect x="0" y="0" width="230" height="500" fill="#f8fafc" />
+  <rect x="0" y="0" width="230" height="500" fill="url(#dotGrid)" />
+  <line x1="230" y1="0" x2="230" y2="500" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3,3" />
+
+  <!-- NLP Header -->
+  <g transform="translate(14, 50)">
+    <text x="0" y="24" font-size="30" font-weight="900" fill="#0f172a" letter-spacing="-0.5">NLP</text>
+    <!-- Music notes / lute doodle -->
+    <path d="M 68 18 Q 72 6 78 8 Q 84 10 80 22 Z" fill="#0f172a" />
+    <circle cx="70" cy="22" r="3.5" fill="#be185d" />
+    <path d="M 78 12 Q 86 14 84 24" stroke="#0f172a" stroke-width="2" fill="none" />
+  </g>
+
+  <!-- Slack Icon -->
+  <g transform="translate(155, 80) scale(0.65)">
+    <rect x="18" y="0" width="8" height="24" rx="4" fill="#36C5F0" />
+    <circle cx="6" cy="12" r="4" fill="#36C5F0" />
+    <rect x="28" y="18" width="24" height="8" rx="4" fill="#2EB67D" />
+    <circle cx="40" cy="6" r="4" fill="#2EB67D" />
+    <rect x="28" y="32" width="8" height="24" rx="4" fill="#E01E5A" />
+    <circle cx="48" cy="44" r="4" fill="#E01E5A" />
+    <rect x="2" y="28" width="24" height="8" rx="4" fill="#ECB22E" />
+    <circle cx="14" cy="48" r="4" fill="#ECB22E" />
+  </g>
+
+  <!-- Left Input Card -->
+  <rect x="14" y="98" width="180" height="190" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="2" />
+  <text x="24" y="126" font-size="14.5" font-weight="bold" fill="#0f172a" font-family="-apple-system, sans-serif">System Input: Quote</text>
+  <text x="24" y="146" font-size="14.5" font-weight="bold" fill="#0f172a" font-family="-apple-system, sans-serif">Creation Copilot</text>
+  <text x="24" y="166" font-size="14.5" font-weight="bold" fill="#0f172a" font-family="-apple-system, sans-serif">Agent in Slack/Grok</text>
+  <text x="24" y="186" font-size="14.5" font-weight="bold" fill="#0f172a" font-family="-apple-system, sans-serif">Command</text>
+
+  <!-- Sub box inside input card -->
+  <rect x="24" y="198" width="160" height="80" rx="8" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5" />
+  <text x="104" y="222" font-size="13" font-weight="bold" fill="#1e293b" text-anchor="middle">OMS / Deal Reg</text>
+  <text x="104" y="244" font-size="13" font-weight="bold" fill="#1e293b" text-anchor="middle">Dedupe</text>
+  <text x="104" y="264" font-size="13" font-weight="bold" fill="#1e293b" text-anchor="middle">Deal Claims</text>
+
+  <!-- Arrow from left box to purple container -->
+  <line x1="194" y1="210" x2="275" y2="210" stroke="#1e1b4b" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- BIG PURPLE CONTAINER -->
+  <rect x="245" y="16" width="815" height="468" rx="14" fill="#ede5f8" stroke="#7c3aed" stroke-width="2.5" />
+
+  <!-- AI Agents Box -->
+  <g transform="translate(275, 168)">
+    <rect x="0" y="0" width="125" height="92" rx="12" fill="#e4d4f7" stroke="#7c3aed" stroke-width="2.5" />
+    <!-- Bot and Person Icons -->
+    <g transform="translate(24, 14)">
+      <!-- Robot Head -->
+      <rect x="0" y="10" width="34" height="26" rx="6" fill="#7c3aed" />
+      <line x1="17" y1="2" x2="17" y2="10" stroke="#7c3aed" stroke-width="3" />
+      <circle cx="17" cy="2" r="3" fill="#7c3aed" />
+      <circle cx="9" cy="22" r="3" fill="#ffffff" />
+      <circle cx="25" cy="22" r="3" fill="#ffffff" />
+      <line x1="11" y1="30" x2="23" y2="30" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+      <!-- Person Silhouette -->
+      <circle cx="56" cy="18" r="10" fill="#7c3aed" />
+      <path d="M 44 40 C 44 31, 68 31, 68 40 Z" fill="#7c3aed" />
+    </g>
+    <text x="62" y="78" font-size="16" font-weight="bold" fill="#3b0764" text-anchor="middle">AI Agents</text>
+  </g>
+
+  <!-- Connectors from AI Agents to branches -->
+  <!-- Main bus line -->
+  <path d="M 400 214 L 428 214 L 428 72 L 448 72" fill="none" stroke="#4c1d95" stroke-width="2" marker-end="url(#purpleArrow)" />
+  <path d="M 428 162 L 448 162" fill="none" stroke="#4c1d95" stroke-width="2" marker-end="url(#purpleArrow)" />
+  <path d="M 428 238 L 448 238" fill="none" stroke="#4c1d95" stroke-width="2" marker-end="url(#purpleArrow)" />
+  <path d="M 428 310 L 448 310" fill="none" stroke="#4c1d95" stroke-width="2" marker-end="url(#purpleArrow)" />
+  <path d="M 428 388 L 448 388" fill="none" stroke="#4c1d95" stroke-width="2" marker-end="url(#purpleArrow)" />
+
+  <!-- BRANCH 1: Generate Summary -->
+  <g transform="translate(452, 50)">
+    <rect x="0" y="0" width="165" height="44" rx="8" fill="#e4d4f7" stroke="#7c3aed" stroke-width="2" />
+    <text x="82" y="27" font-size="15" font-weight="bold" fill="#3b0764" text-anchor="middle">Generate Summary</text>
+  </g>
+  <line x1="617" y1="72" x2="655" y2="72" stroke="#4c1d95" stroke-width="2" marker-end="url(#purpleArrow)" />
+
+  <!-- Diamond: Summary Details (Branch) -->
+  <g transform="translate(660, 36)">
+    <polygon points="52,0 104,36 52,72 0,36" fill="#e4d4f7" stroke="#7c3aed" stroke-width="2" />
+    <text x="52" y="28" font-size="12" font-weight="bold" fill="#3b0764" text-anchor="middle">Summary</text>
+    <text x="52" y="42" font-size="12" font-weight="bold" fill="#3b0764" text-anchor="middle">Details</text>
+    <text x="52" y="56" font-size="11" font-weight="bold" fill="#3b0764" text-anchor="middle">(Branch)</text>
+  </g>
+
+  <!-- Branches from diamond -->
+  <path d="M 764 72 Q 782 42 805 42" fill="none" stroke="#4c1d95" stroke-width="1.8" marker-end="url(#purpleArrow)" />
+  <path d="M 764 72 L 805 72" fill="none" stroke="#4c1d95" stroke-width="1.8" marker-end="url(#purpleArrow)" />
+  <path d="M 764 72 Q 782 102 805 102" fill="none" stroke="#4c1d95" stroke-width="1.8" marker-end="url(#purpleArrow)" />
+
+  <!-- History Doc -->
+  <rect x="810" y="26" width="120" height="32" rx="6" fill="#e4d4f7" stroke="#7c3aed" stroke-width="1.8" />
+  <text x="870" y="47" font-size="13" font-weight="bold" fill="#3b0764" text-anchor="middle">History Doc</text>
+
+  <!-- Account Opportunity -->
+  <rect x="810" y="56" width="140" height="32" rx="6" fill="#e4d4f7" stroke="#7c3aed" stroke-width="1.8" />
+  <text x="880" y="77" font-size="13" font-weight="bold" fill="#3b0764" text-anchor="middle">Account Opportunity</text>
+
+  <!-- Approval -->
+  <rect x="810" y="86" width="120" height="32" rx="6" fill="#e4d4f7" stroke="#7c3aed" stroke-width="1.8" />
+  <text x="870" y="107" font-size="13" font-weight="bold" fill="#3b0764" text-anchor="middle">Approval</text>
+
+  <!-- From Approval to Seller & Approver -->
+  <path d="M 930 102 Q 950 88 970 88" fill="none" stroke="#4c1d95" stroke-width="1.8" marker-end="url(#purpleArrow)" />
+  <path d="M 930 102 Q 950 116 970 116" fill="none" stroke="#4c1d95" stroke-width="1.8" marker-end="url(#purpleArrow)" />
+
+  <!-- Seller & Approver Box -->
+  <g transform="translate(974, 66)">
+    <rect x="0" y="0" width="80" height="68" rx="8" fill="#e4d4f7" stroke="#7c3aed" stroke-width="2" />
+    <text x="40" y="24" font-size="13" font-weight="bold" fill="#3b0764" text-anchor="middle">Seller</text>
+    <text x="40" y="41" font-size="13" font-weight="bold" fill="#3b0764" text-anchor="middle">&amp;</text>
+    <text x="40" y="58" font-size="13" font-weight="bold" fill="#3b0764" text-anchor="middle">Approver</text>
+  </g>
+
+  <!-- BRANCH 2: Suggest Actions -->
+  <g transform="translate(452, 140)">
+    <rect x="0" y="0" width="165" height="44" rx="8" fill="#e4d4f7" stroke="#7c3aed" stroke-width="2" />
+    <text x="82" y="27" font-size="15" font-weight="bold" fill="#3b0764" text-anchor="middle">Suggest Actions</text>
+  </g>
+  <path d="M 617 162 Q 640 148 662 148" fill="none" stroke="#4c1d95" stroke-width="1.8" marker-end="url(#purpleArrow)" />
+  <path d="M 617 162 Q 640 180 662 180" fill="none" stroke="#4c1d95" stroke-width="1.8" marker-end="url(#purpleArrow)" />
+
+  <!-- Bundle / MFA / Discount Tier Box -->
+  <g transform="translate(668, 134)">
+    <rect x="0" y="0" width="125" height="58" rx="8" fill="#e4d4f7" stroke="#7c3aed" stroke-width="2" />
+    <text x="62" y="19" font-size="13" font-weight="bold" fill="#3b0764" text-anchor="middle">Bundle</text>
+    <!-- Crossed out MFA -->
+    <text x="62" y="35" font-size="13" font-weight="bold" fill="#3b0764" text-anchor="middle">MFA</text>
+    <line x1="45" y1="24" x2="80" y2="39" stroke="#dc2626" stroke-width="2.5" />
+    <line x1="45" y1="39" x2="80" y2="24" stroke="#dc2626" stroke-width="2.5" />
+    <text x="62" y="51" font-size="13" font-weight="bold" fill="#3b0764" text-anchor="middle">Discount Tier</text>
+  </g>
+
+  <!-- BRANCH 3: Detect Upsell / Renew Signals -->
+  <g transform="translate(452, 216)">
+    <rect x="0" y="0" width="175" height="44" rx="8" fill="#e4d4f7" stroke="#7c3aed" stroke-width="2" />
+    <text x="87" y="21" font-size="13.5" font-weight="bold" fill="#3b0764" text-anchor="middle">Detect Upsell /</text>
+    <text x="87" y="37" font-size="13.5" font-weight="bold" fill="#3b0764" text-anchor="middle">Renew Signals</text>
+  </g>
+
+  <!-- BRANCH 4: Flags Risk: Revenue Leakage -->
+  <g transform="translate(452, 288)">
+    <rect x="0" y="0" width="175" height="44" rx="8" fill="#e4d4f7" stroke="#7c3aed" stroke-width="2" />
+    <text x="87" y="21" font-size="13.5" font-weight="bold" fill="#3b0764" text-anchor="middle">Flags Risk:</text>
+    <text x="87" y="37" font-size="13.5" font-weight="bold" fill="#3b0764" text-anchor="middle">Revenue Leakage</text>
+  </g>
+
+  <!-- Elbow from Flags Risk to Chevrons -->
+  <path d="M 627 310 L 690 310 L 690 262 L 720 262" fill="none" stroke="#4c1d95" stroke-width="2" marker-end="url(#purpleArrow)" />
+  <path d="M 690 310 L 690 358 L 720 358" fill="none" stroke="#4c1d95" stroke-width="2" marker-end="url(#purpleArrow)" />
+
+  <!-- Chevron 1: Data Hygiene Issue -->
+  <g transform="translate(725, 244)">
+    <path d="M 0 0 L 175 0 L 195 18 L 175 36 L 0 36 L 15 18 Z" fill="#f8fafc" stroke="#475569" stroke-width="2" />
+    <text x="96" y="23" font-size="13.5" font-weight="bold" fill="#0f172a" text-anchor="middle">Data Hygiene Issue</text>
+  </g>
+
+  <!-- Chevron 2: Revenue Leaking/Pipeline Forecast Inaccuracy -->
+  <g transform="translate(725, 340)">
+    <path d="M 0 0 L 295 0 L 315 18 L 295 36 L 0 36 L 15 18 Z" fill="#f8fafc" stroke="#475569" stroke-width="2" />
+    <text x="155" y="23" font-size="12.5" font-weight="bold" fill="#0f172a" text-anchor="middle">Revenue Leaking/Pipeline Forecast Inaccuracy</text>
+  </g>
+
+  <!-- BRANCH 5: Task Trigger -->
+  <g transform="translate(452, 366)">
+    <rect x="0" y="0" width="165" height="44" rx="8" fill="#e4d4f7" stroke="#7c3aed" stroke-width="2" />
+    <text x="82" y="27" font-size="15" font-weight="bold" fill="#3b0764" text-anchor="middle">Task Trigger</text>
+  </g>
+</svg>
